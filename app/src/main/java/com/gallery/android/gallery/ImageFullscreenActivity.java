@@ -10,10 +10,13 @@ public class ImageFullscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
-        int res = getIntent().getExtras().getInt("resID");
+        String res = getIntent().getExtras().getString("tag");
         setContentView(R.layout.activity_image_fullscreen);
-        ImageView iv = findViewById(R.id.fullscreen_image_view);
-        iv.setImageResource(res);
+        ImageView image = findViewById(R.id.fullscreen_image_view);
+        image.setImageResource(getResources().getIdentifier(res,"drawable",this.getPackageName()));
+
+
+
 
     }
 }

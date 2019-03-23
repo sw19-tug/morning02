@@ -17,31 +17,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView iv_1 = findViewById(R.id.small_image_view);
-        ImageView iv_2 = findViewById(R.id.small_image_view_2);
+        final List<ImageView> images = new ArrayList<>();
+        images.add((ImageView) findViewById(R.id.small_image_view));
+        images.add((ImageView) findViewById(R.id.small_image_view_2));
 
-        final int res_1 = R.drawable.duckduck;
-        final int res_2 = R.drawable.duckduckdwo;
-
-        iv_1.setImageResource(res_1);
-        iv_2.setImageResource(res_2);
-
-        iv_1.setOnClickListener(new View.OnClickListener() {
+        for (final ImageView image : images) {
+            image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    String res = (String)image.getTag();
                     Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                    fullscreenImageIntent.putExtra("resID", res_1);
+                    fullscreenImageIntent.putExtra("tag", res);
                     startActivity(fullscreenImageIntent);
                 }
-        });
-
-        iv_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                fullscreenImageIntent.putExtra("resID", res_2);
-                startActivity(fullscreenImageIntent);
-            }
-        });
+            });
+        }
     }
 }

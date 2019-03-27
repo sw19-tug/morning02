@@ -9,73 +9,63 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static com.gallery.android.gallery.PictureDummy.PictureComperator.DATE;
+import static com.gallery.android.gallery.PictureDummy.PictureComperator.NAME;
+import static com.gallery.android.gallery.PictureDummy.PictureComperator.SIZE;
+
 
 public class SortablePictureList {
+
+    enum SortOrder {
+        ASCENDING, DESCENDING
+    }
 
 
     List<PictureDummy> pictures;
 
+    SortablePictureList() {
+        pictures = new ArrayList<>();
+    }
 
-    void sortByDate(boolean asc) {
-        PictureDummy min_picture = pictures.get(0);
-        List<PictureDummy> sorted_pictures = new ArrayList<>();
 
-        while (sorted_pictures.size() < pictures.size()) {
-            for (PictureDummy bitm: pictures) {
 
-                if (bitm.getDate().before(min_picture.getDate())) {
-                    min_picture = bitm;
-                }
 
-            }
-
-            sorted_pictures.add(min_picture);
-        }
-
-        pictures.clear();
-        pictures.addAll(sorted_pictures);
+    void sortByDate(SortOrder so) {
+       if (so == SortOrder.ASCENDING)
+           Collections.sort(pictures, PictureDummy.ascending(PictureDummy.getComparator(DATE)));
+       else
+           Collections.sort(pictures, PictureDummy.decending(PictureDummy.getComparator(DATE)));
 
     }
 
-    void sortByName() {
-
-        PictureDummy min_picture = pictures.get(0);
-        List<PictureDummy> sorted_pictures = new ArrayList<>();
-
-        while (sorted_pictures.size() < pictures.size()) {
-            for (PictureDummy bitm: pictures) {
-
-                if (bitm.getFilename().compareTo(min_picture.getFilename()) > 0) {
-                    min_picture = bitm;
-                }
-
-            }
-
-            sorted_pictures.add(min_picture);
-        }
-
-        pictures.clear();
-        pictures.addAll(sorted_pictures);
+    void sortByName(SortOrder so) {
+        if (so == SortOrder.ASCENDING)
+            Collections.sort(pictures, PictureDummy.ascending(PictureDummy.getComparator(NAME)));
+        else
+            Collections.sort(pictures, PictureDummy.decending(PictureDummy.getComparator(NAME)));
 
     }
 
 
 
 
-    void sortBySize() {
-
+    void sortBySize(SortOrder so) {
+        if (so == SortOrder.ASCENDING)
+            Collections.sort(pictures, PictureDummy.ascending(PictureDummy.getComparator(SIZE)));
+        else
+            Collections.sort(pictures, PictureDummy.decending(PictureDummy.getComparator(SIZE)));
     }
 
 
 
 
-    Integer getPicture(Integer index) {
+    PictureDummy getPicture(Integer index) {
 
-
-        return 0;
+        return pictures.get(index);
     }
 
 
 }
+
 
 

@@ -16,6 +16,7 @@ import static com.gallery.android.gallery.PictureDummy.PictureComperator.SIZE;
 
 public class SortablePictureList {
 
+    
     enum SortOrder {
         ASCENDING, DESCENDING
     }

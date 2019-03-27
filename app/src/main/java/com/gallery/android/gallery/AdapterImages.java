@@ -42,6 +42,7 @@ public class AdapterImages
     public void onBindViewHolder(ViewHolderImages holder, int position) {
 
         holder.photo.setImageBitmap(listImages.get(position).getImage());
+        holder.photo.setId(holder.photo.getId()+position);
     }
 
     @Override

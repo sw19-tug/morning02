@@ -26,11 +26,13 @@ public class LayoutTest {
         //Matcher<View> itemMatcher;
         //onView(withId(R.id.image15)).check(matches(isDisplayed()));
         RecyclerView rView=activityTestRule.getActivity().recyclerImages;
-        for (int childCount = rView.getChildCount(), i = 0; i < childCount; ++i) {
+        for (int childCount = rView.getChildCount(), i = 0; i < 1; ++i) {
             AdapterImages.ViewHolderImages holder = (AdapterImages.ViewHolderImages) rView.getChildViewHolder(rView.getChildAt(i));
             //itemMatcher.matches(holder.itemView);
             //onView(itemMatcher.matches(holder.itemView).matches(isDisplayed());
-            onView(withId(R.id.idImage)).check(matches(isDisplayed()));
+            int id=holder.photo.getId();
+            System.out.println("dale"+id);
+            onView(withId(id)).check(matches(isDisplayed()));
 
         }
         assert(1==1);

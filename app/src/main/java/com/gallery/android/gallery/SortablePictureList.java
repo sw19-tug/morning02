@@ -13,7 +13,7 @@ import java.util.List;
 public class SortablePictureList {
 
 
-    List<PictureDummy> pictures;
+   public List<PictureDummy> pictures;
 
 
     void sortByDate(boolean asc) {

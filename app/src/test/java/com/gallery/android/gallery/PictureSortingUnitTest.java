@@ -63,7 +63,7 @@ public class PictureSortingUnitTest {
             piclist.pictures.add(image);
             piclist.pictures.add(image1);
 
-        piclist.sortByDate(false);//SortOrder.DESCENDING
+        piclist.sortByDate(SortablePictureList.SortOrder.DESCENDING);//SortOrder.DESCENDING
         assertThat(piclist.pictures, is(equalTo(decendingimageList)));
 
 

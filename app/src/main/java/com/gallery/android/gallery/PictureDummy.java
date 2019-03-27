@@ -33,10 +33,10 @@ public class PictureDummy {
         DATE {
             public int compare(PictureDummy p1, PictureDummy p2) {
                 if (p1.getDate().before(p2.getDate())) {
-                    return 1;
+                    return -1;
                 }
                 else if (p1.getDate().after(p2.getDate())) {
-                    return -1;
+                    return 1;
                 }
                 else
                     return 0;

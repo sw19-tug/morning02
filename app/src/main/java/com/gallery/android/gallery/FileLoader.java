@@ -37,6 +37,15 @@ public class FileLoader implements FileLoaderInterface {
         }
         return paths;
     }
+    public ArrayList<ImageContainer> loadImageContainers(){
+        List<String> paths=this.getImagesPaths();
+        ArrayList<ImageContainer> imageList = new ArrayList<ImageContainer>();
+        for(int i = 0; i < paths.size(); i++ )
+        {
+            imageList.add(new ImageContainer(paths.get(i)));
+        }
+        return imageList;
+    }
 
 
 

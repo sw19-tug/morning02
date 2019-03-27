@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,42 +26,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void fillImages() {
-        listImages.add(new ImageVo(R.drawable.image01));
-        listImages.add(new ImageVo(R.drawable.image02));
-        listImages.add(new ImageVo(R.drawable.image03));
-        listImages.add(new ImageVo(R.drawable.image04));
-        listImages.add(new ImageVo(R.drawable.image05));
-        listImages.add(new ImageVo(R.drawable.image06));
-        listImages.add(new ImageVo(R.drawable.image07));
-        listImages.add(new ImageVo(R.drawable.image08));
-        listImages.add(new ImageVo(R.drawable.image09));
-        listImages.add(new ImageVo(R.drawable.image11));
-        listImages.add(new ImageVo(R.drawable.image12));
-        listImages.add(new ImageVo(R.drawable.image13));
-        listImages.add(new ImageVo(R.drawable.image14));
-        listImages.add(new ImageVo(R.drawable.image15));
-        listImages.add(new ImageVo(R.drawable.image16));
-        listImages.add(new ImageVo(R.drawable.image17));
-        listImages.add(new ImageVo(R.drawable.image18));
-        listImages.add(new ImageVo(R.drawable.image19));
-        listImages.add(new ImageVo(R.drawable.image20));
-        listImages.add(new ImageVo(R.drawable.image21));
-        listImages.add(new ImageVo(R.drawable.image22));
-        listImages.add(new ImageVo(R.drawable.image23));
-        listImages.add(new ImageVo(R.drawable.image24));
-        listImages.add(new ImageVo(R.drawable.image25));
-
-    }
 
     private void buildRecycler() {
         listImages=new ArrayList<>();
         recyclerImages= (RecyclerView) findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this,3));
-        fillImages();
-        AdapterImages adapter=new AdapterImages(listImages);
+        FileLoader f=new FileLoader();
+        ArrayList<ImageContainer> imageList=f.loadImageContainers();
+
+        AdapterImages adapter=new AdapterImages(imageList);
 
         recyclerImages.setAdapter(adapter);
+
 
     }
 

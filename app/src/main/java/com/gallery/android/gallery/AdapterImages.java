@@ -17,10 +17,10 @@ public class AdapterImages
         extends RecyclerView.Adapter<AdapterImages.ViewHolderImages>
         implements View.OnClickListener{
 
-    ArrayList<ImageVo> listImages;
+    ArrayList<ImageContainer> listImages;
     private View.OnClickListener listener;
 
-    public AdapterImages(ArrayList<ImageVo> listImages) {
+    public AdapterImages(ArrayList<ImageContainer> listImages) {
         this.listImages = listImages;
     }
 
@@ -41,7 +41,7 @@ public class AdapterImages
     @Override
     public void onBindViewHolder(ViewHolderImages holder, int position) {
 
-        holder.photo.setImageResource(listImages.get(position).getPhoto());
+        holder.photo.setImageBitmap(listImages.get(position).getImage());
     }
 
     @Override

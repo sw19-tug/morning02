@@ -3,6 +3,7 @@ package com.gallery.android.gallery;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
 import org.junit.Rule;
@@ -32,8 +33,12 @@ public class FileLoaderJTest {
         ImageContainer iC = new ImageContainer(paths.get(0));
         assertFalse(iC.getPath() == paths.get(0));
         assertNotNull(iC.getImage());
+        RecyclerView rView=activityTestRule.getActivity().recyclerImages;
+        for (int childCount = rView.getChildCount(), i = 0; i < childCount; ++i) {
+            AdapterImages.ViewHolderImages holder = (AdapterImages.ViewHolderImages) rView.getChildViewHolder(rView.getChildAt(i));
+            assertNotNull(holder.photo.getDrawable());
 
-        ImageView iView1=activityTestRule.getActivity().findViewById(R.id.image01);
-        assertNotNull(iView1.getDrawable());
+        }
+
     }
 }

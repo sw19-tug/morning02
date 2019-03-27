@@ -26,7 +26,7 @@ public class LayoutTest {
         //Matcher<View> itemMatcher;
         //onView(withId(R.id.image15)).check(matches(isDisplayed()));
         RecyclerView rView=activityTestRule.getActivity().recyclerImages;
-        for (int childCount = rView.getChildCount(), i = 0; i < 1; ++i) {
+        for (int childCount = rView.getChildCount(), i = 0; i < childCount; ++i) {
             AdapterImages.ViewHolderImages holder = (AdapterImages.ViewHolderImages) rView.getChildViewHolder(rView.getChildAt(i));
             //itemMatcher.matches(holder.itemView);
             //onView(itemMatcher.matches(holder.itemView).matches(isDisplayed());

@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
         final List<ImageView> images = new ArrayList<>();
         images.add((ImageView) findViewById(R.id.small_image_view));
         images.add((ImageView) findViewById(R.id.small_image_view_2));
@@ -32,5 +33,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        */
     }
 }

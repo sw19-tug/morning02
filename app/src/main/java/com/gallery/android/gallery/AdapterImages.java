@@ -62,6 +62,15 @@ public class AdapterImages
     }
 
     public ImageContainer searchPictures(String name){
+
+        for(ImageContainer image : listImages)
+        {
+            if(image.getFilename()== name)
+            {
+                return image;
+            }
+
+        }
         return listImages.get(0);
     }
 

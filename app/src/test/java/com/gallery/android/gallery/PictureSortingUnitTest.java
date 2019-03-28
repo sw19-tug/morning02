@@ -5,16 +5,14 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.hasProperty;
+
 
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.jar.JarException;
 
 public class PictureSortingUnitTest {
 
@@ -30,7 +28,7 @@ public class PictureSortingUnitTest {
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
         date = date_format.parse("2018-04-05");
 
-        PictureDummy image = new PictureDummy(date, "test1", 5000);
+        ImageContainer image = new ImageContainer(date, "test1", 5000);
 
         assertTrue(image.getFilename().equals("test1"));
         assertTrue(image.getSize() == 5000);
@@ -41,7 +39,7 @@ public class PictureSortingUnitTest {
     public void inDecendingDateOrder() throws ParseException
     {
 
-        List<PictureDummy> decendingimageList = new ArrayList<>();
+        List<ImageContainer> decendingimageList = new ArrayList<>();
         Date date, date1, date2;
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -49,21 +47,21 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date2 = date_format.parse("2008-01-04");
 
-        PictureDummy image = new PictureDummy(date, "test", 5000);
-        PictureDummy image1 = new PictureDummy(date1, "test1", 5000);
-        PictureDummy image2 = new PictureDummy(date2, "test2", 5000);
+        ImageContainer image = new ImageContainer(date, "test", 5000);
+        ImageContainer image1 = new ImageContainer(date1, "test1", 5000);
+        ImageContainer image2 = new ImageContainer(date2, "test2", 5000);
 
         decendingimageList.add(0,image);
         decendingimageList.add(1,image1);
         decendingimageList.add(2,image2);
 
-        SortablePictureList piclist = new SortablePictureList();
+        AdapterImages piclist = new AdapterImages();
 
             piclist.pictures.add(image2);
             piclist.pictures.add(image);
             piclist.pictures.add(image1);
 
-        piclist.sortByDate(SortablePictureList.SortOrder.DESCENDING);
+        piclist.sortByDate(AdapterImages.SortOrder.DESCENDING);
         assertThat(piclist.pictures, is(equalTo(decendingimageList)));
 
     }
@@ -72,7 +70,7 @@ public class PictureSortingUnitTest {
     public void inAscendingDateOrder() throws ParseException
     {
 
-        List<PictureDummy> ascendingimageList = new ArrayList<>();
+        List<ImageContainer> ascendingimageList = new ArrayList<>();
         Date date, date1, date2,date3,date4,date5;
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -84,12 +82,12 @@ public class PictureSortingUnitTest {
         date5 = date_format.parse("2018-02-23");
 
 
-        PictureDummy image = new PictureDummy(date, "test", 5000);
-        PictureDummy image1 = new PictureDummy(date1, "test1", 6000);
-        PictureDummy image2 = new PictureDummy(date2, "test2", 6000);
-        PictureDummy image3 = new PictureDummy(date3, "test3", 8000);
-        PictureDummy image4 = new PictureDummy(date4, "test4", 2000);
-        PictureDummy image5 = new PictureDummy(date5, "test5", 1000);
+        ImageContainer image = new ImageContainer(date, "test", 5000);
+        ImageContainer image1 = new ImageContainer(date1, "test1", 6000);
+        ImageContainer image2 = new ImageContainer(date2, "test2", 6000);
+        ImageContainer image3 = new ImageContainer(date3, "test3", 8000);
+        ImageContainer image4 = new ImageContainer(date4, "test4", 2000);
+        ImageContainer image5 = new ImageContainer(date5, "test5", 1000);
 
 
         ascendingimageList.add(0,image);
@@ -99,7 +97,7 @@ public class PictureSortingUnitTest {
         ascendingimageList.add(4,image4);
         ascendingimageList.add(5,image5);
 
-        SortablePictureList piclist = new SortablePictureList();
+        AdapterImages piclist = new AdapterImages();
 
         piclist.pictures.add(image4);
         piclist.pictures.add(image);
@@ -108,7 +106,7 @@ public class PictureSortingUnitTest {
         piclist.pictures.add(image3);
         piclist.pictures.add(image5);
 
-        piclist.sortByDate(SortablePictureList.SortOrder.ASCENDING);
+        piclist.sortByDate(AdapterImages.SortOrder.ASCENDING);
         assertThat(piclist.pictures, is(equalTo(ascendingimageList)));
 
     }
@@ -117,7 +115,7 @@ public class PictureSortingUnitTest {
     public void inDecendingSizeOrder() throws ParseException
     {
 
-        List<PictureDummy> decendingimageList = new ArrayList<>();
+        List<ImageContainer> decendingimageList = new ArrayList<>();
         Date date, date1, date2;
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -125,21 +123,21 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date = date_format.parse("2008-01-04");
 
-        PictureDummy image = new PictureDummy(date, "test", 5000);
-        PictureDummy image1 = new PictureDummy(date1, "test1", 4500);
-        PictureDummy image2 = new PictureDummy(date2, "test2", 4000);
+        ImageContainer image = new ImageContainer(date, "test", 5000);
+        ImageContainer image1 = new ImageContainer(date1, "test1", 4500);
+        ImageContainer image2 = new ImageContainer(date2, "test2", 4000);
 
         decendingimageList.add(0,image);
         decendingimageList.add(1,image1);
         decendingimageList.add(2,image2);
 
-        SortablePictureList piclist = new SortablePictureList();
+        AdapterImages piclist = new AdapterImages();
 
         piclist.pictures.add(image2);
         piclist.pictures.add(image);
         piclist.pictures.add(image1);
 
-        piclist.sortBySize(SortablePictureList.SortOrder.DESCENDING);
+        piclist.sortBySize(AdapterImages.SortOrder.DESCENDING);
         assertThat(piclist.pictures, is(equalTo(decendingimageList)));
 
     }
@@ -148,7 +146,7 @@ public class PictureSortingUnitTest {
     public void inAscendingSizeOrder() throws ParseException
     {
 
-        List<PictureDummy> ascendingimageList = new ArrayList<>();
+        List<ImageContainer> ascendingimageList = new ArrayList<>();
         Date date, date1, date2;
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -156,21 +154,21 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date = date_format.parse("2008-01-04");
 
-        PictureDummy image = new PictureDummy(date, "test", 3000);
-        PictureDummy image1 = new PictureDummy(date1, "test1", 4500);
-        PictureDummy image2 = new PictureDummy(date2, "test2", 7000);
+        ImageContainer image = new ImageContainer(date, "test", 3000);
+        ImageContainer image1 = new ImageContainer(date1, "test1", 4500);
+        ImageContainer image2 = new ImageContainer(date2, "test2", 7000);
 
         ascendingimageList.add(0,image);
         ascendingimageList.add(1,image1);
         ascendingimageList.add(2,image2);
 
-        SortablePictureList piclist = new SortablePictureList();
+        AdapterImages piclist = new AdapterImages();
 
         piclist.pictures.add(image2);
         piclist.pictures.add(image);
         piclist.pictures.add(image1);
 
-        piclist.sortBySize(SortablePictureList.SortOrder.ASCENDING);
+        piclist.sortBySize(AdapterImages.SortOrder.ASCENDING);
         assertThat(piclist.pictures, is(equalTo(ascendingimageList)));
 
     }
@@ -179,7 +177,7 @@ public class PictureSortingUnitTest {
     public void inDescendingNameOrder() throws ParseException
     {
 
-        List<PictureDummy> descendingimageList = new ArrayList<>();
+        List<ImageContainer> descendingimageList = new ArrayList<>();
         Date date, date1, date2;
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -187,21 +185,21 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date = date_format.parse("2008-01-04");
 
-        PictureDummy image = new PictureDummy(date, "zenia", 3000);
-        PictureDummy image1 = new PictureDummy(date1, "gustav", 4500);
-        PictureDummy image2 = new PictureDummy(date2, "albert", 7000);
+        ImageContainer image = new ImageContainer(date, "zenia", 3000);
+        ImageContainer image1 = new ImageContainer(date1, "gustav", 4500);
+        ImageContainer image2 = new ImageContainer(date2, "albert", 7000);
 
         descendingimageList.add(0,image);
         descendingimageList.add(1,image1);
         descendingimageList.add(2,image2);
 
-        SortablePictureList piclist = new SortablePictureList();
+        AdapterImages piclist = new AdapterImages();
 
         piclist.pictures.add(image2);
         piclist.pictures.add(image);
         piclist.pictures.add(image1);
 
-        piclist.sortByName(SortablePictureList.SortOrder.DESCENDING);
+        piclist.sortByName(AdapterImages.SortOrder.DESCENDING);
         assertThat(piclist.pictures, is(equalTo(descendingimageList)));
 
     }
@@ -210,7 +208,7 @@ public class PictureSortingUnitTest {
     public void inAscendingNameOrder() throws ParseException
     {
 
-        List<PictureDummy> ascendingimageList = new ArrayList<>();
+        List<ImageContainer> ascendingimageList = new ArrayList<>();
         Date date, date1, date2;
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -218,21 +216,21 @@ public class PictureSortingUnitTest {
         date = date_format.parse("2018-04-05");
         date1 = date_format.parse("2008-01-04");
 
-        PictureDummy image = new PictureDummy(date, "albert", 3000);
-        PictureDummy image1 = new PictureDummy(date1, "gustav", 4500);
-        PictureDummy image2 = new PictureDummy(date2, "zenia", 200);
+        ImageContainer image = new ImageContainer(date, "albert", 3000);
+        ImageContainer image1 = new ImageContainer(date1, "gustav", 4500);
+        ImageContainer image2 = new ImageContainer(date2, "zenia", 200);
 
         ascendingimageList.add(0,image);
         ascendingimageList.add(1,image1);
         ascendingimageList.add(2,image2);
 
-        SortablePictureList piclist = new SortablePictureList();
+        AdapterImages piclist = new AdapterImages();
 
         piclist.pictures.add(image2);
         piclist.pictures.add(image);
         piclist.pictures.add(image1);
 
-        piclist.sortByName(SortablePictureList.SortOrder.ASCENDING);
+        piclist.sortByName(AdapterImages.SortOrder.ASCENDING);
         assertThat(piclist.pictures, is(equalTo(ascendingimageList)));
 
     }

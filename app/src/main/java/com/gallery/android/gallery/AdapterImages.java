@@ -1,20 +1,15 @@
 package com.gallery.android.gallery;
 
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
-import static com.gallery.android.gallery.PictureDummy.PictureComperator.DATE;
-import static com.gallery.android.gallery.PictureDummy.PictureComperator.NAME;
-import static com.gallery.android.gallery.PictureDummy.PictureComperator.SIZE;
+import static com.gallery.android.gallery.ImageContainer.PictureComperator.DATE;
+import static com.gallery.android.gallery.ImageContainer.PictureComperator.NAME;
+import static com.gallery.android.gallery.ImageContainer.PictureComperator.SIZE;
 
 
-public class SortablePictureList {
+public class AdapterImages {
 
 
     enum SortOrder {
@@ -22,9 +17,9 @@ public class SortablePictureList {
     }
 
 
-    List<PictureDummy> pictures;
+    List<ImageContainer> pictures;
 
-    SortablePictureList() {
+    AdapterImages() {
         pictures = new ArrayList<>();
     }
 
@@ -33,17 +28,17 @@ public class SortablePictureList {
 
     void sortByDate(SortOrder so) {
        if (so == SortOrder.ASCENDING)
-           Collections.sort(pictures, PictureDummy.ascending(PictureDummy.getComparator(DATE)));
+           Collections.sort(pictures, ImageContainer.ascending(ImageContainer.getComparator(DATE)));
        else
-           Collections.sort(pictures, PictureDummy.decending(PictureDummy.getComparator(DATE)));
+           Collections.sort(pictures, ImageContainer.decending(ImageContainer.getComparator(DATE)));
 
     }
 
     void sortByName(SortOrder so) {
         if (so == SortOrder.ASCENDING)
-            Collections.sort(pictures, PictureDummy.ascending(PictureDummy.getComparator(NAME)));
+            Collections.sort(pictures, ImageContainer.ascending(ImageContainer.getComparator(NAME)));
         else
-            Collections.sort(pictures, PictureDummy.decending(PictureDummy.getComparator(NAME)));
+            Collections.sort(pictures, ImageContainer.decending(ImageContainer.getComparator(NAME)));
 
     }
 
@@ -52,15 +47,15 @@ public class SortablePictureList {
 
     void sortBySize(SortOrder so) {
         if (so == SortOrder.ASCENDING)
-            Collections.sort(pictures, PictureDummy.ascending(PictureDummy.getComparator(SIZE)));
+            Collections.sort(pictures, ImageContainer.ascending(ImageContainer.getComparator(SIZE)));
         else
-            Collections.sort(pictures, PictureDummy.decending(PictureDummy.getComparator(SIZE)));
+            Collections.sort(pictures, ImageContainer.decending(ImageContainer.getComparator(SIZE)));
     }
 
 
 
 
-    PictureDummy getPicture(Integer index) {
+    ImageContainer getPicture(Integer index) {
 
         return pictures.get(index);
     }

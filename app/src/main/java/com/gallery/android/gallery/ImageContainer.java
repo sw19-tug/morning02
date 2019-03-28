@@ -32,9 +32,14 @@ public class ImageContainer implements ImageContainerInterface{
         this.date = date;
     }
 
+    public String getFilename(){return filename;}
+
+    public void setFilename(String name){this.filename = name;}
+
     private Bitmap image;
     private String path;
     private SimpleDateFormat date;
+    private String filename;
 
     public ImageContainer()
     {
@@ -48,5 +53,13 @@ public class ImageContainer implements ImageContainerInterface{
         image = BitmapFactory.decodeFile(path);
         path = path;
         date = new SimpleDateFormat();
+    }
+
+    //for testing purposes
+    public ImageContainer(String thepath,SimpleDateFormat thedate, String thename)
+    {
+        path = thepath;
+        date = thedate;
+        filename = thename;
     }
 }

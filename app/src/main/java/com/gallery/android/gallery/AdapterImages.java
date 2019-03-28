@@ -61,6 +61,10 @@ public class AdapterImages
         }
     }
 
+    public ImageContainer searchPictures(String name){
+        return listImages.get(0);
+    }
+
     public class ViewHolderImages extends RecyclerView.ViewHolder {
 
         TextView etiName,etiInformation;

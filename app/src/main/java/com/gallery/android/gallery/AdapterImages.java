@@ -13,10 +13,13 @@ import java.util.ArrayList;
  * Created by CHENAO on 3/07/2017.
  */
 
-public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolderImages>
-        /*implements View.OnClickListener*/{
+public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolderImages> {
 
-    ArrayList<ImageContainer> listImages;
+    public ArrayList<ImageContainer> getListImages() {
+        return listImages;
+    }
+
+    private ArrayList<ImageContainer> listImages;
     private static ClickListener listener;
 
     public AdapterImages(ArrayList<ImageContainer> listImages) {
@@ -25,7 +28,7 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
 
     @Override
     public ViewHolderImages onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layout=0;
+        int layout;
 
         layout=R.layout.item_grid_images;
 
@@ -45,21 +48,21 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
     public int getItemCount() {
         return listImages.size();
     }
-
+/*
     public void setOnClickListener(ClickListener listener){
         AdapterImages.listener = listener;
     }
-
+*/
     public class ViewHolderImages extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView etiName,etiInformation;
+        //TextView etiName,etiInformation;
         ImageView photo;
 
         public ViewHolderImages(View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
-            photo= (ImageView) itemView.findViewById(R.id.idImage);
+            photo= itemView.findViewById(R.id.idImage);
         }
 
         @Override

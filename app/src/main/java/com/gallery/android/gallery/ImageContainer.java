@@ -46,7 +46,7 @@ public class ImageContainer implements ImageContainerInterface{
     public ImageContainer(String path)
     {
         image = BitmapFactory.decodeFile(path);
-        path = path;
+        this.path = path;
         date = new SimpleDateFormat();
     }
 }

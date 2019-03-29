@@ -58,9 +58,20 @@ public class MainActivity extends AppCompatActivity {
         recyclerImages= (RecyclerView) findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this,3));
         FileLoader f=new FileLoader();
-        ArrayList<ImageContainer> imageList=f.loadImageContainers();
+        final ArrayList<ImageContainer> imageList=f.loadImageContainers();
 
         AdapterImages adapter=new AdapterImages(imageList);
+
+        adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                System.out.println(position);
+                String image_path = imageList.get(position).getPath();
+                Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+                fullscreenImageIntent.putExtra("path", image_path);
+                startActivity(fullscreenImageIntent);
+            }
+        });
 
         recyclerImages.setAdapter(adapter);
 

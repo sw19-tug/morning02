@@ -13,12 +13,11 @@ import java.util.ArrayList;
  * Created by CHENAO on 3/07/2017.
  */
 
-public class AdapterImages
-        extends RecyclerView.Adapter<AdapterImages.ViewHolderImages>
-        implements View.OnClickListener{
+public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolderImages>
+        /*implements View.OnClickListener*/{
 
     ArrayList<ImageContainer> listImages;
-    private View.OnClickListener listener;
+    private static ClickListener listener;
 
     public AdapterImages(ArrayList<ImageContainer> listImages) {
         this.listImages = listImages;
@@ -30,13 +29,10 @@ public class AdapterImages
 
         layout=R.layout.item_grid_images;
 
-
         View view= LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
-
-        view.setOnClickListener(this);
-
         return new ViewHolderImages(view);
     }
+
 
     @Override
     public void onBindViewHolder(ViewHolderImages holder, int position) {
@@ -50,18 +46,11 @@ public class AdapterImages
         return listImages.size();
     }
 
-    public void setOnClickListener(View.OnClickListener listener){
-        this.listener=listener;
+    public void setOnClickListener(ClickListener listener){
+        AdapterImages.listener = listener;
     }
 
-    @Override
-    public void onClick(View view) {
-        if (listener!=null){
-            listener.onClick(view);
-        }
-    }
-
-    public class ViewHolderImages extends RecyclerView.ViewHolder {
+    public class ViewHolderImages extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView etiName,etiInformation;
         ImageView photo;
@@ -69,7 +58,23 @@ public class AdapterImages
         public ViewHolderImages(View itemView) {
             super(itemView);
 
+            itemView.setOnClickListener(this);
             photo= (ImageView) itemView.findViewById(R.id.idImage);
         }
+
+        @Override
+        public void onClick(View view) {
+            if (listener!=null){
+                listener.onItemClick(getAdapterPosition(), view);
+            }
+        }
+    }
+
+    public void setOnItemClickListener(ClickListener listener) {
+        AdapterImages.listener = listener;
+    }
+
+    public interface ClickListener {
+        void onItemClick(int position, View v);
     }
 }

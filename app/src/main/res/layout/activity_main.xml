@@ -8,6 +8,20 @@
     tools:context="com.gallery.android.gallery.MainActivity">
 
 
+ <!--   <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/small_image_view"
+        android:src="@drawable/duckduck"
+        android:tag="duckduck"/>
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/small_image_view_2"
+        android:src="@drawable/duckduckdwo"
+        android:tag="duckduckdwo"/>
+        -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,4 +34,3 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>
-

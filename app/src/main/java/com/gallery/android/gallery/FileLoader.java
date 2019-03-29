@@ -28,8 +28,10 @@ public class FileLoader implements FileLoaderInterface {
     }
     public List<String> getImagesPaths() {
         //String path = Environment.getExternalStorageDirectory().toString()+"/Pictures";
-        String path = "/storage/sdcard/DCIM/Camera";
-        File dir = new File(path);
+        //String path = "/storage/sdcard/DCIM/Camera";
+        //File dir = new File(path);
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File dir = new File(path, "/Camera");
         File[] filelist = dir.listFiles();
         List<String> paths = new ArrayList<String>();
         for (File f : filelist) {

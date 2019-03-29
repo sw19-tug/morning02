@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import android.support.v7.widget.GridLayoutManager;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
-
+    ArrayList<ImageContainer> imageList=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,19 @@ public class MainActivity extends AppCompatActivity {
         */
 
         buildRecycler();
-
+        //Only for test purposes
+        setContentView(R.layout.activity_image_fullscreen);
+        ImageView image= (ImageView) findViewById(R.id.fullscreen_image_view);
+        image.setImageBitmap(imageList.get(0).getImage());
+        //only for test purposes
+        Button shareButton= (Button)findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                Intent intent=new Intent(Intent.ACTION_SEND);
+                intent.setType("*/*");
+                startActivity(Intent.createChooser(intent,"Share Using"));
+            }
+        });
 
 
     }
@@ -58,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerImages= (RecyclerView) findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this,3));
         FileLoader f=new FileLoader();
-        ArrayList<ImageContainer> imageList=f.loadImageContainers();
+        imageList=f.loadImageContainers();
 
         AdapterImages adapter=new AdapterImages(imageList);
 

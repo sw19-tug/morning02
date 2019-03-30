@@ -8,7 +8,12 @@ public class FileDeleterTest {
     FileDeleter fd=new FileDeleter();
 
     @Test
-    public void testFileLoader() {
+    public void testFileDeleter() {
         assertNotNull(fd);
+    }
+
+    @Test
+    public void testFileLoaderDelete() {
+        fd.delete("");
     }
 }

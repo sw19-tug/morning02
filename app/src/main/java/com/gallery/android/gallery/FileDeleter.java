@@ -9,10 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDeleter implements FileDeleterInterface{
-    public FileDeleter(){
+    public FileDeleter(){}
 
+    @Override
+    public boolean delete(String path) {
 
-
+        boolean deleted = false;
+        return deleted;
     }
 
 }

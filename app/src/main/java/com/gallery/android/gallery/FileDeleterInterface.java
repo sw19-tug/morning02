@@ -6,6 +6,5 @@ import android.widget.ImageView;
 import java.util.List;
 
 public interface FileDeleterInterface {
-
-
+    boolean delete(String path);
 }

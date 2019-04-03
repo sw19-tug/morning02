@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
+    public boolean selection_mode = false;
 
 
     @Override

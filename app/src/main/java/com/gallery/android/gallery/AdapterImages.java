@@ -13,12 +13,14 @@ import java.util.ArrayList;
  * Created by CHENAO on 3/07/2017.
  */
 
-public class AdapterImages
-        extends RecyclerView.Adapter<AdapterImages.ViewHolderImages>
-        implements View.OnClickListener{
+public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolderImages> {
 
-    ArrayList<ImageContainer> listImages;
-    private View.OnClickListener listener;
+    public ArrayList<ImageContainer> getListImages() {
+        return listImages;
+    }
+
+    private ArrayList<ImageContainer> listImages;
+    private static ClickListener listener;
 
     public AdapterImages(ArrayList<ImageContainer> listImages) {
         this.listImages = listImages;
@@ -26,17 +28,14 @@ public class AdapterImages
 
     @Override
     public ViewHolderImages onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layout=0;
+        int layout;
 
         layout=R.layout.item_grid_images;
 
-
         View view= LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
-
-        view.setOnClickListener(this);
-
         return new ViewHolderImages(view);
     }
+
 
     @Override
     public void onBindViewHolder(ViewHolderImages holder, int position) {
@@ -49,27 +48,36 @@ public class AdapterImages
     public int getItemCount() {
         return listImages.size();
     }
-
-    public void setOnClickListener(View.OnClickListener listener){
-        this.listener=listener;
+/*
+    public void setOnClickListener(ClickListener listener){
+        AdapterImages.listener = listener;
     }
+*/
+    public class ViewHolderImages extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    @Override
-    public void onClick(View view) {
-        if (listener!=null){
-            listener.onClick(view);
-        }
-    }
-
-    public class ViewHolderImages extends RecyclerView.ViewHolder {
-
-        TextView etiName,etiInformation;
+        //TextView etiName,etiInformation;
         ImageView photo;
 
         public ViewHolderImages(View itemView) {
             super(itemView);
 
-            photo= (ImageView) itemView.findViewById(R.id.idImage);
+            itemView.setOnClickListener(this);
+            photo= itemView.findViewById(R.id.idImage);
         }
+
+        @Override
+        public void onClick(View view) {
+            if (listener!=null){
+                listener.onItemClick(getAdapterPosition(), view);
+            }
+        }
+    }
+
+    public void setOnItemClickListener(ClickListener listener) {
+        AdapterImages.listener = listener;
+    }
+
+    public interface ClickListener {
+        void onItemClick(int position, View v);
     }
 }

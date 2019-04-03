@@ -27,44 +27,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        /*
-        final List<ImageView> images = new ArrayList<>();
-        images.add((ImageView) findViewById(R.id.small_image_view));
-        images.add((ImageView) findViewById(R.id.small_image_view_2));
-
-        for (final ImageView image : images) {
-            image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String res = (String)image.getTag();
-                    Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                    fullscreenImageIntent.putExtra("tag", res);
-                    startActivity(fullscreenImageIntent);
-                }
-            });
-        }
-        */
-
         buildRecycler();
-
-
-
     }
 
 
     private void buildRecycler() {
         listImages=new ArrayList<>();
-        recyclerImages= (RecyclerView) findViewById(R.id.RecyclerId);
+        recyclerImages= findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this,3));
+
         FileLoader f=new FileLoader();
-        ArrayList<ImageContainer> imageList=f.loadImageContainers();
+        final ArrayList<ImageContainer> imageList=f.loadImageContainers();
 
         AdapterImages adapter=new AdapterImages(imageList);
 
+        adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                System.out.println(position);
+                String image_path = imageList.get(position).getPath();
+                System.out.println(image_path);
+                Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+                fullscreenImageIntent.putExtra("path", image_path);
+                startActivity(fullscreenImageIntent);
+            }
+        });
+
         recyclerImages.setAdapter(adapter);
-
-
     }
 
 

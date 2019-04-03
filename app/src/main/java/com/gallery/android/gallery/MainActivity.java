@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         listImages=new ArrayList<>();
         recyclerImages= findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this,3));
+
         FileLoader f=new FileLoader();
         final ArrayList<ImageContainer> imageList=f.loadImageContainers();
 

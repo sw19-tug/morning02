@@ -56,9 +56,8 @@ public class MainActivity extends AppCompatActivity {
         Button shareButton= (Button)findViewById(R.id.shareButton);
         shareButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
-                Intent intent=new Intent(Intent.ACTION_SEND);
-                intent.setType("*/*");
-                startActivity(Intent.createChooser(intent,"Share Using"));
+                ShareContentActivity shareContentActivity=new ShareContentActivity(getApplicationContext());
+                shareContentActivity.shareContent();
             }
         });
 

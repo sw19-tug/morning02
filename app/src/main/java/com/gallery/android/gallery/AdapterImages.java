@@ -65,8 +65,9 @@ public class AdapterImages
 
         for(ImageContainer image : listImages)
         {
-            if(image.getFilename()== name)
+            if(image.getFilename().equals(name))
             {
+                System.out.println(name + "=" + image.getFilename());
                 return image;
             }
 

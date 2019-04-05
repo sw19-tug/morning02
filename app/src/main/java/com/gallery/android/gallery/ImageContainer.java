@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 
 public class ImageContainer implements ImageContainerInterface{
@@ -50,9 +52,10 @@ public class ImageContainer implements ImageContainerInterface{
 
     public ImageContainer(String path)
     {
-        image = BitmapFactory.decodeFile(path);
-        path = path;
-        date = new SimpleDateFormat();
+        this.image = BitmapFactory.decodeFile(path);
+        this.path = path;
+        this.date = new SimpleDateFormat();
+        this.filename = path.substring(path.lastIndexOf("/")+1);
     }
 
     //for testing purposes

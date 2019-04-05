@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

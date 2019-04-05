@@ -8,7 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+
 import android.widget.Adapter;
+
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
         buildRecycler();
 
 
-        final EditText edittext = (EditText) findViewById(R.id.search_bar);
-        edittext.setOnKeyListener(new View.OnKeyListener() {
+       editText = (EditText) findViewById(R.id.search_bar);
+        editText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {

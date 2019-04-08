@@ -75,4 +75,37 @@ public class SelectorTest {
         //activityTestRule.getActivity().selection_list;
 
     }
+
+    @Test
+    public void checkAddedToSelection() throws Throwable {
+        checkLongPressSelection();
+
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
+        runOnUiThread(new MyRunnable(rec_view, 1) {
+
+            public void run() {
+
+                this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
+
+                try {
+                    Thread.sleep(100);
+
+                } catch (InterruptedException ex1) {
+                    return;
+                }
+            }
+        });
+
+        Field selection_field = MainActivity.class.getField("selection_list");
+        List<ImageContainer> img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
+
+        ImageContainer image_container = img_container_list.get(1);
+
+        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        AdapterImages adapter = (AdapterImages)res.getAdapter();
+
+        assertTrue(image_container.getPath().equals(adapter.getListImages().get(1).getPath()));
+
+    }
 }

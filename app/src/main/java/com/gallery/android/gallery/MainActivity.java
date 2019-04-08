@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
     public boolean selection_mode = false;
-
+    public List<ImageContainer> selection_list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(int position, View v) {
                 System.out.println("Long click on item\n");
+
+                selection_list.add(imageList.get(position));
 
                 selection_mode = true;
             }

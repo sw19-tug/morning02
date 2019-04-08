@@ -121,4 +121,36 @@ public class SelectorTest {
 
 
     }
+
+    @Test
+    public void testDeselection() throws Throwable {
+        checkAddedToSelection();
+
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
+        Field selection_field = MainActivity.class.getField("selection_list");
+        List<ImageContainer> img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
+
+        ImageContainer image_container = img_container_list.get(1);
+
+        runOnUiThread(new MyRunnable(rec_view, 1) {
+
+            public void run() {
+
+                this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
+
+                try {
+                    Thread.sleep(100);
+
+                } catch (InterruptedException ex1) {
+                    return;
+                }
+            }
+        });
+
+        selection_field = MainActivity.class.getField("selection_list");
+        img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
+
+        assertFalse(img_container_list.contains(image_container));
+    }
 }

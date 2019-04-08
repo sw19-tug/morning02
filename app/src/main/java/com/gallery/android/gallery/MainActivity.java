@@ -32,6 +32,16 @@ public class MainActivity extends AppCompatActivity {
         buildRecycler();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (selection_mode) {
+            selection_list.clear();
+            selection_mode = false;
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     private void buildRecycler() {
         listImages=new ArrayList<>();

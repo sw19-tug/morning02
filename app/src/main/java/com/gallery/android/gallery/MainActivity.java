@@ -55,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        adapter.setOnItemLongClickListener(new AdapterImages.LongClickListener() {
+            @Override
+            public void onItemLongClick(int position, View v) {
+                System.out.println("Long click on item\n");
+
+                selection_mode = true;
+            }
+        });
+
         recyclerImages.setAdapter(adapter);
     }
 

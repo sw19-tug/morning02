@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
@@ -35,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (selection_mode) {
+            RecyclerView rec_view = (RecyclerView)this.findViewById(R.id.RecyclerId);
+
+
+            for (int i = 0; i < rec_view.getChildCount(); i++) {
+                RelativeLayout rel_layout = (RelativeLayout)rec_view.findViewHolderForAdapterPosition(i).itemView;
+                rel_layout.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
+            }
+
             selection_list.clear();
             selection_mode = false;
         } else {
@@ -61,10 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
                 if (selection_mode) {
 
-                    if (selection_list.contains(imageList.get(position)))
+                    if (selection_list.contains(imageList.get(position))) {
                         selection_list.remove(imageList.get(position));
-                    else
+                        v.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
+                    }
+                    else {
                         selection_list.add(imageList.get(position));
+                        v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
+                    }
+
 
                     if (selection_list.isEmpty())
                         selection_mode = false;
@@ -86,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!selection_mode) {
                     selection_list.add(imageList.get(position));
                     selection_mode = true;
+                    v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                 }
             }
         });

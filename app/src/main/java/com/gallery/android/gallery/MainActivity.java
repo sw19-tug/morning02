@@ -60,7 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(position);
 
                 if (selection_mode) {
-                    selection_list.add(imageList.get(position));
+
+                    if (selection_list.contains(imageList.get(position)))
+                        selection_list.remove(imageList.get(position));
+                    else
+                        selection_list.add(imageList.get(position));
                 }
                 else {
                     String image_path = imageList.get(position).getPath();

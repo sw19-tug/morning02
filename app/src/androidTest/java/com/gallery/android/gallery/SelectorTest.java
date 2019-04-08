@@ -1,5 +1,6 @@
 package com.gallery.android.gallery;
 
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v7.widget.RecyclerView;
 
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static android.support.test.espresso.Espresso.pressBack;
+import static org.junit.Assert.fail;
 
 public class SelectorTest {
 
@@ -152,5 +154,67 @@ public class SelectorTest {
         img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
 
         assertFalse(img_container_list.contains(image_container));
+    }
+
+    @Test
+    public void testDoubleLongClickSelection() throws Throwable {
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
+        runOnUiThread(new MyRunnable(rec_view, 1) {
+
+            public void run() {
+
+                this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performLongClick();
+
+
+                try {
+                    Thread.sleep(100);
+                    this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performLongClick();
+                    Thread.sleep(100);
+
+                } catch (InterruptedException ex1) {
+                    fail();
+                    return;
+                }
+            }
+        });
+
+
+        Field selection_field = MainActivity.class.getField("selection_list");
+        List<ImageContainer> img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
+
+        assertTrue(img_container_list.size() == 1);
+    }
+
+    @Test
+    public void checkSelectionModeDisabled() throws Throwable{
+
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
+        Field selection_field = MainActivity.class.getField("selection_list");
+        List<ImageContainer> img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
+
+        ImageContainer image_container = img_container_list.get(1);
+
+        runOnUiThread(new MyRunnable(rec_view, 1) {
+
+            public void run() {
+
+                this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
+
+                try {
+                    Thread.sleep(100);
+                    this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
+
+                } catch (InterruptedException ex1) {
+                    fail();
+                    return;
+                }
+            }
+        });
+
+        assertFalse(activityTestRule.getActivity().selection_mode);
+
+
     }
 }

@@ -38,15 +38,15 @@ public class ImageContainer implements ImageContainerInterface{
 
     public ImageContainer()
     {
-        image = null;
-        path = "";
-        date = new SimpleDateFormat();
+        this.image = null;
+        this.path = "";
+        this.date = new SimpleDateFormat();
     }
 
     public ImageContainer(String path)
     {
-        image = BitmapFactory.decodeFile(path);
-        path = path;
-        date = new SimpleDateFormat();
+        this.image = BitmapFactory.decodeFile(path);
+        this.path = path;
+        this.date = new SimpleDateFormat();
     }
 }

@@ -12,8 +12,34 @@ import java.util.List;
 public class FileLoader implements FileLoaderInterface {
     public FileLoader(){
         this.bitmapList=new ArrayList<Bitmap>();
+        this.extentions=new ArrayList<String>();
+        this.extentions.add("jpg");
+        this.extentions.add("png");
+        this.extentions.add("bmp");
+        this.extentions.add("gif");
     }
     private List<Bitmap> bitmapList;
+    private List<String> extentions;
+
+    private void search(File[] filelist, List<String> paths) {
+        for (File f : filelist) {
+            for (String extetion : extentions) {
+                if(f.getName().startsWith(".")) {
+                    break;
+                }
+                if (f.getName().endsWith("." + extetion)) {
+                    paths.add(f.getAbsolutePath());
+                    break;
+                }
+                if (f.isDirectory()) {
+                    File[] newfilelist = f.listFiles();
+                    search(newfilelist, paths);
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public Bitmap getAndAddBitMap(String s) {
         Bitmap b= BitmapFactory.decodeFile(s);
@@ -27,14 +53,11 @@ public class FileLoader implements FileLoaderInterface {
         return view;
     }
     public List<String> getImagesPaths() {
-        //String path = Environment.getExternalStorageDirectory().toString()+"/Pictures";
-        String path = "/storage/sdcard/DCIM/Camera";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         File dir = new File(path);
         File[] filelist = dir.listFiles();
         List<String> paths = new ArrayList<String>();
-        for (File f : filelist) {
-            paths.add(f.getAbsolutePath());
-        }
+        search(filelist, paths);
         return paths;
     }
     public ArrayList<ImageContainer> loadImageContainers(){
@@ -46,7 +69,4 @@ public class FileLoader implements FileLoaderInterface {
         }
         return imageList;
     }
-
-
-
 }

@@ -119,7 +119,6 @@ public class ImageContainer implements ImageContainerInterface{
         };
     }
 
-
     public static Comparator<ImageContainer> getComparator(final PictureComperator... multipleOptions) {
         return new Comparator<ImageContainer>() {
             public int compare(ImageContainer o1, ImageContainer o2) {
@@ -134,11 +133,7 @@ public class ImageContainer implements ImageContainerInterface{
         };
     }
 
-
-
-
     int getSize() {
         return size;
     }
-
 }

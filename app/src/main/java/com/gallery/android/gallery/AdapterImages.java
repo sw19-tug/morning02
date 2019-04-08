@@ -6,7 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import static com.gallery.android.gallery.ImageContainer.PictureComperator.DATE;
+import static com.gallery.android.gallery.ImageContainer.PictureComperator.NAME;
+import static com.gallery.android.gallery.ImageContainer.PictureComperator.SIZE;
 import java.util.ArrayList;
 
 /**
@@ -95,4 +101,41 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
     public interface ClickListener {
         void onItemClick(int position, View v);
     }
+
+    enum SortOrder {
+        ASCENDING, DESCENDING
+    }
+
+    AdapterImages() {
+        this.listImages = new ArrayList<>();
+    }
+
+    void sortByDate(SortOrder so) {
+       if (so == SortOrder.ASCENDING)
+           Collections.sort(listImages, ImageContainer.ascending(ImageContainer.getComparator(DATE)));
+       else
+           Collections.sort(listImages, ImageContainer.decending(ImageContainer.getComparator(DATE)));
+
+    }
+
+    void sortByName(SortOrder so) {
+        if (so == SortOrder.ASCENDING)
+            Collections.sort(listImages, ImageContainer.ascending(ImageContainer.getComparator(NAME)));
+        else
+            Collections.sort(listImages, ImageContainer.decending(ImageContainer.getComparator(NAME)));
+
+    }
+
+    void sortBySize(SortOrder so) {
+        if (so == SortOrder.ASCENDING)
+            Collections.sort(listImages, ImageContainer.ascending(ImageContainer.getComparator(SIZE)));
+        else
+            Collections.sort(listImages, ImageContainer.decending(ImageContainer.getComparator(SIZE)));
+    }
+
+    ImageContainer getPicture(Integer index) {
+
+        return listImages.get(index);
+    }
 }
+

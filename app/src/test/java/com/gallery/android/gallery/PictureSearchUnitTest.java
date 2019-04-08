@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -16,16 +17,16 @@ public class PictureSearchUnitTest {
     @Before
     public void initialize() {
         ArrayList<ImageContainer> imageList = new ArrayList<>();
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"ducky"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"donald duck"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"tick"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"trick"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"track"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"dagobert duck"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"daisy duck"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"gustav gans"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"gundel gauckele"));
-        imageList.add(new ImageContainer("somepath",new SimpleDateFormat(),"oma duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),"ducky"));
+        imageList.add(new ImageContainer("somepath",new Date(),"donald duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),"tick"));
+        imageList.add(new ImageContainer("somepath",new Date(),"trick"));
+        imageList.add(new ImageContainer("somepath",new Date(),"track"));
+        imageList.add(new ImageContainer("somepath",new Date(),"dagobert duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),"daisy duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),"gustav gans"));
+        imageList.add(new ImageContainer("somepath",new Date(),"gundel gauckele"));
+        imageList.add(new ImageContainer("somepath",new Date(),"oma duck"));
 
         adapter=new AdapterImages(imageList);
     }

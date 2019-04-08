@@ -1,8 +1,9 @@
 package com.gallery.android.gallery;
 
-import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,11 +11,10 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static android.support.test.espresso.Espresso.pressBack;
 import static org.junit.Assert.fail;
 
 public class SelectorTest {
@@ -191,11 +191,6 @@ public class SelectorTest {
 
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
 
-        Field selection_field = MainActivity.class.getField("selection_list");
-        List<ImageContainer> img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
-
-        ImageContainer image_container = img_container_list.get(1);
-
         runOnUiThread(new MyRunnable(rec_view, 1) {
 
             public void run() {
@@ -215,6 +210,14 @@ public class SelectorTest {
 
         assertFalse(activityTestRule.getActivity().selection_mode);
 
+    }
 
+    @Test
+    public void checkIfRecyclerHasRelativeLayout() {
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
+        RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
+
+        assertTrue(layout.getResources().getResourceEntryName(layout.getId()).equals("ImageLayout"));
     }
 }

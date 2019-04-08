@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
                         selection_list.remove(imageList.get(position));
                     else
                         selection_list.add(imageList.get(position));
+
+                    if (selection_list.isEmpty())
+                        selection_mode = false;
                 }
                 else {
                     String image_path = imageList.get(position).getPath();
@@ -80,11 +83,10 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemLongClickListener(new AdapterImages.LongClickListener() {
             @Override
             public void onItemLongClick(int position, View v) {
-                System.out.println("Long click on item\n");
-
-                selection_list.add(imageList.get(position));
-
-                selection_mode = true;
+                if (!selection_mode) {
+                    selection_list.add(imageList.get(position));
+                    selection_mode = true;
+                }
             }
         });
 

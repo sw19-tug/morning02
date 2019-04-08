@@ -1,7 +1,9 @@
 package com.gallery.android.gallery;
 
+import android.graphics.drawable.shapes.Shape;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -219,5 +221,21 @@ public class SelectorTest {
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
 
         assertTrue(layout.getResources().getResourceEntryName(layout.getId()).equals("ImageLayout"));
+    }
+
+
+    @Test
+    public void checkIfRelativeLayoutHasShape() {
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
+
+        View view = layout.getChildAt(0);
+
+        assertTrue(layout.getResources().getResourceEntryName(view.getId()).equals("SelectedShape"));
+
+
+
+
+
     }
 }

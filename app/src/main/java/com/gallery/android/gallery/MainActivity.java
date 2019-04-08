@@ -1,7 +1,9 @@
 package com.gallery.android.gallery;
 
 import android.content.Intent;
+
 import android.media.Image;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,6 +13,12 @@ import android.widget.ImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.view.View;
+
+import android.widget.Adapter;
+
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -21,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +37,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         buildRecycler();
+
+       editText = (EditText) findViewById(R.id.search_bar);
+        editText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                   onSearchClicked((AdapterImages)recyclerImages.getAdapter());
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
 
@@ -54,6 +77,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerImages.setAdapter(adapter);
+    }
+
+    private void onSearchClicked(AdapterImages adapter) {
+        EditText searchbar_input = (EditText)findViewById(R.id.search_bar);
+        System.out.println(searchbar_input.getText().toString());
+        ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
+
+        //Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+        //fullscreenImageIntent.putExtra("path", image.getPath());
+        //startActivity(fullscreenImageIntent);
+
+        searchbar_input.setText("Found: " + image.getFilename());
+
     }
 
 

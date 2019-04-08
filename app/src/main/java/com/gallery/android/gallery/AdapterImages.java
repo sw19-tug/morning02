@@ -55,7 +55,8 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
 */
     public class ViewHolderImages extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        //TextView etiName,etiInformation;
+        TextView etiName,etiInformation;
+
         ImageView photo;
 
         public ViewHolderImages(View itemView) {
@@ -71,6 +72,20 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
                 listener.onItemClick(getAdapterPosition(), view);
             }
         }
+    }
+
+    public ImageContainer searchPictures(String name){
+
+        for(ImageContainer image : listImages)
+        {
+            if(image.getFilename().equals(name))
+            {
+                System.out.println(name + "=" + image.getFilename());
+                return image;
+            }
+
+        }
+        return listImages.get(0);
     }
 
     public void setOnItemClickListener(ClickListener listener) {

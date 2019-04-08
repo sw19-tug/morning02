@@ -31,7 +31,7 @@ public class FileLoaderJTest {
         assertNotNull(paths);
         assertFalse(paths.isEmpty());
         ImageContainer iC = new ImageContainer(paths.get(0));
-        assertFalse(iC.getPath() == paths.get(0));
+        assert(iC.getPath() == paths.get(0));
         assertNotNull(iC.getImage());
         RecyclerView rView=activityTestRule.getActivity().recyclerImages;
         for (int childCount = rView.getChildCount(), i = 0; i < childCount; ++i) {

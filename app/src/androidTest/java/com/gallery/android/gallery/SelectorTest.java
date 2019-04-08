@@ -10,8 +10,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static android.support.test.espresso.Espresso.pressBack;
 
 public class SelectorTest {
 
@@ -106,6 +108,17 @@ public class SelectorTest {
         AdapterImages adapter = (AdapterImages)res.getAdapter();
 
         assertTrue(image_container.getPath().equals(adapter.getListImages().get(1).getPath()));
+
+    }
+
+    @Test
+    public void checkBackButton() throws Throwable {
+
+        checkSelectedItemList();
+        pressBack();
+
+        assert(activityTestRule.getActivity().selection_list.size() == 0);
+
 
     }
 }

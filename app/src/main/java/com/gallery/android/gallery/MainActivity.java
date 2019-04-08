@@ -46,12 +46,20 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
+
                 System.out.println(position);
-                String image_path = imageList.get(position).getPath();
-                System.out.println(image_path);
-                Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                fullscreenImageIntent.putExtra("path", image_path);
-                startActivity(fullscreenImageIntent);
+
+                if (selection_mode) {
+                    selection_list.add(imageList.get(position));
+                }
+                else {
+                    String image_path = imageList.get(position).getPath();
+                    System.out.println(image_path);
+                    Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+                    fullscreenImageIntent.putExtra("path", image_path);
+                    startActivity(fullscreenImageIntent);
+                }
+
             }
         });
 

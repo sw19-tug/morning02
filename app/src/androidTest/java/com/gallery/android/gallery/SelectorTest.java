@@ -229,13 +229,22 @@ public class SelectorTest {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
 
-        View view = layout.getChildAt(0);
+        View view = layout.getChildAt(1);
 
-        assertTrue(layout.getResources().getResourceEntryName(view.getId()).equals("SelectedShape"));
+        assertTrue(layout.getResources().getResourceEntryName(view.getId()).equals("SelectedIcon"));
 
+    }
 
+    @Test
+    public void checkIfSelectedIconVisible() throws Throwable {
+        checkLongPressSelection();
 
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
 
+        RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
 
+        ImageView icon = layout.findViewById(R.id.SelectedIcon);
+
+        assertTrue(icon.getVisibility() == View.VISIBLE);
     }
 }

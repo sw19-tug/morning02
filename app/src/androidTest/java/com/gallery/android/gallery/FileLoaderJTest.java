@@ -103,4 +103,53 @@ public class FileLoaderJTest {
         }
         assertFalse(error);
     }
+
+    @Test
+    public void testSubfolder(){
+
+
+        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/myPhotos");
+        boolean success = false;
+        if (!folder.exists()) {
+            success = folder.mkdirs();
+        }
+        if (!success) {
+        } else {
+        }
+
+
+        String name = "test.png";
+        String subfolderpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/myPhotos";
+
+
+        File dest = new File(subfolderpath, name);
+
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        for(int x = 0; x < 100; x++){
+            for(int y = 0; y < 100; y++){
+                bitmap.setPixel(x, y, Color.rgb(2, 100, 56));
+            }
+        }
+
+        try {
+            FileOutputStream fos = new FileOutputStream(dest);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String path = subfolderpath + "/" + name;
+        FileLoader f=new FileLoader();
+
+        List<String> paths=f.getImagesPaths();
+        boolean error = true;
+        for (String currentPath : paths){
+            if (path.compareTo(currentPath) == 0){
+                error = false;
+            }
+        }
+        assertFalse(error);
+    }
 }

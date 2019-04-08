@@ -1,9 +1,7 @@
 package com.gallery.android.gallery;
 
 import android.content.Intent;
-
 import android.media.Image;
-
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,6 +17,7 @@ import android.view.View;
 import android.widget.Adapter;
 
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
@@ -33,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
+    public boolean selection_mode = false;
+    public List<ImageContainer> selection_list = new ArrayList<>();
     EditText editText;
 
     @Override
@@ -57,6 +58,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (selection_mode) {
+            RecyclerView rec_view = (RecyclerView)this.findViewById(R.id.RecyclerId);
+
+
+            for (int i = 0; i < rec_view.getChildCount(); i++) {
+                RelativeLayout rel_layout = (RelativeLayout)rec_view.findViewHolderForAdapterPosition(i).itemView;
+                rel_layout.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
+            }
+
+            selection_list.clear();
+            selection_mode = false;
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     private void buildRecycler() {
         listImages=new ArrayList<>();
@@ -71,12 +90,43 @@ public class MainActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
+
                 System.out.println(position);
-                String image_path = imageList.get(position).getPath();
-                System.out.println(image_path);
-                Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                fullscreenImageIntent.putExtra("path", image_path);
-                startActivity(fullscreenImageIntent);
+
+                if (selection_mode) {
+
+                    if (selection_list.contains(imageList.get(position))) {
+                        selection_list.remove(imageList.get(position));
+                        v.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
+                    }
+                    else {
+                        selection_list.add(imageList.get(position));
+                        v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
+                    }
+
+
+                    if (selection_list.isEmpty())
+                        selection_mode = false;
+                }
+                else {
+                    String image_path = imageList.get(position).getPath();
+                    System.out.println(image_path);
+                    Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+                    fullscreenImageIntent.putExtra("path", image_path);
+                    startActivity(fullscreenImageIntent);
+                }
+
+            }
+        });
+
+        adapter.setOnItemLongClickListener(new AdapterImages.LongClickListener() {
+            @Override
+            public void onItemLongClick(int position, View v) {
+                if (!selection_mode) {
+                    selection_list.add(imageList.get(position));
+                    selection_mode = true;
+                    v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
+                }
             }
         });
 

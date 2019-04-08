@@ -27,13 +27,14 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
 
     private ArrayList<ImageContainer> listImages;
     private static ClickListener listener;
+    private static LongClickListener longclick_listener;
 
     public AdapterImages(ArrayList<ImageContainer> listImages) {
         this.listImages = listImages;
     }
 
     @Override
-    public ViewHolderImages onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolderImages onCreateViewHolder(ViewGroup parent, int viewType)  {
         int layout;
 
         layout=R.layout.item_grid_images;
@@ -59,7 +60,7 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         AdapterImages.listener = listener;
     }
 */
-    public class ViewHolderImages extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolderImages extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView etiName,etiInformation;
 
@@ -69,6 +70,7 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
             super(itemView);
 
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             photo= itemView.findViewById(R.id.idImage);
         }
 
@@ -77,6 +79,16 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
             if (listener!=null){
                 listener.onItemClick(getAdapterPosition(), view);
             }
+        }
+
+        @Override
+    public boolean onLongClick(View view) {
+            if (longclick_listener!=null) {
+                longclick_listener.onItemLongClick(getAdapterPosition(), view);
+                return true;
+            }
+            else
+                return false;
         }
     }
 
@@ -98,8 +110,18 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         AdapterImages.listener = listener;
     }
 
+    public void setOnItemLongClickListener(LongClickListener listener) {
+        AdapterImages.longclick_listener = listener;
+    }
+
+
     public interface ClickListener {
         void onItemClick(int position, View v);
+    }
+
+
+    public interface LongClickListener {
+        void onItemLongClick(int position, View v);
     }
 
     enum SortOrder {

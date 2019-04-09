@@ -151,5 +151,18 @@ public class FileLoaderJTest {
             }
         }
         assertFalse(error);
+
+        //delete file
+        File file = new File(subfolderpath, name);
+        if(file.exists())
+        {
+            file.delete();
+        }
+        //delete subfolder
+        File dir = new File(subfolderpath);
+        if(dir.exists())
+        {
+            dir.delete();
+        }
     }
 }

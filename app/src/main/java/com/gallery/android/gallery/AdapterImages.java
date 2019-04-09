@@ -103,7 +103,7 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
             }
 
         }
-        return listImages.get(0);
+        return null;
     }
 
     public void setOnItemClickListener(ClickListener listener) {

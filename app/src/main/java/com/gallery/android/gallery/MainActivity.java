@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import android.support.v7.widget.GridLayoutManager;
@@ -32,9 +33,13 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ImageVo> listImages;
     RecyclerView recyclerImages;
+
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
     EditText editText;
+
+
+    ArrayList<ImageContainer> imageList=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         buildRecycler();
 
-       editText = (EditText) findViewById(R.id.search_bar);
+        editText = (EditText) findViewById(R.id.search_bar);
         editText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
@@ -56,12 +61,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     @Override
     public void onBackPressed() {
         if (selection_mode) {
             RecyclerView rec_view = (RecyclerView)this.findViewById(R.id.RecyclerId);
+
+
+        buildRecycler();
 
 
             for (int i = 0; i < rec_view.getChildCount(); i++) {
@@ -83,7 +92,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerImages.setLayoutManager(new GridLayoutManager(this,3));
 
         FileLoader f=new FileLoader();
+
         final ArrayList<ImageContainer> imageList=f.loadImageContainers();
+
+
+
 
         AdapterImages adapter=new AdapterImages(imageList);
 

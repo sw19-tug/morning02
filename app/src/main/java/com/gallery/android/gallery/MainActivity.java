@@ -151,12 +151,13 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(searchbar_input.getText().toString());
         ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
 
-        //Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-        //fullscreenImageIntent.putExtra("path", image.getPath());
-        //startActivity(fullscreenImageIntent);
+        if(image != null) {
+            //Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+            //fullscreenImageIntent.putExtra("path", image.getPath());
+            //startActivity(fullscreenImageIntent);
 
-        searchbar_input.setText("Found: " + image.getFilename());
-
+            searchbar_input.setText("Found: " + image.getFilename());
+        }
     }
 
 

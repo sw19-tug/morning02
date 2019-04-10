@@ -1,5 +1,6 @@
 package com.gallery.android.gallery;
 
+import android.os.Environment;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -7,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,7 +25,13 @@ public class FileDeleterJTest {
         FileDeleter fd=new FileDeleter();
         assertNotNull(fd);
         //Create Test File to delete
-        String path ="/storage/sdcard/DCIM/test.txt";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        File dir = new File(path);
+        if(!dir.exists() && !dir.isDirectory()){
+            if(!dir.mkdirs())
+                System.out.println("ERROR: Not able to create a test image!");
+        }
+        path = path + "/test.txt";
         FileOutputStream stream = null;
         try {
             stream = new FileOutputStream(path);
@@ -45,6 +53,6 @@ public class FileDeleterJTest {
         }
 
         //delete the testfile
-        assertFalse(fd.delete("/storage/sdcard/DCIM/test.txt") == false);
+        assertFalse(fd.delete(path) == false);
     }
 }

@@ -56,8 +56,15 @@ public class FileLoader implements FileLoaderInterface {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         File dir = new File(path);
         File[] filelist = dir.listFiles();
+        boolean success = false;
+        if(!dir.exists() && !dir.isDirectory()){
+            success=dir.mkdirs();
+            if(success)
+                filelist = dir.listFiles();
+        }
         List<String> paths = new ArrayList<String>();
-        search(filelist, paths);
+        if(filelist != null)
+            search(filelist, paths);
         return paths;
     }
     public ArrayList<ImageContainer> loadImageContainers(){

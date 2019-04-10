@@ -31,8 +31,12 @@ public class FileLoaderJTest {
         //create test.png
         String name = "test.png";
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        File dir = new File(path);
+        if(!dir.exists() && !dir.isDirectory()){
+            if(!dir.mkdirs())
+                System.out.println("ERROR: Not able to create a test image!");
+        }
         File dest = new File(path, name);
-
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         for(int x = 0; x < 100; x++){
             for(int y = 0; y < 100; y++){
@@ -99,8 +103,6 @@ public class FileLoaderJTest {
 
     @Test
     public void testSubfolder(){
-
-
         File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/myPhotos");
         boolean success = false;
         if (!folder.exists()) {
@@ -110,10 +112,8 @@ public class FileLoaderJTest {
         } else {
         }
 
-
         String name = "test.png";
         String subfolderpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/myPhotos";
-
 
         File dest = new File(subfolderpath, name);
 

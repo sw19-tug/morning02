@@ -34,41 +34,14 @@ public class PictureSearchTest {
 
     @BeforeClass
     public static void setUpClass() {
-        //create test.png
-        String name = "ashwarrior.jpg";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File dir = new File(path);
-        if(!dir.exists() && !dir.isDirectory()){
-            if(!dir.mkdirs())
-                System.out.println("ERROR: Not able to create a test image!");
-        }
-        File dest = new File(path, name);
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        for(int x = 0; x < 100; x++){
-            for(int y = 0; y < 100; y++){
-                bitmap.setPixel(x, y, Color.rgb(100, 100, 0));
-            }
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(dest);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        TestHelper.createFile("test1.png");
+        TestHelper.createFile("test2.png");
     }
 
     @AfterClass
     public static void tearDownClass() throws IOException {
-        //delete test.png
-        String name = "ashwarrior.jpg";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File file = new File(path, name);
-        if(file.exists())
-        {
-            file.delete();
-        }
+        TestHelper.deleteFile("test1.png");
+        TestHelper.deleteFile("test2.png");
     }
 
     @Test
@@ -78,12 +51,14 @@ public class PictureSearchTest {
 
     @Test
     public void testSearchPictures() {
+        String name = "test1.png";
+
         final EditText textView = activityTestRule.getActivity().findViewById(R.id.search_bar);
         try {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textView.setText("ashwarrior.jpg");
+                    textView.setText("test1.png");
                 }
             });
         } catch (java.lang.Throwable e) {
@@ -100,6 +75,8 @@ public class PictureSearchTest {
             System.out.println(e.fillInStackTrace());
         }
         String search = textView.getText().toString();
-        assertEquals("Found: ashwarrior.jpg", search);
+        assertEquals("Found: test1.png", search);
+
+        TestHelper.deleteFile(name);
     }
 }

@@ -28,42 +28,14 @@ public class FileLoaderJTest {
 
     @BeforeClass
     public static void setUpClass() {
-        //create test.png
-        String name = "test.png";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File dir = new File(path);
-        if(!dir.exists() && !dir.isDirectory()){
-            if(!dir.mkdirs())
-                System.out.println("ERROR: Not able to create a test image!");
-        }
-        File dest = new File(path, name);
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        for(int x = 0; x < 100; x++){
-            for(int y = 0; y < 100; y++){
-                bitmap.setPixel(x, y, Color.rgb(2, 100, 56));
-            }
-        }
-
-        try {
-            FileOutputStream fos = new FileOutputStream(dest);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        TestHelper.createFile("test1.png");
+        TestHelper.createFile("test2.png");
     }
 
     @AfterClass
     public static void tearDownClass() throws IOException {
-        //delete test.png
-        String name = "test.png";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File file = new File(path, name);
-        if(file.exists())
-        {
-            file.delete();
-        }
+        TestHelper.deleteFile("test1.png");
+        TestHelper.deleteFile("test2.png");
     }
 
     @Test
@@ -82,19 +54,19 @@ public class FileLoaderJTest {
             assertNotNull(holder.photo.getDrawable());
 
         }
-
     }
 
     @Test
     public void testDefaultPath(){
-        String name = "test.png";
-        String defaultPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        String path = defaultPath + "/" + name;
+        String name = "test1.png";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+
+        String absolutePath = path + "/" + name;
         FileLoader f=new FileLoader();
         List<String> paths=f.getImagesPaths();
         boolean error = true;
         for (String currentPath : paths){
-            if (path.compareTo(currentPath) == 0){
+            if (absolutePath.compareTo(currentPath) == 0){
                 error = false;
             }
         }
@@ -103,20 +75,18 @@ public class FileLoaderJTest {
 
     @Test
     public void testSubfolder(){
-        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/myPhotos");
+        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/GalleryTest");
         boolean success = false;
         if (!folder.exists()) {
             success = folder.mkdirs();
         }
-        if (!success) {
-        } else {
-        }
+        if(!success)
+            System.out.println("ERROR: Not able to create a test image!");
 
         String name = "test.png";
-        String subfolderpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/myPhotos";
-
+        String subfolderpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()+ "/GalleryTest";
+        TestHelper.createFile(name, subfolderpath);
         File dest = new File(subfolderpath, name);
-
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         for(int x = 0; x < 100; x++){
             for(int y = 0; y < 100; y++){
@@ -145,17 +115,7 @@ public class FileLoaderJTest {
         }
         assertFalse(error);
 
-        //delete file
-        File file = new File(subfolderpath, name);
-        if(file.exists())
-        {
-            file.delete();
-        }
-        //delete subfolder
-        File dir = new File(subfolderpath);
-        if(dir.exists())
-        {
-            dir.delete();
-        }
+        TestHelper.deleteFile(name, subfolderpath);
+        TestHelper.deleteFile("GalleryTest", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
     }
 }

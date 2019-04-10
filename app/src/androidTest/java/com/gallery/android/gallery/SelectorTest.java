@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,83 +23,26 @@ import java.util.List;
 
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class SelectorTest {
 
-
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-    @BeforeClass
-    public static void setUpClass() {
-        //create test.png
-        String name = "test.png";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File dir = new File(path);
-        if(!dir.exists() && !dir.isDirectory()){
-            if(!dir.mkdirs())
-                System.out.println("ERROR: Not able to create a test image!");
-        }
-        File dest = new File(path, name);
-
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        for(int x = 0; x < 100; x++){
-            for(int y = 0; y < 100; y++){
-                bitmap.setPixel(x, y, Color.rgb(2, 100, 56));
-            }
-        }
-
-        try {
-            FileOutputStream fos = new FileOutputStream(dest);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //create test2.png
-        String name2 = "test2.png";
-        File dest2 = new File(path, name2);
-
-        Bitmap bitmap2 = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        for(int x = 0; x < 100; x++){
-            for(int y = 0; y < 100; y++){
-                bitmap2.setPixel(x, y, Color.rgb(2, 100, 56));
-            }
-        }
-
-        try {
-            FileOutputStream fos2 = new FileOutputStream(dest2);
-            bitmap2.compress(Bitmap.CompressFormat.PNG, 100, fos2);
-            fos2.flush();
-            fos2.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Before
+    public void setUpClass() {
+        TestHelper.createFile("test1.png");
+        TestHelper.createFile("test2.png");
     }
 
     @AfterClass
     public static void tearDownClass() throws IOException {
-        //delete test.png
-        String name = "test.png";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File file = new File(path, name);
-        if(file.exists())
-        {
-            file.delete();
-        }
-
-        //delete test2.png
-        String name2 = "test2.png";
-        File file2 = new File(path, name2);
-        if(file2.exists())
-        {
-            file2.delete();
-        }
+        TestHelper.deleteFile("test1.png");
+        TestHelper.deleteFile("test2.png");
     }
 
     @Test
@@ -116,7 +60,7 @@ public class SelectorTest {
             public void run() {
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
                 try {
-                    Thread.sleep(100);
+                    sleep(100);
 
                 } catch (InterruptedException ex1) {
                     return;
@@ -153,7 +97,7 @@ public class SelectorTest {
             public void run() {
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
                 try {
-                    Thread.sleep(100);
+                    sleep(100);
 
                 } catch (InterruptedException ex1) {
                     return;
@@ -195,7 +139,7 @@ public class SelectorTest {
             public void run() {
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
                 try {
-                    Thread.sleep(100);
+                    sleep(100);
 
                 } catch (InterruptedException ex1) {
                     return;
@@ -217,9 +161,9 @@ public class SelectorTest {
             public void run() {
                 this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performLongClick();
                 try {
-                    Thread.sleep(100);
+                    sleep(100);
                     this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performLongClick();
-                    Thread.sleep(100);
+                    sleep(100);
                 } catch (InterruptedException ex1) {
                     fail();
                     return;
@@ -240,7 +184,7 @@ public class SelectorTest {
             public void run() {
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
                 try {
-                    Thread.sleep(100);
+                    sleep(100);
                     this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
 
                 } catch (InterruptedException ex1) {

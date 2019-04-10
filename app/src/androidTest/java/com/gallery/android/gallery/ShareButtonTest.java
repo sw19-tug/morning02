@@ -1,9 +1,6 @@
 package com.gallery.android.gallery;
 
-import android.content.Intent;
-import android.os.Handler;
 import android.support.test.rule.ActivityTestRule;
-import android.widget.Button;
 
 import org.junit.Rule;
 import org.junit.Test;

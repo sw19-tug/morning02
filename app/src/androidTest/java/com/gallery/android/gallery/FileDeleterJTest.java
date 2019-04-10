@@ -2,7 +2,6 @@ package com.gallery.android.gallery;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,7 +10,6 @@ import org.junit.runner.RunWith;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;

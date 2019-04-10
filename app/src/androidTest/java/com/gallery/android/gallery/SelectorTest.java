@@ -2,7 +2,6 @@ package com.gallery.android.gallery;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.shapes.Shape;
 import android.os.Environment;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v7.widget.RecyclerView;

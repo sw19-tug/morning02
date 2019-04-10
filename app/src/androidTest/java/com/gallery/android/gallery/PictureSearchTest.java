@@ -3,22 +3,17 @@ package com.gallery.android.gallery;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.hamcrest.Matcher;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import android.support.test.rule.ActivityTestRule;
-import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,13 +21,11 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class PictureSearchTest {

@@ -37,6 +37,11 @@ public class SelectorTest {
         //create test.png
         String name = "test.png";
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        File dir = new File(path);
+        if(!dir.exists() && !dir.isDirectory()){
+            if(!dir.mkdirs())
+                System.out.println("ERROR: Not able to create a test image!");
+        }
         File dest = new File(path, name);
 
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
@@ -54,6 +59,26 @@ public class SelectorTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //create test2.png
+        String name2 = "test2.png";
+        File dest2 = new File(path, name2);
+
+        Bitmap bitmap2 = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        for(int x = 0; x < 100; x++){
+            for(int y = 0; y < 100; y++){
+                bitmap2.setPixel(x, y, Color.rgb(2, 100, 56));
+            }
+        }
+
+        try {
+            FileOutputStream fos2 = new FileOutputStream(dest2);
+            bitmap2.compress(Bitmap.CompressFormat.PNG, 100, fos2);
+            fos2.flush();
+            fos2.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterClass
@@ -66,15 +91,19 @@ public class SelectorTest {
         {
             file.delete();
         }
+
+        //delete test2.png
+        String name2 = "test2.png";
+        File file2 = new File(path, name2);
+        if(file2.exists())
+        {
+            file2.delete();
+        }
     }
 
     @Test
     public void checkSelectedProperty() throws NoSuchFieldException {
-
-
         MainActivity.class.getField("selection_mode");
-
-
     }
 
     @Test
@@ -84,12 +113,8 @@ public class SelectorTest {
         assertFalse(activityTestRule.getActivity().selection_mode);
 
         runOnUiThread(new MyRunnable(res, 0) {
-
             public void run() {
-
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
-
-
                 try {
                     Thread.sleep(100);
 
@@ -98,14 +123,11 @@ public class SelectorTest {
                 }
             }
         });
-
-
         assertTrue(activityTestRule.getActivity().selection_mode);
     }
 
     @Test
     public void checkSelectedItemList() throws Throwable {
-
         checkLongPressSelection();
         MainActivity.class.getField("selection_list");
 
@@ -119,10 +141,6 @@ public class SelectorTest {
 
         assertTrue(image_container.getPath().equals(adapter.getListImages().get(0).getPath()));
 
-
-
-        //activityTestRule.getActivity().selection_list;
-
     }
 
     @Test
@@ -132,11 +150,8 @@ public class SelectorTest {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
 
         runOnUiThread(new MyRunnable(rec_view, 1) {
-
             public void run() {
-
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
-
                 try {
                     Thread.sleep(100);
 
@@ -160,13 +175,9 @@ public class SelectorTest {
 
     @Test
     public void checkBackButton() throws Throwable {
-
         checkSelectedItemList();
         pressBack();
-
         assert(activityTestRule.getActivity().selection_list.size() == 0);
-
-
     }
 
     @Test
@@ -181,11 +192,8 @@ public class SelectorTest {
         ImageContainer image_container = img_container_list.get(1);
 
         runOnUiThread(new MyRunnable(rec_view, 1) {
-
             public void run() {
-
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
-
                 try {
                     Thread.sleep(100);
 
@@ -206,24 +214,18 @@ public class SelectorTest {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
 
         runOnUiThread(new MyRunnable(rec_view, 1) {
-
             public void run() {
-
                 this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performLongClick();
-
-
                 try {
                     Thread.sleep(100);
                     this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performLongClick();
                     Thread.sleep(100);
-
                 } catch (InterruptedException ex1) {
                     fail();
                     return;
                 }
             }
         });
-
 
         Field selection_field = MainActivity.class.getField("selection_list");
         List<ImageContainer> img_container_list = (List<ImageContainer>)selection_field.get(activityTestRule.getActivity());
@@ -233,15 +235,10 @@ public class SelectorTest {
 
     @Test
     public void checkSelectionModeDisabled() throws Throwable{
-
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-
         runOnUiThread(new MyRunnable(rec_view, 1) {
-
             public void run() {
-
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
-
                 try {
                     Thread.sleep(100);
                     this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
@@ -252,17 +249,13 @@ public class SelectorTest {
                 }
             }
         });
-
         assertFalse(activityTestRule.getActivity().selection_mode);
-
     }
 
     @Test
     public void checkIfRecyclerHasRelativeLayout() {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
-
         assertTrue(layout.getResources().getResourceEntryName(layout.getId()).equals("ImageLayout"));
     }
 
@@ -271,23 +264,16 @@ public class SelectorTest {
     public void checkIfRelativeLayoutHasShape() {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
-
         View view = layout.getChildAt(1);
-
         assertTrue(layout.getResources().getResourceEntryName(view.getId()).equals("SelectedIcon"));
-
     }
 
     @Test
     public void checkIfSelectedIconVisible() throws Throwable {
         checkLongPressSelection();
-
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
-
         ImageView icon = layout.findViewById(R.id.SelectedIcon);
-
         assertTrue(icon.getVisibility() == View.VISIBLE);
     }
 }

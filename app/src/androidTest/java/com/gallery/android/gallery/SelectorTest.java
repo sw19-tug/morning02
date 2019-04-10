@@ -33,8 +33,8 @@ public class SelectorTest {
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Before
-    public void setUpClass() {
+    @BeforeClass
+    public static void setUpClass() {
         TestHelper.createFile("test1.png");
         TestHelper.createFile("test2.png");
     }
@@ -206,6 +206,11 @@ public class SelectorTest {
 
     @Test
     public void checkIfRelativeLayoutHasShape() {
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
         View view = layout.getChildAt(1);

@@ -1,6 +1,8 @@
 # Built application files
 *.apk
 *.ap_
+# Except for releases
+!morning02-1st_release.apk
 
 # Files for the ART/Dalvik VM
 *.dex

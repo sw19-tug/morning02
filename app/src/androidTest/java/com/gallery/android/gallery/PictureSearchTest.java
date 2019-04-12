@@ -1,109 +1,72 @@
 package com.gallery.android.gallery;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Environment;
+import android.Manifest;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
-
-import org.hamcrest.Matcher;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import android.support.test.rule.ActivityTestRule;
-import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import org.junit.AfterClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
+
 import java.util.concurrent.TimeUnit;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class PictureSearchTest {
+    private ActivityTestRule<MainActivity> activityTestRule;
+
     @Rule
-    public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-    @BeforeClass
-    public static void setUpClass() {
-        //create test.png
-        String name = "ashwarrior.jpg";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File dest = new File(path, name);
-
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        for(int x = 0; x < 100; x++){
-            for(int y = 0; y < 100; y++){
-                bitmap.setPixel(x, y, Color.rgb(100, 100, 0));
-            }
-        }
-
-        try {
-            FileOutputStream fos = new FileOutputStream(dest);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public final TestRule chain = RuleChain
+            .outerRule(GrantPermissionRule.grant(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            .around(activityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    TestHelper.createFile("test1.png");
+                    TestHelper.createFile("test2.png");
+                }
+            });
 
     @AfterClass
-    public static void tearDownClass() throws IOException {
-        //delete test.png
-        String name = "ashwarrior.jpg";
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        File file = new File(path, name);
-        if(file.exists())
-        {
-            file.delete();
-        }
+    public static void tearDownClass() {
+        TestHelper.deleteFile("test1.png");
+        TestHelper.deleteFile("test2.png");
     }
 
     @Test
     public void testSearchbarVisible() {
         onView(withId(R.id.search_bar)).check(matches(isDisplayed()));
-
     }
-
 
     @Test
     public void testSearchPictures() {
-
+        String name = "test1.png";
 
         final EditText textView = activityTestRule.getActivity().findViewById(R.id.search_bar);
-
         try {
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
-
-                    textView.setText("ashwarrior.jpg");
-
+                    textView.setText("test1.png");
                 }
             });
-        }
-          catch (java.lang.Throwable e) {
+        } catch (java.lang.Throwable e) {
                 e.printStackTrace();
-            }
-
-
+        }
 
         BaseInputConnection inputConnection = new BaseInputConnection(activityTestRule.getActivity().editText, true);
         inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
@@ -112,17 +75,11 @@ public class PictureSearchTest {
             TimeUnit.SECONDS.sleep(3);
         }
         catch(java.lang.InterruptedException e){
-            System.out.println(e.fillInStackTrace());
+            e.printStackTrace();
         }
-
-
         String search = textView.getText().toString();
+        assertEquals("Found: test1.png", search);
 
-        assertEquals("Found: ashwarrior.jpg", search);
-
-
-
+        TestHelper.deleteFile(name);
     }
-
-
 }

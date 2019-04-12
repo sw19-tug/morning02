@@ -1,7 +1,9 @@
 package com.gallery.android.gallery;
 
+import android.Manifest;
 import android.os.Environment;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Rule;
@@ -14,12 +16,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class FileDeleterJTest {
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
     @Test
     public void testPathsAreRetrieved(){
         FileDeleter fd=new FileDeleter();
@@ -52,7 +59,7 @@ public class FileDeleterJTest {
             }
         }
 
-        //delete the testfile
-        assertFalse(fd.delete(path) == false);
+        //delete the test file
+        assertNotEquals(false, fd.delete(path));
     }
 }

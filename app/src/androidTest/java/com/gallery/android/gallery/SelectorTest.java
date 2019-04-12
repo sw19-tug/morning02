@@ -1,23 +1,19 @@
 package com.gallery.android.gallery;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Environment;
+import android.Manifest;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -30,17 +26,23 @@ import static org.junit.Assert.fail;
 
 public class SelectorTest {
 
-    @Rule
-    public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+    private ActivityTestRule<MainActivity> activityTestRule;
 
-    @BeforeClass
-    public static void setUpClass() {
-        TestHelper.createFile("test1.png");
-        TestHelper.createFile("test2.png");
-    }
+    @Rule
+    public final TestRule chain = RuleChain
+            .outerRule(GrantPermissionRule.grant(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            .around(activityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    TestHelper.createFile("test1.png");
+                    TestHelper.createFile("test2.png");
+                }
+            });
 
     @AfterClass
-    public static void tearDownClass() throws IOException {
+    public static void tearDownClass() {
         TestHelper.deleteFile("test1.png");
         TestHelper.deleteFile("test2.png");
     }
@@ -206,11 +208,6 @@ public class SelectorTest {
 
     @Test
     public void checkIfRelativeLayoutHasShape() {
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
         View view = layout.getChildAt(1);

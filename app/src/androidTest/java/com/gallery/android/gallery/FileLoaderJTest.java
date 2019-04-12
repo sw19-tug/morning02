@@ -1,21 +1,23 @@
 package com.gallery.android.gallery;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -23,17 +25,23 @@ import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
 public class FileLoaderJTest {
-    @Rule
-    public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+    private ActivityTestRule<MainActivity> activityTestRule;
 
-    @BeforeClass
-    public static void setUpClass() {
-        TestHelper.createFile("test1.png");
-        TestHelper.createFile("test2.png");
-    }
+    @Rule
+    public final TestRule chain = RuleChain
+            .outerRule(GrantPermissionRule.grant(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            .around(activityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    TestHelper.createFile("test1.png");
+                    TestHelper.createFile("test2.png");
+                }
+            });
 
     @AfterClass
-    public static void tearDownClass() throws IOException {
+    public static void tearDownClass() {
         TestHelper.deleteFile("test1.png");
         TestHelper.deleteFile("test2.png");
     }
@@ -47,12 +55,10 @@ public class FileLoaderJTest {
         assertFalse(paths.isEmpty());
         ImageContainer iC = new ImageContainer(paths.get(0));
         assert(iC.getPath().compareTo(paths.get(0)) != 0);
-        //assertNotNull(iC.getImage());
         RecyclerView rView=activityTestRule.getActivity().recyclerImages;
         for (int childCount = rView.getChildCount(), i = 0; i < childCount; ++i) {
             AdapterImages.ViewHolderImages holder = (AdapterImages.ViewHolderImages) rView.getChildViewHolder(rView.getChildAt(i));
             assertNotNull(holder.photo.getDrawable());
-
         }
     }
 

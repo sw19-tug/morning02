@@ -27,5 +27,6 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                 startActivity(shareContentActivity);
             }
         });
+        Button cropButton =(Button)findViewById(R.id.button_crop);
     }
 }

@@ -15,7 +15,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
-        String path = getIntent().getExtras().getString("path");
+        final String path = getIntent().getExtras().getString("path");
         setContentView(R.layout.activity_image_fullscreen);
         ImageView image = findViewById(R.id.fullscreen_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
@@ -33,6 +33,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
         cropButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 Intent cropImageActivity = new Intent(ImageFullscreenActivity.this, CropImageActivity.class);
+                cropImageActivity.putExtra("path", path);
                 startActivity(cropImageActivity);
             }
         });

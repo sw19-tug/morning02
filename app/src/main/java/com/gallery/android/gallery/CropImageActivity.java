@@ -16,10 +16,8 @@ public class CropImageActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         String path = getIntent().getExtras().getString("path");
-        setContentView(R.layout.activity_image_crop);
-        ImageView image = findViewById(R.id.crop_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
-        image.setImageBitmap(bitmap);
+
     }
 
 }

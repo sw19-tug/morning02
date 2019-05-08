@@ -21,4 +21,22 @@
         android:text="Share"
         android:textSize="24sp"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/shareButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Share"
+        android:textSize="24sp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exportButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Export"
+        android:textSize="24sp"/>
+
 </RelativeLayout>

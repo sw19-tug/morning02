@@ -38,6 +38,7 @@ public class CropImageActivity extends AppCompatActivity {
             cropIntent.putExtra("outputX", 256);
             cropIntent.putExtra("outputY", 256);
             cropIntent.putExtra("return-data", true);
+            cropIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivityForResult(cropIntent, PIC_CROP);
 
         }

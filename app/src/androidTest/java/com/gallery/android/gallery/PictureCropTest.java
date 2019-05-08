@@ -10,6 +10,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -44,7 +45,7 @@ public class PictureCropTest {
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.cropButton)).perform(click());
 
-        intended(hasComponent("com.android.camera.action.CROP"));
+        intended(hasExtraWithKey("crop"));
     }
 
 }

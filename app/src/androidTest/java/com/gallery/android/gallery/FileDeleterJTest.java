@@ -15,6 +15,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertNotEquals;
 
@@ -61,5 +66,15 @@ public class FileDeleterJTest {
 
         //delete the test file
         assertNotEquals(false, fd.delete(path));
+    }
+
+    @Test
+    public void testButtonVisible() throws InterruptedException {
+
+        onView(withId(R.id.activity_main)).perform(click());
+
+        Thread.sleep(100);
+
+        onView(withId(R.id.delete_button)).check(matches(isDisplayed()));
     }
 }

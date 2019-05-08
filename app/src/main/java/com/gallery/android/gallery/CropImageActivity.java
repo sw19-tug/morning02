@@ -1,11 +1,14 @@
 package com.gallery.android.gallery;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CropImageActivity extends AppCompatActivity {
 
@@ -31,14 +38,27 @@ public class CropImageActivity extends AppCompatActivity {
         try {
 
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            String pathName=path.toString();
+            File file = new File(path.toString());
+            String filename = file.getName();
+            System.out.println(filename);
             cropIntent.setDataAndType(path, "image/*");
             cropIntent.putExtra("crop", "true");
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
             cropIntent.putExtra("outputX", 256);
             cropIntent.putExtra("outputY", 256);
+            cropIntent.putExtra("fileName",filename);
             cropIntent.putExtra("return-data", true);
             cropIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            setResult(Activity.RESULT_OK, cropIntent);
+            SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.clear();
+
+            editor.putString("filename",filename);
+
+            editor.commit();
             startActivityForResult(cropIntent, PIC_CROP);
 
         }
@@ -50,9 +70,43 @@ public class CropImageActivity extends AppCompatActivity {
         }
 
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bitmap thePic = data.getExtras().getParcelable("data");
+        SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
+        String filen="h";
+        String filename = settings.getString("filename",filen);
+        savebitmap(thePic,filename);
+        Intent mainIntent = new Intent(CropImageActivity.this, MainActivity.class);
+        startActivity(mainIntent);
+
+    }
+    private String savebitmap(Bitmap bmp,String name) {
+        String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        OutputStream outStream = null;
+        // String temp = null;
+        File file = new File(extStorageDirectory, timeStamp+"Crop" + name );
+
+        if (file.exists()) {
+            file.delete();
+            file = new File(extStorageDirectory, timeStamp+"Crop" + name );
 
 
+        }
 
+        try {
+            outStream = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return timeStamp;
     }
 
 }

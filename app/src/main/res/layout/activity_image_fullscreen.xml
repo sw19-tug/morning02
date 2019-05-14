@@ -21,4 +21,13 @@
         android:text="Share"
         android:textSize="24sp"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tagsButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="Tags"
+        android:textSize="24sp"/>
+
 </RelativeLayout>

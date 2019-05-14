@@ -2,12 +2,15 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.os.Environment;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.io.File;
@@ -27,12 +30,16 @@ import static org.junit.Assert.assertNotEquals;
 @RunWith(AndroidJUnit4.class)
 public class FileDeleterJTest {
     @Rule
-    public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-    @Rule
-    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
+    public final TestRule chain = RuleChain
+            .outerRule(GrantPermissionRule.grant(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            .around(new IntentsTestRule<MainActivity>(MainActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    TestHelper.createFile("testClick.png");
+                }
+            });
     @Test
     public void testPathsAreRetrieved(){
         FileDeleter fd=new FileDeleter();
@@ -72,7 +79,7 @@ public class FileDeleterJTest {
     @Test
     public void testButtonVisible() throws InterruptedException {
 
-        onView(withId(R.id.activity_main)).perform(click());
+        onView(withId(R.id.idImage)).perform(click());
 
         Thread.sleep(100);
 
@@ -81,10 +88,25 @@ public class FileDeleterJTest {
 
     @Test
      public void dialog() throws InterruptedException {
-        onView(withId(R.id.activity_main)).perform(click());
+        onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
         onView(withId(R.id.delete_btn)).perform(click());
         onView(withText("Are you sure?")).check(matches(isDisplayed()));
+    }
 
+    @Test
+    public void testDialogClick() throws InterruptedException {
+        onView(withId(R.id.idImage)).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.delete_btn)).perform(click());
+        Thread.sleep(100);
+        onView(withText("no")).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.delete_btn)).perform(click());
+        Thread.sleep(100);
+        onView(withText("yes")).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.activity_main)).check(matches(isDisplayed()));
     }
 }

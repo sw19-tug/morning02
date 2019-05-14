@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -28,21 +30,24 @@ public class CropImageActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         String path = getIntent().getExtras().getString("path");
-        performCrop(Uri.fromFile(new File(path)));
+        performCrop(path);
+
 
     }
 
-    protected void performCrop(Uri path){
+    protected void performCrop(String path){
         final int PIC_CROP = 2;
 
         try {
 
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             String pathName=path.toString();
             File file = new File(path.toString());
             String filename = file.getName();
             System.out.println(filename);
-            cropIntent.setDataAndType(path, "image/*");
+            Uri uri = FileProvider.getUriForFile(CropImageActivity.this, BuildConfig.APPLICATION_ID + ".provider",new File(path));
+            cropIntent.setDataAndType(uri, "image/  *");
             cropIntent.putExtra("crop", "true");
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
@@ -73,13 +78,18 @@ public class CropImageActivity extends AppCompatActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bitmap thePic = data.getExtras().getParcelable("data");
-        SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
-        String filen="h";
-        String filename = settings.getString("filename",filen);
-        savebitmap(thePic,filename);
-        Intent mainIntent = new Intent(CropImageActivity.this, MainActivity.class);
-        startActivity(mainIntent);
+        if (resultCode!=RESULT_OK) {
+            this.finish();
+        }
+        else {
+            Bitmap thePic = data.getExtras().getParcelable("data");
+            SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
+            String filen = "h";
+            String filename = settings.getString("filename", filen);
+            savebitmap(thePic, filename);
+            Intent mainIntent = new Intent(CropImageActivity.this, MainActivity.class);
+            startActivity(mainIntent);
+        }
 
     }
     private String savebitmap(Bitmap bmp,String name) {

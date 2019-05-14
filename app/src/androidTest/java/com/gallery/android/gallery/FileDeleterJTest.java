@@ -20,6 +20,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertNotEquals;
 
@@ -75,6 +76,15 @@ public class FileDeleterJTest {
 
         Thread.sleep(100);
 
-        onView(withId(R.id.delete_button)).check(matches(isDisplayed()));
+        onView(withId(R.id.delete_btn)).check(matches(isDisplayed()));
+    }
+
+    @Test
+     public void dialog() throws InterruptedException {
+        onView(withId(R.id.activity_main)).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withText("Are you sure?")).check(matches(isDisplayed()));
+
     }
 }

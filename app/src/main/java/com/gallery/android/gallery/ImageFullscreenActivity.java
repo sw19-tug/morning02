@@ -15,7 +15,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
-        String path = getIntent().getExtras().getString("path");
+        final String path = getIntent().getExtras().getString("path");
         setContentView(R.layout.activity_image_fullscreen);
         ImageView image = findViewById(R.id.fullscreen_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
@@ -27,5 +27,19 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                 startActivity(shareContentActivity);
             }
         });
+
+        Button deleteBtn = (Button)findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //do something
+
+                FileDeleter delete = new FileDeleter();
+                delete.delete(path);
+
+            }
+        });
+
+
     }
 }

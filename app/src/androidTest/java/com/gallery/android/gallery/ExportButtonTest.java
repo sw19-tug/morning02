@@ -30,6 +30,9 @@ package com.gallery.android.gallery;
 public class ExportButtonTest {
 
 
+    String files[] = {"test1.png", "test2.png", "test3.png"};
+
+
     private ActivityTestRule<MainActivity> activityTestRule;
 
     @Rule
@@ -40,8 +43,11 @@ public class ExportButtonTest {
             .around(activityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    TestHelper.createFile("test1.png");
-                    TestHelper.createFile("test2.png");
+
+                    for (int i = 0; i < files.length; i++)
+                    {
+                        TestHelper.createFile(files[i]);
+                    }
                 }
             });
 
@@ -75,7 +81,7 @@ public class ExportButtonTest {
     public void exportAllImages() throws Throwable, InterruptedException {
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         final AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
-        for (int i = 0; i < adapter_images.getItemCount(); i++ ) {
+        for (int i = 0; i < 3; i++ ) {
             runOnUiThread(new MyRunnable(recycler_view, i) {
                 public void run() {
                     this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
@@ -97,10 +103,9 @@ public class ExportButtonTest {
 
         onView(withId(R.id.exportButton)).perform(click());
 
-        String[] dirs = {"test1.png", "test2.png"};
         String export_phase = "_export.zip";
 
-        File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + dirs[number] + export_phase);
+        File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +"/"+ files[number] + export_phase);
 
         assertTrue((f.exists() && f.isFile()));
         assertTrue(((int)f.length()) >= size);

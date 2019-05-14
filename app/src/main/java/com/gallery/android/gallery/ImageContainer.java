@@ -12,7 +12,7 @@ public class ImageContainer implements ImageContainerInterface{
     private String path;
     private String filename;
     private Date date;
-    int size;
+    long size;
 
     enum PictureComperator implements Comparator<ImageContainer> {
         NAME {
@@ -23,7 +23,7 @@ public class ImageContainer implements ImageContainerInterface{
 
         SIZE {
             public int compare(ImageContainer p1, ImageContainer p2) {
-                return Integer.compare(p1.getSize(), p2.getSize());
+                return Long.compare(p1.getSize(), p2.getSize());
 
             }
         },
@@ -49,7 +49,7 @@ public class ImageContainer implements ImageContainerInterface{
         this.date = new Date();
     }
 
-    public ImageContainer(String path, Date date, int size) {
+    public ImageContainer(String path, Date date, long size) {
         this.date = date;
         this.path = path;
         this.size = size;
@@ -98,7 +98,7 @@ public class ImageContainer implements ImageContainerInterface{
 
     public void setFilename(String name){this.filename = name;}
 
-    int getSize() {
+    long getSize() {
         return size;
     }
 

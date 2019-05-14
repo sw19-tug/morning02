@@ -50,7 +50,7 @@ public class FileLoaderJTest {
     public void testPathsAreRetrieved(){
         FileLoader f=new FileLoader();
         assertNotNull(f);
-        List<String> paths=f.getImagesPaths();
+        List<String> paths=f.getImagesInformation();
         assertNotNull(paths);
         assertFalse(paths.isEmpty());
         ImageContainer iC = new ImageContainer(paths.get(0));
@@ -69,7 +69,7 @@ public class FileLoaderJTest {
 
         String absolutePath = path + "/" + name;
         FileLoader f=new FileLoader();
-        List<String> paths=f.getImagesPaths();
+        List<String> paths=f.getImagesInformation();
         boolean error = true;
         for (String currentPath : paths){
             if (absolutePath.compareTo(currentPath) == 0){
@@ -112,7 +112,7 @@ public class FileLoaderJTest {
         String path = subfolderpath + "/" + name;
         FileLoader f=new FileLoader();
 
-        List<String> paths=f.getImagesPaths();
+        List<String> paths=f.getImagesInformation();
         boolean error = true;
         for (String currentPath : paths){
             if (path.compareTo(currentPath) == 0){

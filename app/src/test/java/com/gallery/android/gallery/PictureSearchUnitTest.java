@@ -18,7 +18,7 @@ public class PictureSearchUnitTest {
         imageList.add(new ImageContainer("somepath",new Date(),1000,"ducky"));
         imageList.add(new ImageContainer("somepath",new Date(),2000,"donald duck"));
         imageList.add(new ImageContainer("somepath",new Date(),1000,"tick"));
-        imageList.add(new ImageContainer("somepath",new Date(),1500,"trick"));
+        imageList.add(new ImageContainer("/path/trick",new Date(),1500,"trick"));
         imageList.add(new ImageContainer("somepath",new Date(),2300,"track"));
         imageList.add(new ImageContainer("somepath",new Date(),5000,"dagobert duck"));
         imageList.add(new ImageContainer("somepath",new Date(),2400,"daisy duck"));
@@ -32,8 +32,8 @@ public class PictureSearchUnitTest {
     @Test
     public void findPicture(){
 
-        ImageContainer image = adapter.searchPictures("trick");
-        assertEquals(image.getFilename(),"trick");
+        String image = adapter.searchPictures("trick");
+        assertEquals(image,"/path/trick");
     }
 
 

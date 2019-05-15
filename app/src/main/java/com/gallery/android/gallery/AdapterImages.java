@@ -51,13 +51,12 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         return listImages;
     }
 
-    public ImageContainer searchPictures(String name){
+    public String searchPictures(String name){
         for(ImageContainer image : listImages)
         {
             if(image.getFilename().equals(name))
             {
-                System.out.println(name + "=" + image.getFilename());
-                return image;
+                return image.getPath();
             }
         }
         return null;

@@ -64,7 +64,8 @@ public class MediaStoreDataLoader {
                 while (cursor.moveToNext()) {
 
                     String path = cursor.getString(path_col_num);
-                    String file_name = path.substring(path.lastIndexOf("/") + 1);
+                    String file_name =  path.substring(path.lastIndexOf("/") + 1);
+                    file_name = file_name.substring(0, file_name.lastIndexOf("."));
 //                    Date date_modified = new Date(Long.parseLong(cursor.getString(date_modified_col_num)));
                     Date date_taken = new Date(Long.parseLong(cursor.getString(date_taken_col_num)));
                     long image_size = Long.parseLong(cursor.getString(size_col_num));

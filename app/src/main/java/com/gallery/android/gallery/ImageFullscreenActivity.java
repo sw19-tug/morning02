@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.IOException;
+
 public class ImageFullscreenActivity extends AppCompatActivity {
 
     @Override
@@ -29,12 +31,26 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                 startActivity(shareContentActivity);
             }
         });
+
         Button cropButton =(Button)findViewById(R.id.cropButton);
         cropButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 Intent cropImageActivity = new Intent(ImageFullscreenActivity.this, CropImageActivity.class);
                 cropImageActivity.putExtra("path", path);
                 startActivity(cropImageActivity);
+            }
+        });
+
+
+        Button export_button= (Button)findViewById(R.id.exportButton);
+        export_button.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                String[] paths = {path};
+                try {
+                    ExportImages.compressImage(paths, path+"_export.zip");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

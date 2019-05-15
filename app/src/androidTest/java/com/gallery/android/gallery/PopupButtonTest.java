@@ -14,6 +14,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class PopupButtonTest {
 
@@ -37,6 +38,6 @@ public class PopupButtonTest {
     public void cropButtonExists(){
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
-        onView(withId(R.id.cropButton)).check(matches(isDisplayed()));
+        onView(withText("Crop")).check(matches(isDisplayed()));
     }
 }

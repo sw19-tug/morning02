@@ -19,6 +19,7 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class ShareButtonTest {
@@ -44,6 +45,7 @@ public class ShareButtonTest {
     public void testDialogIsShown(){
 
         onView(withId(R.id.idImage)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
         onView(withId(R.id.shareButton)).perform(click());
 
         intended(hasComponent(ShareContentActivity.class.getName()));

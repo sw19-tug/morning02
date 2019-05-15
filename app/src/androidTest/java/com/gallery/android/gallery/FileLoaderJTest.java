@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -53,7 +54,7 @@ public class FileLoaderJTest {
         List<String> paths=f.getImagesInformation();
         assertNotNull(paths);
         assertFalse(paths.isEmpty());
-        ImageContainer iC = new ImageContainer(paths.get(0));
+        ImageContainer iC = new ImageContainer(paths.get(0),new Date(),1000,"dummyfile");
         assert(iC.getPath().compareTo(paths.get(0)) != 0);
         RecyclerView rView=activityTestRule.getActivity().recyclerImages;
         for (int childCount = rView.getChildCount(), i = 0; i < childCount; ++i) {

@@ -75,17 +75,17 @@ public class MediaStoreDataLoader {
                     Bitmap thumb_nail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path),
                             256, 256);
 
-                    ImageContainer image_container = new ImageContainer();
 
-                    image_container.setPath(path);
-                    image_container.setFilename(file_name);
-//                    image_container.setDate(date_modified);
-                    image_container.setDate(date_taken);
-                    image_container.setSize(image_size);
-                    image_container.setHeight(height);
-                    image_container.setWidth(width);
-                    image_container.setImage(thumb_nail);
-                    image_container.setOrientation(orientation);
+
+                    ImageContainer image_container = new ImageContainer(
+                            thumb_nail,
+                            path,
+                            file_name,
+                            date_taken,
+                            height,
+                            width,
+                            image_size,
+                            orientation);
 
                     image_list.add(image_container);
                 }

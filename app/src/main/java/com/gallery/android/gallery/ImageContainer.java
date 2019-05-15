@@ -46,33 +46,44 @@ public class ImageContainer implements ImageContainerInterface{
         }
     }
 
-    public ImageContainer()
-    {
-        this.image = null;
-        this.path = "";
-        this.date = new Date();
-    }
 
-    public ImageContainer(String path, Date date, long size) {
+
+    public ImageContainer(String path, Date date, long size, String filename) {
         this.date = date;
         this.path = path;
         this.size = size;
+        this.filename = filename;
     }
 
-    public ImageContainer(String path)
+   /* public ImageContainer(String path)
     {
         this.image = BitmapFactory.decodeFile(path);
         this.path = path;
         this.date = new Date();
         this.filename = path.substring(path.lastIndexOf("/")+1);
-    }
+    }*/
+   public ImageContainer(
+            Bitmap image,
+            String path,
+            String filename,
+            Date date,
+            int height,
+            int width,
+            long size,
+            String orientation) {
 
-    public ImageContainer(String path,Date date, String name)
-    {
-        this.path = path;
-        this.date = date;
-        this.filename = name;
-    }
+       this.image = image;
+       this.path = path;
+       this.filename = filename;
+       this.date = date;
+       this.height = height;
+       this.width = width;
+       this.size = size;
+       this.orientation = orientation;
+   }
+
+
+
 
     public Bitmap getImage() {
         return image;

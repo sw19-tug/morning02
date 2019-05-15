@@ -23,7 +23,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         image.setImageBitmap(bitmap);
 
-
+        /*
         Button shareButton= (Button)findViewById(R.id.shareButton);
         shareButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
@@ -53,6 +53,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                 }
             }
         });
+        */
 
     }
 }

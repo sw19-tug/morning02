@@ -1,5 +1,6 @@
 package com.gallery.android.gallery;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
@@ -81,7 +82,8 @@ public class FileLoader implements FileLoaderInterface {
     }
 
 
-    public ArrayList<ImageContainer> loadImageContainers(){
+    public ArrayList<ImageContainer> loadImageContainers(Context context){
+        /*
         List<String> paths=this.getImagesInformation();
         ArrayList<ImageContainer> imageList = new ArrayList<ImageContainer>();
         for(int i = 0; i < paths.size(); i++ )
@@ -93,9 +95,10 @@ public class FileLoader implements FileLoaderInterface {
                 e.printStackTrace();
             }
             File file = new File(paths.get(i));
-
+            System.out.println(paths.get(i));
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
             String datestring = exif.getAttribute(ExifInterface.TAG_DATETIME);
+            System.out.println(datestring);
             try{
                 Date date = simpleDateFormat.parse(datestring);
                 imageList.add(new ImageContainer(paths.get(i), date, file.length()));
@@ -107,6 +110,8 @@ public class FileLoader implements FileLoaderInterface {
             }
 
         }
-        return imageList;
+        return imageList;*/
+        MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
+        return loader.parseAllImages();
     }
 }

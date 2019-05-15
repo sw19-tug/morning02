@@ -12,7 +12,11 @@ public class ImageContainer implements ImageContainerInterface{
     private String path;
     private String filename;
     private Date date;
-    long size;
+    private int height;
+    private int width;
+    private long size;
+    private String orientation;
+
 
     enum PictureComperator implements Comparator<ImageContainer> {
         NAME {
@@ -100,6 +104,34 @@ public class ImageContainer implements ImageContainerInterface{
 
     long getSize() {
         return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public String getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(String orientation) {
+        this.orientation = orientation;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     public static Comparator<ImageContainer> decending(final Comparator<ImageContainer> other) {

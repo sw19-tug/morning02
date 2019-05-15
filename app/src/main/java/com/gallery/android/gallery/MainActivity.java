@@ -3,7 +3,10 @@ package com.gallery.android.gallery;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -79,13 +82,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void buildRecycler() {
+
         recyclerImages = findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
-        final ArrayList<ImageContainer> imageList = f.loadImageContainers();
+        final ArrayList<ImageContainer> image_list = f.loadImageContainers(this);
 
-        AdapterImages adapter = new AdapterImages(imageList);
+        AdapterImages adapter = new AdapterImages(image_list);
 
         adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
             @Override
@@ -93,18 +97,18 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(position);
                 if (selection_mode) {
 
-                    if (selection_list.contains(imageList.get(position))) {
-                        selection_list.remove(imageList.get(position));
+                    if (selection_list.contains(image_list.get(position))) {
+                        selection_list.remove(image_list.get(position));
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
                     } else {
-                        selection_list.add(imageList.get(position));
+                        selection_list.add(image_list.get(position));
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                     }
 
                     if (selection_list.isEmpty())
                         selection_mode = false;
                 } else {
-                    String image_path = imageList.get(position).getPath();
+                    String image_path = image_list.get(position).getPath();
                     System.out.println(image_path);
                     Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
                     fullscreenImageIntent.putExtra("path", image_path);
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(int position, View v) {
                 if (!selection_mode) {
-                    selection_list.add(imageList.get(position));
+                    selection_list.add(image_list.get(position));
                     selection_mode = true;
                     v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                 }

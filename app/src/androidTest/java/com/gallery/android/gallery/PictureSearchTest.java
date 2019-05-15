@@ -36,15 +36,15 @@ public class PictureSearchTest {
             .around(activityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    TestHelper.createFile("test1.png");
-                    TestHelper.createFile("test2.png");
+                    TestHelper.createFile("test1.jpg");
+                    TestHelper.createFile("test2.jpg");
                 }
             });
 
     @AfterClass
     public static void tearDownClass() {
-        TestHelper.deleteFile("test1.png");
-        TestHelper.deleteFile("test2.png");
+        TestHelper.deleteFile("test1.jpg");
+        TestHelper.deleteFile("test2.jpg");
     }
 
     @Test
@@ -54,14 +54,14 @@ public class PictureSearchTest {
 
     @Test
     public void testSearchPictures() {
-        String name = "test1.png";
+        String name = "test1.jpg";
 
         final EditText textView = activityTestRule.getActivity().findViewById(R.id.search_bar);
         try {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    textView.setText("test1.png");
+                    textView.setText("test1.jpg");
                 }
             });
         } catch (java.lang.Throwable e) {
@@ -78,7 +78,7 @@ public class PictureSearchTest {
             e.printStackTrace();
         }
         String search = textView.getText().toString();
-        assertEquals("Found: test1.png", search);
+        assertEquals("Found: test1.jpg", search);
 
         TestHelper.deleteFile(name);
     }

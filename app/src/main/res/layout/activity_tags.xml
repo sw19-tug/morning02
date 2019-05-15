@@ -18,6 +18,7 @@
         android:background="@color/cardview_dark_background"
         android:backgroundTint="#6200EE"
         android:textColor="@color/white"
+        android:onClick="click_add_tag"
         />
 
     <android.support.v7.widget.RecyclerView
@@ -25,5 +26,8 @@
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+
 
 </LinearLayout>

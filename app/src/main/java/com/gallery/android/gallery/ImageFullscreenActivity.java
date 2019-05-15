@@ -45,6 +45,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         FileDeleter delete = new FileDeleter();
                         delete.delete(path);
+                        ImageFullscreenActivity.this.finish();
                         dialog.dismiss();
                     }
                 });

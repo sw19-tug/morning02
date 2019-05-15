@@ -28,6 +28,11 @@
         <activity android:name=".ShareContentActivity">
 
 
+    </activity>
+
+        <activity android:name=".TagActivity">
+
+
         </activity>
 
     </application>

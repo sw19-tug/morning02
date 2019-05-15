@@ -27,5 +27,14 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                 startActivity(shareContentActivity);
             }
         });
+
+        Button tagsButton = (Button)findViewById(R.id.tagsButton);
+
+        tagsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent tagsContentActivity = new Intent(ImageFullscreenActivity.this, TagActivity.class);
+                startActivity(tagsContentActivity);
+            }
+        });
     }
 }

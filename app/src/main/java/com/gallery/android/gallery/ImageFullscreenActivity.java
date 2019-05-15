@@ -1,10 +1,14 @@
 package com.gallery.android.gallery;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,15 +19,52 @@ import java.io.IOException;
 
 public class ImageFullscreenActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
     String path="";
+    int index = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
         path = getIntent().getExtras().getString("path");
+        index = getIntent().getExtras().getInt("index");
         setContentView(R.layout.activity_image_fullscreen);
         ImageView image = findViewById(R.id.fullscreen_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         image.setImageBitmap(bitmap);
+
+        Button deleteBtn = (Button)findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //do something
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ImageFullscreenActivity.this);
+                builder.setTitle("Confirm");
+                builder.setMessage("Are you sure?");
+
+                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        FileDeleter delete = new FileDeleter();
+                        delete.delete(path);
+
+                        Intent returnIntent = new Intent();
+                        int deletePos = index;
+                        returnIntent.putExtra("deletePos",deletePos);
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        ImageFullscreenActivity.this.finish();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();alert.show();
+            }
+        });
 
 
     }

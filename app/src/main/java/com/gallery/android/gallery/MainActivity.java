@@ -1,6 +1,7 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,7 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static final int STORAGE_READ_REQUEST = 1;
-
+    public static final int FULLSCREEN_REQUEST = 2;
     RecyclerView recyclerImages;
 
     public boolean selection_mode = false;
@@ -109,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println(image_path);
                     Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
                     fullscreenImageIntent.putExtra("path", image_path);
-                    startActivity(fullscreenImageIntent);
+                    fullscreenImageIntent.putExtra("index", position);
+                    startActivityForResult(fullscreenImageIntent,FULLSCREEN_REQUEST);
+
                 }
             }
         });
@@ -125,6 +128,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         recyclerImages.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == FULLSCREEN_REQUEST) {
+            if(resultCode == Activity.RESULT_OK){
+                int result=data.getIntExtra("deletePos",-1);
+                if(result > -1)
+                {
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    adapterImages.getListImages().remove(result);
+                    adapterImages.notifyItemRemoved(result);
+                    adapterImages.notifyItemRangeChanged(result,adapterImages.getListImages().size());
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
     }
 
     private void onSearchClicked(AdapterImages adapter) {

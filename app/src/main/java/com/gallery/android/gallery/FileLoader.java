@@ -29,6 +29,7 @@ public class FileLoader implements FileLoaderInterface {
         this.extentions.add("png");
         this.extentions.add("bmp");
         this.extentions.add("gif");
+        this.extentions.add("jpeg");
     }
     private List<Bitmap> bitmapList;
     private List<String> extentions;

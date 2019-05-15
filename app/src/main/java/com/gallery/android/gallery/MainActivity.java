@@ -158,13 +158,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSearchClicked(AdapterImages adapter) {
         EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
-        System.out.println(searchbar_input.getText().toString());
-        String image_path = adapter.searchPictures(searchbar_input.getText().toString());
 
-        if (image_path != null) {
-            Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-            fullscreenImageIntent.putExtra("path", image_path);
-            startActivity(fullscreenImageIntent);
+        AdapterImages adapterImages_sort = (AdapterImages) recyclerImages.getAdapter();
+        if(searchbar_input.getText().toString().equals("asc")){
+            adapterImages_sort.sortByName(AdapterImages.SortOrder.ASCENDING);
+            refreshView();
+        }
+        if(searchbar_input.getText().toString().equals("desc")){
+            adapterImages_sort.sortByName(AdapterImages.SortOrder.DESCENDING);
+            refreshView();
+        }
+        else {
+
+            String image_path = adapter.searchPictures(searchbar_input.getText().toString());
+
+            if (image_path != null) {
+                Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+                fullscreenImageIntent.putExtra("path", image_path);
+                startActivity(fullscreenImageIntent);
+            }
         }
     }
 
@@ -180,5 +192,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void refreshView()
+    {
+        ((AdapterImages)recyclerImages.getAdapter()).notifyDataSetChanged();
     }
 }

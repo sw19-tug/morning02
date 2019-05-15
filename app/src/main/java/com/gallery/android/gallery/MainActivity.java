@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -61,6 +63,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
+        case R.id.sort: {
+            //add the function to perform here
+            return (true);
+        }
+        case R.id.search:
+            EditText search_bar = findViewById(R.id.search_bar);
+            if (search_bar.getVisibility() == View.GONE)
+                search_bar.setVisibility(View.VISIBLE);
+            else
+                search_bar.setVisibility(View.GONE);
+            return true;
+    }
+        return(super.onOptionsItemSelected(item));
     }
 
     @Override

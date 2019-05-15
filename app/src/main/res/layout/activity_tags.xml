@@ -6,6 +6,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/add_tag"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Add new tag"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:background="@color/cardview_dark_background"
+        android:backgroundTint="#6200EE"
+        android:textColor="@color/white"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/TagsRecyclerId"
         android:scrollbars="vertical"

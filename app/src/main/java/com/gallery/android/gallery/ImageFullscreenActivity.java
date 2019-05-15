@@ -22,6 +22,8 @@ public class ImageFullscreenActivity extends AppCompatActivity {
         ImageView image = findViewById(R.id.fullscreen_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         image.setImageBitmap(bitmap);
+
+
         Button shareButton= (Button)findViewById(R.id.shareButton);
         shareButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
@@ -29,6 +31,16 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                 startActivity(shareContentActivity);
             }
         });
+
+        Button cropButton =(Button)findViewById(R.id.cropButton);
+        cropButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view) {
+                Intent cropImageActivity = new Intent(ImageFullscreenActivity.this, CropImageActivity.class);
+                cropImageActivity.putExtra("path", path);
+                startActivity(cropImageActivity);
+            }
+        });
+
 
         Button export_button= (Button)findViewById(R.id.exportButton);
         export_button.setOnClickListener(new View.OnClickListener(){
@@ -41,5 +53,6 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 }

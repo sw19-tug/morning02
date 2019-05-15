@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -111,7 +113,21 @@ public class FileLoader implements FileLoaderInterface {
 
         }
         return imageList;*/
+        List<String> paths = this.getImagesInformation();
+        ArrayList<ImageContainer> images = new ArrayList<>();
+
         MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
-        return loader.parseAllImages();
+
+        for (int index = 0; index < paths.size(); index++) {
+            ImageContainer image = loader.parseImage(paths.get(index));
+            if (image != null)
+            {
+                images.add(image);
+            }
+        }
+        return images;
+
+
+//        return loader.parseAllImages();
     }
 }

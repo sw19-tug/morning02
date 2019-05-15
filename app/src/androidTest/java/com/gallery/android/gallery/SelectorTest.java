@@ -57,23 +57,29 @@ public class SelectorTest {
         RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
 
         assertFalse(activityTestRule.getActivity().selection_mode);
+        if (res.getAdapter().getItemCount() > 0) {
+            runOnUiThread(new MyRunnable(res, 0) {
+                public void run() {
+                    this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
+                    try {
+                        sleep(100);
 
-        runOnUiThread(new MyRunnable(res, 0) {
-            public void run() {
-                this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
-                try {
-                    sleep(100);
-
-                } catch (InterruptedException ex1) {
-                    return;
+                    } catch (InterruptedException ex1) {
+                        return;
+                    }
                 }
-            }
-        });
-        assertTrue(activityTestRule.getActivity().selection_mode);
+            });
+            assertTrue(activityTestRule.getActivity().selection_mode);
+        }
     }
 
     @Test
     public void checkSelectedItemList() throws Throwable {
+
+        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (res.getAdapter().getItemCount() == 0)
+            return;
+
         checkLongPressSelection();
         MainActivity.class.getField("selection_list");
 
@@ -82,7 +88,6 @@ public class SelectorTest {
 
         ImageContainer image_container = img_container_list.get(0);
 
-        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         AdapterImages adapter = (AdapterImages)res.getAdapter();
 
         assertTrue(image_container.getPath().equals(adapter.getListImages().get(0).getPath()));
@@ -91,6 +96,10 @@ public class SelectorTest {
 
     @Test
     public void checkAddedToSelection() throws Throwable {
+        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (res.getAdapter().getItemCount() == 0)
+            return;
+
         checkLongPressSelection();
 
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
@@ -112,7 +121,6 @@ public class SelectorTest {
 
         ImageContainer image_container = img_container_list.get(1);
 
-        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         AdapterImages adapter = (AdapterImages)res.getAdapter();
 
         assertTrue(image_container.getPath().equals(adapter.getListImages().get(1).getPath()));
@@ -121,6 +129,11 @@ public class SelectorTest {
 
     @Test
     public void checkBackButton() throws Throwable {
+
+        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (res.getAdapter().getItemCount() == 0)
+            return;
+
         checkSelectedItemList();
         pressBack();
         assert(activityTestRule.getActivity().selection_list.size() == 0);
@@ -128,6 +141,10 @@ public class SelectorTest {
 
     @Test
     public void testDeselection() throws Throwable {
+        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (res.getAdapter().getItemCount() == 0)
+            return;
+
         checkAddedToSelection();
 
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
@@ -157,6 +174,10 @@ public class SelectorTest {
 
     @Test
     public void testDoubleLongClickSelection() throws Throwable {
+        RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (res.getAdapter().getItemCount() == 0)
+            return;
+
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
 
         runOnUiThread(new MyRunnable(rec_view, 1) {
@@ -181,7 +202,11 @@ public class SelectorTest {
 
     @Test
     public void checkSelectionModeDisabled() throws Throwable{
+
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (rec_view.getAdapter().getItemCount() == 0)
+            return;
+
         runOnUiThread(new MyRunnable(rec_view, 1) {
             public void run() {
                 this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performLongClick();
@@ -201,6 +226,8 @@ public class SelectorTest {
     @Test
     public void checkIfRecyclerHasRelativeLayout() {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (rec_view.getAdapter().getItemCount() == 0)
+            return;
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
         assertTrue(layout.getResources().getResourceEntryName(layout.getId()).equals("ImageLayout"));
     }
@@ -208,7 +235,10 @@ public class SelectorTest {
 
     @Test
     public void checkIfRelativeLayoutHasShape() {
+
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (rec_view.getAdapter().getItemCount() == 0)
+            return;
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
         View view = layout.getChildAt(1);
         assertTrue(layout.getResources().getResourceEntryName(view.getId()).equals("SelectedIcon"));
@@ -216,8 +246,10 @@ public class SelectorTest {
 
     @Test
     public void checkIfSelectedIconVisible() throws Throwable {
-        checkLongPressSelection();
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (rec_view.getAdapter().getItemCount() == 0)
+            return;
+        checkLongPressSelection();
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
         ImageView icon = layout.findViewById(R.id.SelectedIcon);
         assertTrue(icon.getVisibility() == View.VISIBLE);

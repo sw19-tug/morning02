@@ -1,6 +1,8 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -9,6 +11,8 @@ import android.view.inputmethod.BaseInputConnection;
 import android.widget.EditText;
 
 import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;

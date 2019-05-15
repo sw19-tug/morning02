@@ -81,9 +81,10 @@ public class ExportButtonTest {
         Log.e("this","export");
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         final AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
-        int n=adapter_images.getItemCount();
-        Log.e("export n= ",n)
+        Integer n=adapter_images.getItemCount();
+        Log.e("export n= ",n.toString());
         for (int i = n-1; i >n-4; i-- ) {
+            Log.e("export mira i=",Integer.toString(i));
             runOnUiThread(new MyRunnable(recycler_view, i) {
                 public void run() {
                     this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
@@ -96,7 +97,7 @@ public class ExportButtonTest {
             });
 
             Log.e("this","export2");
-            checkExportImage(3-(i-(n-1)), adapter_images.getListImages().get(i).size);
+            checkExportImage(3+(i-(n-1))-1, adapter_images.getListImages().get(i).size);
         }
     }
 

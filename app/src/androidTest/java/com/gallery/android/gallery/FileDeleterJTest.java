@@ -125,9 +125,11 @@ public class FileDeleterJTest {
         onView(withId(R.id.delete_btn)).perform(click());
         Thread.sleep(100);
         onView(withText("yes")).perform(click());
-        String afterImagePath = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getPath();
-        assertEquals(firstImagePath,afterImagePath);
+        AdapterImages adapterImages = ((AdapterImages)rView.getAdapter());
+        if(!adapterImages.getListImages().isEmpty())
+        {
+            String afterImagePath = adapterImages.getListImages().get(0).getPath();
+            assertNotEquals(firstImagePath,afterImagePath);
+        }
     }
-
-
 }

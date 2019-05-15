@@ -1,5 +1,6 @@
 package com.gallery.android.gallery;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         final String path = getIntent().getExtras().getString("path");
+        final int index = getIntent().getExtras().getInt("index");
         setContentView(R.layout.activity_image_fullscreen);
         ImageView image = findViewById(R.id.fullscreen_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
@@ -45,6 +48,11 @@ public class ImageFullscreenActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         FileDeleter delete = new FileDeleter();
                         delete.delete(path);
+
+                        Intent returnIntent = new Intent();
+                        int deletePos = index;
+                        returnIntent.putExtra("deletePos",deletePos);
+                        setResult(Activity.RESULT_OK,returnIntent);
                         ImageFullscreenActivity.this.finish();
                         dialog.dismiss();
                     }

@@ -26,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.googlecode.eyesfree.utils.LogUtils.TAG;
 
 //Code was parially taken from https://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
@@ -48,14 +49,17 @@ public class PictureCropTest {
     @Test
     public void testButtonsVisible() {
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.cropButton)).check(matches(isDisplayed()));
+        onView(withId(R.id.popupMenu)).perform(click());
+        onView(withText("Crop")).check(matches(isDisplayed()));
     }
 
     @Test
     public void testDialogIsShown() {
         //Intents.init();
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.cropButton)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        onView(withText("Crop")).perform(click());;
+
 
         intended(hasComponent(CropImageActivity.class.getName()));
         intended(hasAction("com.android.camera.action.CROP"));

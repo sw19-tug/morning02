@@ -25,7 +25,9 @@
 
 
         </activity>
+        <activity android:name=".ShareContentActivity">
 
+        </activity>
         <activity android:name=".CropImageActivity">
 
 

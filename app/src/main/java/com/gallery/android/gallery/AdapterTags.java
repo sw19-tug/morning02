@@ -39,7 +39,9 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
         Tags actual_tag = tags_.get(position);
 
-        holder.tag_name.setText(actual_tag.getName());
+        TextView textView = holder.tag_name;
+
+        textView.setText(actual_tag.getName());
         holder.tag_name.setId(position);
     }
 
@@ -51,7 +53,7 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
     public class ViewHolderTags extends RecyclerView.ViewHolder {
 
-        final TextView tag_name;
+        public TextView tag_name;
 
         ViewHolderTags(View tagview) {
             super(tagview);

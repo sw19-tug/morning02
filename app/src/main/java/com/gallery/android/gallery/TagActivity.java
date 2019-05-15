@@ -26,8 +26,7 @@ public class TagActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tags);
 
 
-        tags_.addAll(Tags.createTagsList(5));
-
+        tags_.addAll(Tags.createTagsList());
     buildRecycler();
 
 

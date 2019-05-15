@@ -8,6 +8,7 @@ package com.gallery.android.gallery;
         import android.support.test.rule.ActivityTestRule;
         import android.support.test.rule.GrantPermissionRule;
         import android.support.v7.widget.RecyclerView;
+        import android.util.Log;
 
 
         import org.junit.Rule;
@@ -16,6 +17,7 @@ package com.gallery.android.gallery;
         import org.junit.rules.TestRule;
 
         import java.io.File;
+        import java.util.logging.Logger;
 
         import static android.support.test.espresso.Espresso.onView;
         import static android.support.test.espresso.action.ViewActions.click;
@@ -23,6 +25,7 @@ package com.gallery.android.gallery;
         import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
         import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
         import static android.support.test.espresso.matcher.ViewMatchers.withId;
+        import static android.support.test.espresso.matcher.ViewMatchers.withText;
         import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
         import static junit.framework.TestCase.assertTrue;
 
@@ -31,7 +34,6 @@ public class ExportButtonTest {
 
 
     String files[] = {"test1.png", "test2.png", "test3.png"};
-
 
     private ActivityTestRule<MainActivity> activityTestRule;
 
@@ -66,22 +68,22 @@ public class ExportButtonTest {
                     }
                 }
             });
+            System.out.println("this yes");
+            Log.e("this","xes");
             onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
         }
     }
 
-    @Test
-    public void testExportButton() throws  Throwable {
-        testClick();
-        onView(withId(R.id.fullscreen_relative_layout)).check(matches(hasChildCount(3)));
 
-    }
 
     @Test
     public void exportAllImages() throws Throwable, InterruptedException {
+        Log.e("this","export");
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         final AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
-        for (int i = 0; i < 3; i++ ) {
+        int n=adapter_images.getItemCount();
+        Log.e("export n= ",n)
+        for (int i = n-1; i >n-4; i-- ) {
             runOnUiThread(new MyRunnable(recycler_view, i) {
                 public void run() {
                     this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
@@ -93,18 +95,21 @@ public class ExportButtonTest {
                 }
             });
 
-
-            checkExportImage(i, adapter_images.getListImages().get(i).size);
+            Log.e("this","export2");
+            checkExportImage(3-(i-(n-1)), adapter_images.getListImages().get(i).size);
         }
     }
 
 
     public void checkExportImage(int number, int size) throws Throwable {
-
-        onView(withId(R.id.exportButton)).perform(click());
+        Log.e("this","export3 + i="+number);
+        onView(withId(R.id.popupMenu)).perform(click());
+        Log.e("this","export4");
+        onView(withText("Export")).perform(click());
 
         String export_phase = "_export.zip";
-
+        Log.e("this","TEST "+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +"/"+ files[number] + export_phase);
+        System.out.println("TEST "+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +"/"+ files[number] + export_phase);
         File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +"/"+ files[number] + export_phase);
 
         assertTrue((f.exists() && f.isFile()));

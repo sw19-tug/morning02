@@ -17,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -51,3 +52,4 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.0'
 
 }
+

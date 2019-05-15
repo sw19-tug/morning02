@@ -2,14 +2,19 @@ package com.gallery.android.gallery;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+
 
 public class TagActivity extends AppCompatActivity {
 
-    static public Map<Integer, String> tags = new HashMap<>();
+    public List<Tags> tags_ = new ArrayList<Tags>();
 
     public RecyclerView recyclerTags;
 
@@ -20,11 +25,8 @@ public class TagActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_tags);
 
-        //(TL)for testing purposes only. remove later.
-        tags.put(1, "beautiful");
-        tags.put(2, "XXX");
 
-        //end remove.
+        tags_.addAll(Tags.createTagsList(5));
 
     buildRecycler();
 
@@ -40,7 +42,11 @@ public class TagActivity extends AppCompatActivity {
 
         recyclerTags = findViewById(R.id.TagsRecyclerId);
 
-        AdapterTags adapter = new AdapterTags(tags);
+        AdapterTags adapter = new AdapterTags(tags_);
+
+        recyclerTags.setAdapter(adapter);
+
+        recyclerTags.setLayoutManager(new LinearLayoutManager(this));
 
 
 

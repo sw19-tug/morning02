@@ -2,6 +2,7 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.os.Environment;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
@@ -148,6 +149,11 @@ public class FileDeleterJTest {
     public void testOldDeleteButtonRemoved() throws InterruptedException {
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).check(matches(not(isDisplayed())));
+        try {
+            onView(withText("Delete")).check(matches(not(isDisplayed())));
+        } catch(NoMatchingViewException e){
+            return;
+        }
+        assert(true);
     }
 }

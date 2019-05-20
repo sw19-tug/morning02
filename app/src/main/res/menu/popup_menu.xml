@@ -13,4 +13,8 @@
         android:id="@+id/exportButton"
         android:title="Export" />
 
+    <item
+        android:id="@+id/deleteButton"
+        android:title="Delete" />
+
 </menu>

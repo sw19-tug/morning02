@@ -89,14 +89,17 @@ public class FileDeleterJTest {
         Thread.sleep(100);
         onView(withId(R.id.popupMenu)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).check(matches(isDisplayed()));
+        onView(withText("Delete")).check(matches(isDisplayed()));
     }
 
     @Test
      public void dialog() throws InterruptedException {
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).check(matches(isDisplayed()));
+        Thread.sleep(100);
         onView(withText("Are you sure?")).check(matches(isDisplayed()));
     }
 

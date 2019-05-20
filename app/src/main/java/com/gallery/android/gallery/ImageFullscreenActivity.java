@@ -95,6 +95,8 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                     e.printStackTrace();
                 }
                 return true;
+            case R.id.deleteButton:
+                return true;
 
             default:
                 return false;

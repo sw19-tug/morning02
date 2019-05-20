@@ -99,6 +99,7 @@ public class FileDeleterJTest {
         onView(withId(R.id.popupMenu)).perform(click());
         Thread.sleep(100);
         onView(withText("Delete")).check(matches(isDisplayed()));
+        onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("Are you sure?")).check(matches(isDisplayed()));
     }
@@ -107,12 +108,16 @@ public class FileDeleterJTest {
     public void testDialogClick() throws InterruptedException {
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("no")).perform(click());
         Thread.sleep(100);
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("yes")).perform(click());
         Thread.sleep(100);

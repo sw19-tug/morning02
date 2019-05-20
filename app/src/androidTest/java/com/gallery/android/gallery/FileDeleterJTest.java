@@ -86,9 +86,9 @@ public class FileDeleterJTest {
     public void testButtonVisible() throws InterruptedException {
 
         onView(withId(R.id.idImage)).perform(click());
-
         Thread.sleep(100);
-
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
         onView(withId(R.id.delete_btn)).check(matches(isDisplayed()));
     }
 

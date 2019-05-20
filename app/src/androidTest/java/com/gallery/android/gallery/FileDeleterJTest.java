@@ -27,6 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertNotNull;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -141,5 +142,12 @@ public class FileDeleterJTest {
             String afterImagePath = adapterImages.getListImages().get(0).getPath();
             assertNotEquals(firstImagePath,afterImagePath);
         }
+    }
+
+    @Test
+    public void testOldDeleteButtonRemoved() throws InterruptedException {
+        onView(withId(R.id.idImage)).perform(click());
+        Thread.sleep(100);
+        onView(withId(R.id.delete_btn)).check(matches(not(isDisplayed())));
     }
 }

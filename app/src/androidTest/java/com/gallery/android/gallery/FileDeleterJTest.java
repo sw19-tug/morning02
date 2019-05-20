@@ -2,6 +2,7 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.os.Environment;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
@@ -27,6 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertNotNull;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -86,17 +88,21 @@ public class FileDeleterJTest {
     public void testButtonVisible() throws InterruptedException {
 
         onView(withId(R.id.idImage)).perform(click());
-
         Thread.sleep(100);
-
-        onView(withId(R.id.delete_btn)).check(matches(isDisplayed()));
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).check(matches(isDisplayed()));
     }
 
     @Test
      public void dialog() throws InterruptedException {
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).check(matches(isDisplayed()));
+        onView(withText("Delete")).perform(click());
+        Thread.sleep(100);
         onView(withText("Are you sure?")).check(matches(isDisplayed()));
     }
 
@@ -104,12 +110,16 @@ public class FileDeleterJTest {
     public void testDialogClick() throws InterruptedException {
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("no")).perform(click());
         Thread.sleep(100);
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("yes")).perform(click());
         Thread.sleep(100);
@@ -122,7 +132,9 @@ public class FileDeleterJTest {
         String firstImagePath = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getPath();
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("yes")).perform(click());
         AdapterImages adapterImages = ((AdapterImages)rView.getAdapter());
@@ -131,5 +143,17 @@ public class FileDeleterJTest {
             String afterImagePath = adapterImages.getListImages().get(0).getPath();
             assertNotEquals(firstImagePath,afterImagePath);
         }
+    }
+
+    @Test
+    public void testOldDeleteButtonRemoved() throws InterruptedException {
+        onView(withId(R.id.idImage)).perform(click());
+        Thread.sleep(100);
+        try {
+            onView(withText("Delete")).check(matches(not(isDisplayed())));
+        } catch(NoMatchingViewException e){
+            return;
+        }
+        assert(true);
     }
 }

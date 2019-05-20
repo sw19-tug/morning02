@@ -30,44 +30,8 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
         ImageView image = findViewById(R.id.fullscreen_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         image.setImageBitmap(bitmap);
-
-        Button deleteBtn = (Button)findViewById(R.id.delete_btn);
-        deleteBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                //do something
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(ImageFullscreenActivity.this);
-                builder.setTitle("Confirm");
-                builder.setMessage("Are you sure?");
-
-                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        FileDeleter delete = new FileDeleter();
-                        delete.delete(path);
-
-                        Intent returnIntent = new Intent();
-                        int deletePos = index;
-                        returnIntent.putExtra("deletePos",deletePos);
-                        setResult(Activity.RESULT_OK,returnIntent);
-                        ImageFullscreenActivity.this.finish();
-                        dialog.dismiss();
-                    }
-                });
-
-                builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog alert = builder.create();alert.show();
-            }
-        });
-
-
     }
+
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
@@ -95,7 +59,34 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                     e.printStackTrace();
                 }
                 return true;
+            case R.id.deleteButton:
+                AlertDialog.Builder builder = new AlertDialog.Builder(ImageFullscreenActivity.this);
+                builder.setTitle("Confirm");
+                builder.setMessage("Are you sure?");
 
+                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        FileDeleter delete = new FileDeleter();
+                        delete.delete(path);
+                        int deletePos = index;
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("deletePos",deletePos);
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        ImageFullscreenActivity.this.finish();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
             default:
                 return false;
         }

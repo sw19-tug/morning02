@@ -96,8 +96,26 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                 }
                 return true;
             case R.id.deleteButton:
-                return true;
+                AlertDialog.Builder builder = new AlertDialog.Builder(ImageFullscreenActivity.this);
+                builder.setTitle("Confirm");
+                builder.setMessage("Are you sure?");
 
+                builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
             default:
                 return false;
         }

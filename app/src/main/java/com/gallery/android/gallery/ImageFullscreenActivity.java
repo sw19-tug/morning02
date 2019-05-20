@@ -103,6 +103,9 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                 builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        ImageFullscreenActivity.this.finish();
                         dialog.dismiss();
                     }
                 });

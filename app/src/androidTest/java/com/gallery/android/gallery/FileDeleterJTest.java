@@ -130,7 +130,9 @@ public class FileDeleterJTest {
         String firstImagePath = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getPath();
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.delete_btn)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("yes")).perform(click());
         AdapterImages adapterImages = ((AdapterImages)rView.getAdapter());

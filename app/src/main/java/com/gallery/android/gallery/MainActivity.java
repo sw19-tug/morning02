@@ -69,14 +69,51 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        menu.findItem(R.id.search).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_name_asc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_name_desc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_date_asc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_date_desc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_size_asc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_size_desc).setVisible(!selection_mode);
+
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
-        case R.id.sort: {
-            //add the function to perform here
+    public boolean onOptionsItemSelected(MenuItem item) {
+        AdapterImages adapterImages_sort = (AdapterImages) recyclerImages.getAdapter();
+        switch(item.getItemId()) {
+        case R.id.sort_name_asc: {
+            adapterImages_sort.sortByName(AdapterImages.SortOrder.ASCENDING);
+            refreshView();
             return (true);
+        }
+        case R.id.sort_name_desc: {
+            adapterImages_sort.sortByName(AdapterImages.SortOrder.DESCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_date_asc: {
+            adapterImages_sort.sortByDate(AdapterImages.SortOrder.ASCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_date_desc: {
+            adapterImages_sort.sortByDate(AdapterImages.SortOrder.DESCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_size_asc: {
+            adapterImages_sort.sortBySize(AdapterImages.SortOrder.ASCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_size_desc: {
+            adapterImages_sort.sortBySize(AdapterImages.SortOrder.DESCENDING);
+            refreshView();
+            return true;
         }
         case R.id.search:
             EditText search_bar = findViewById(R.id.search_bar);
@@ -85,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             else
                 search_bar.setVisibility(View.GONE);
             return true;
+
     }
         return(super.onOptionsItemSelected(item));
     }
@@ -100,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             selection_list.clear();
-            selection_mode = false;
+            setSelectionMode(false);
         } else {
             super.onBackPressed();
         }
@@ -132,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (selection_list.isEmpty())
-                        selection_mode = false;
+                        setSelectionMode(false);
                 } else {
                     String image_path = image_list.get(position).getPath();
                     System.out.println(image_path);
@@ -148,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemLongClick(int position, View v) {
                 if (!selection_mode) {
                     selection_list.add(image_list.get(position));
-                    selection_mode = true;
+                    setSelectionMode(true);
                     v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                 }
             }
@@ -159,24 +197,12 @@ public class MainActivity extends AppCompatActivity {
     private void onSearchClicked(AdapterImages adapter) {
         EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
 
-        AdapterImages adapterImages_sort = (AdapterImages) recyclerImages.getAdapter();
-        if(searchbar_input.getText().toString().equals("asc")){
-            adapterImages_sort.sortByName(AdapterImages.SortOrder.ASCENDING);
-            refreshView();
-        }
-        if(searchbar_input.getText().toString().equals("desc")){
-            adapterImages_sort.sortByName(AdapterImages.SortOrder.DESCENDING);
-            refreshView();
-        }
-        else {
+        String image_path = adapter.searchPictures(searchbar_input.getText().toString());
 
-            String image_path = adapter.searchPictures(searchbar_input.getText().toString());
-
-            if (image_path != null) {
-                Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                fullscreenImageIntent.putExtra("path", image_path);
-                startActivity(fullscreenImageIntent);
-            }
+        if (image_path != null) {
+            Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+            fullscreenImageIntent.putExtra("path", image_path);
+            startActivity(fullscreenImageIntent);
         }
     }
 
@@ -197,5 +223,17 @@ public class MainActivity extends AppCompatActivity {
     public void refreshView()
     {
         ((AdapterImages)recyclerImages.getAdapter()).notifyDataSetChanged();
+    }
+
+    private void setSelectionMode(boolean selection_mode)
+    {
+        if (selection_mode)
+        {
+            EditText search_bar = findViewById(R.id.search_bar);
+            if (search_bar.getVisibility() == View.VISIBLE)
+                search_bar.setVisibility(View.GONE);
+        }
+        this.selection_mode = selection_mode;
+        this.invalidateOptionsMenu();
     }
 }

@@ -12,8 +12,28 @@
         app:showAsAction="always"
         android:title="Search"/>
     <item
-        android:id="@+id/sort"
+        android:id="@+id/sort_name_asc"
         app:showAsAction="never"
-        android:title="Sort"/>
+        android:title="Sort by name ascending"/>
+    <item
+        android:id="@+id/sort_name_desc"
+        app:showAsAction="never"
+        android:title="Sort by name descending"/>
+    <item
+        android:id="@+id/sort_date_asc"
+        app:showAsAction="never"
+        android:title="Sort by date ascending"/>
+    <item
+        android:id="@+id/sort_date_desc"
+        app:showAsAction="never"
+        android:title="Sort by date descending"/>
+    <item
+        android:id="@+id/sort_size_asc"
+        app:showAsAction="never"
+        android:title="Sort by size ascending"/>
+    <item
+        android:id="@+id/sort_size_desc"
+        app:showAsAction="never"
+        android:title="Sort by size descending"/>
 
 </menu>

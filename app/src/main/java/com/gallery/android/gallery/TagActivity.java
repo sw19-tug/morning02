@@ -64,7 +64,10 @@ public class TagActivity extends AppCompatActivity {
                 insert_text = input.getText().toString();
 
                 AdapterTags ad = (AdapterTags)recyclerTags.getAdapter();
-                ad.addItem(insert_text);
+
+                AdapterTags a = (AdapterTags)recyclerTags.getAdapter();
+                if(!a.hasItem(insert_text))
+                    ad.addItem(insert_text);
 
 
 

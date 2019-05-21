@@ -18,13 +18,11 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 public class TagsTest {
 
@@ -54,6 +52,20 @@ public class TagsTest {
                     TestHelper.createFile("test.png");
                 }
             });
+
+    private ActivityTestRule<TagActivity> activityTestRule3;
+    @Rule
+    public final TestRule chain3 = RuleChain
+            .outerRule(GrantPermissionRule.grant(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            .around(activityTestRule3 = new ActivityTestRule<TagActivity>(TagActivity.class) {
+                @Override
+                protected void beforeActivityLaunched() {
+                    TestHelper.createFile("test.png");
+                }
+            });
+
 
     @Test
     public void checkAddTag() throws Throwable, InterruptedException {
@@ -96,9 +108,8 @@ public class TagsTest {
 
         Integer count_after = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
         assertSame(count , count_after);
-
-
     }
+
 
 
 

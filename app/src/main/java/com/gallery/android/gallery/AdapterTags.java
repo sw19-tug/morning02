@@ -66,17 +66,24 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
             super(tagview);
 
             tag_name = tagview.findViewById(R.id.tag_name);
-
-
-
         }
 
+    }
+    public boolean hasItem(String name){
+            boolean flag = false;
+            for (int k = 0; k < tags_.size(); k++)
+            {
+                Tags tag;
+                tag = tags_.get(k);
+                if (tag.getName().equals(name))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
 
     }
-
-
-
-
 
 
 }

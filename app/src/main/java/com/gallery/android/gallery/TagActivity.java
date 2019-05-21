@@ -49,9 +49,9 @@ public class TagActivity extends AppCompatActivity {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Title");
+        builder.setTitle("New tag");
 
-        View viewInflated = LayoutInflater.from(this).inflate(R.layout.activity_tags, (ViewGroup) findViewById(R.id.frame), false);
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.add_name_tags, (ViewGroup) findViewById(R.id.frame), false);
 
         final EditText input = (EditText) viewInflated.findViewById(R.id.input);
         builder.setView(viewInflated);

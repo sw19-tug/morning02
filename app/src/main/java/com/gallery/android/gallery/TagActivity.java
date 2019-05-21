@@ -62,6 +62,13 @@ public class TagActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 insert_text = input.getText().toString();
+
+                AdapterTags ad = (AdapterTags)recyclerTags.getAdapter();
+                ad.addItem(insert_text);
+
+
+
+
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

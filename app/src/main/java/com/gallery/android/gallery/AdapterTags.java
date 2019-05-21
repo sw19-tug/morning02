@@ -21,6 +21,13 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
     public AdapterTags(List<Tags> tags) {tags_.addAll(tags);}
 
+    public void addItem(String name) {
+        Tags new_tag = new Tags(name);
+        tags_.add(new_tag);
+
+        notifyItemInserted(tags_.size()-1);
+    }
+
 
     @Override
     @NonNull

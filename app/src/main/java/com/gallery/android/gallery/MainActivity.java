@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.import_zip: {
                 System.out.println("import zip pressed");
-                // import the zip
+                performFileSearch();
                 return (true);
             }
         }
@@ -167,46 +168,45 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == FULLSCREEN_REQUEST) {
-            if(resultCode == Activity.RESULT_OK){
-                int result=data.getIntExtra("deletePos",-1);
-                if(result > -1)
-                {
-                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
-                    adapterImages.getListImages().remove(result);
-                    adapterImages.notifyItemRemoved(result);
-                    adapterImages.notifyItemRangeChanged(result,adapterImages.getListImages().size());
+        switch(requestCode) {
+            case (FULLSCREEN_REQUEST): {
+                if (resultCode == Activity.RESULT_OK) {
+                    int result = data.getIntExtra("deletePos", -1);
+                    if (result > -1) {
+                        AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                        adapterImages.getListImages().remove(result);
+                        adapterImages.notifyItemRemoved(result);
+                        adapterImages.notifyItemRangeChanged(result, adapterImages.getListImages().size());
+                    }
+                }
+                if (resultCode == Activity.RESULT_CANCELED) {
                 }
             }
-            if (resultCode == Activity.RESULT_CANCELED) {
-            }
-        }
-        if(requestCode == OPEN_ZIP_REQUEST){
-            if(resultCode == Activity.RESULT_OK) {
-                if (data != null) {
-
-                   EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
-                   Uri path =  data.getData();
-                   searchbar_input.setText(unzip(path,
-                           Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()).toString());
-
+            case (OPEN_ZIP_REQUEST): {
+                if (resultCode == RESULT_OK) {
+                    if (data != null) {
+                        Uri path = data.getData();
+                        if (!unzip(path, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()))
+                        {
+                            Toast.makeText(this, "Could not unzip.", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        buildRecycler();
+                    }
                 }
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
             }
         }
     }
 
     private void onSearchClicked(AdapterImages adapter) {
         EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
-       /* ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
+                       /* ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
 
-        if (image != null) {
-            searchbar_input.setText("Found: " + image.getFilename());
-        }
-        */
-       performFileSearch();
+                        if (image != null) {
+                            searchbar_input.setText("Found: " + image.getFilename());
+                        }
+                        */
+        performFileSearch();
     }
 
     private void setEditText() {
@@ -226,10 +226,8 @@ public class MainActivity extends AppCompatActivity {
     public void performFileSearch() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/*");
+        intent.setType("application/zip");
         startActivityForResult(intent, OPEN_ZIP_REQUEST);
-
-
     }
 
     public Boolean unzip(Uri sourceFile, String destinationFolder)  {
@@ -257,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
                 } finally {
                     fout.close();
                 }
-
             }
         } catch (IOException ioe){
             System.out.println(ioe.getStackTrace());
@@ -272,5 +269,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    }
+}

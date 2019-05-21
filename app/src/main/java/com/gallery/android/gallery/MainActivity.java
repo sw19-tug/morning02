@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int STORAGE_READ_REQUEST = 1;
     public static final int FULLSCREEN_REQUEST = 2;
+    public static final int OPEN_ZIP_REQUEST = 3;
     RecyclerView recyclerImages;
 
     public boolean selection_mode = false;
@@ -170,16 +171,30 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_CANCELED) {
             }
         }
+        if(requestCode == OPEN_ZIP_REQUEST){
+            if(resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+
+                   EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
+                   String path =  data.getData().getPath();
+                   searchbar_input.setText(path);
+
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
     }
 
     private void onSearchClicked(AdapterImages adapter) {
         EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
-        System.out.println(searchbar_input.getText().toString());
-        ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
+       /* ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
 
         if (image != null) {
             searchbar_input.setText("Found: " + image.getFilename());
         }
+        */
+       performFileSearch();
     }
 
     private void setEditText() {
@@ -195,4 +210,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-}
+
+    public void performFileSearch() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/*");
+        startActivityForResult(intent, OPEN_ZIP_REQUEST);
+
+
+    }
+
+    }

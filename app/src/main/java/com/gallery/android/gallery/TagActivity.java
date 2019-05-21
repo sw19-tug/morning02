@@ -48,10 +48,10 @@ public class TagActivity extends AppCompatActivity {
     public void click_add_tag(View view){
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Title");
 
-        View viewInflated = LayoutInflater.from(view.getContext()).inflate(R.layout.activity_tags, (ViewGroup) findViewById(R.id.frame), false);
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.activity_tags, (ViewGroup) findViewById(R.id.frame), false);
 
         final EditText input = (EditText) viewInflated.findViewById(R.id.input);
         builder.setView(viewInflated);
@@ -70,6 +70,8 @@ public class TagActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+
+        builder.show();
     }
 
 

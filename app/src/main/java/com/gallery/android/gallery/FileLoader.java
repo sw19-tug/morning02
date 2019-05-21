@@ -36,11 +36,11 @@ public class FileLoader implements FileLoaderInterface {
 
     private void search(File[] filelist, List<String> paths) {
         for (File f : filelist) {
-            for (String extetion : extentions) {
+            for (String extension : extentions) {
                 if(f.getName().startsWith(".")) {
                     break;
                 }
-                if (f.getName().endsWith("." + extetion)) {
+                if (f.getName().endsWith("." + extension)) {
                     paths.add(f.getAbsolutePath());
                     break;
                 }
@@ -67,7 +67,7 @@ public class FileLoader implements FileLoaderInterface {
     }
 
 
-    public List<String> getImagesInformation() {
+    public ArrayList<String> getImagesInformation() {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
         File dir = new File(path);
@@ -78,7 +78,7 @@ public class FileLoader implements FileLoaderInterface {
             if(success)
                 filelist = dir.listFiles();
         }
-        List<String> paths = new ArrayList<String>();
+        ArrayList<String> paths = new ArrayList<String>();
         if(filelist != null)
             search(filelist, paths);
         return paths;
@@ -114,21 +114,10 @@ public class FileLoader implements FileLoaderInterface {
 
         }
         return imageList;*/
-        List<String> paths = this.getImagesInformation();
-        ArrayList<ImageContainer> images = new ArrayList<>();
+        ArrayList<String> paths = this.getImagesInformation();
 
         MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
 
-        for (int index = 0; index < paths.size(); index++) {
-            ImageContainer image = loader.parseImage(paths.get(index));
-            if (image != null)
-            {
-                images.add(image);
-            }
-        }
-        return images;
-
-
-//        return loader.parseAllImages();
+        return loader.parseAllImages(paths);
     }
 }

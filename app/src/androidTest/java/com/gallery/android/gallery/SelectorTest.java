@@ -77,7 +77,7 @@ public class SelectorTest {
     public void checkSelectedItemList() throws Throwable {
 
         RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (res.getAdapter().getItemCount() == 0)
+        if (res.getAdapter().getItemCount() < 2)
             return;
 
         checkLongPressSelection();
@@ -97,7 +97,7 @@ public class SelectorTest {
     @Test
     public void checkAddedToSelection() throws Throwable {
         RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (res.getAdapter().getItemCount() == 0)
+        if (res.getAdapter().getItemCount() < 2)
             return;
 
         checkLongPressSelection();
@@ -131,7 +131,7 @@ public class SelectorTest {
     public void checkBackButton() throws Throwable {
 
         RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (res.getAdapter().getItemCount() == 0)
+        if (res.getAdapter().getItemCount() < 2)
             return;
 
         checkSelectedItemList();
@@ -142,7 +142,7 @@ public class SelectorTest {
     @Test
     public void testDeselection() throws Throwable {
         RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (res.getAdapter().getItemCount() == 0)
+        if (res.getAdapter().getItemCount() < 2)
             return;
 
         checkAddedToSelection();
@@ -175,7 +175,7 @@ public class SelectorTest {
     @Test
     public void testDoubleLongClickSelection() throws Throwable {
         RecyclerView res = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (res.getAdapter().getItemCount() == 0)
+        if (res.getAdapter().getItemCount() < 2)
             return;
 
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
@@ -204,7 +204,7 @@ public class SelectorTest {
     public void checkSelectionModeDisabled() throws Throwable{
 
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (rec_view.getAdapter().getItemCount() == 0)
+        if (rec_view.getAdapter().getItemCount() < 2)
             return;
 
         runOnUiThread(new MyRunnable(rec_view, 1) {
@@ -226,7 +226,7 @@ public class SelectorTest {
     @Test
     public void checkIfRecyclerHasRelativeLayout() {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (rec_view.getAdapter().getItemCount() == 0)
+        if (rec_view.getAdapter().getItemCount() < 1)
             return;
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
         assertTrue(layout.getResources().getResourceEntryName(layout.getId()).equals("ImageLayout"));
@@ -237,17 +237,18 @@ public class SelectorTest {
     public void checkIfRelativeLayoutHasShape() {
 
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (rec_view.getAdapter().getItemCount() == 0)
+        if (rec_view.getAdapter().getItemCount() < 1)
             return;
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;
         View view = layout.getChildAt(1);
+        System.out.println(layout.getResources().getResourceEntryName(view.getId()));
         assertTrue(layout.getResources().getResourceEntryName(view.getId()).equals("SelectedIcon"));
     }
 
     @Test
     public void checkIfSelectedIconVisible() throws Throwable {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        if (rec_view.getAdapter().getItemCount() == 0)
+        if (rec_view.getAdapter().getItemCount() < 1)
             return;
         checkLongPressSelection();
         RelativeLayout layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(0).itemView;

@@ -33,6 +33,10 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         int layout;
         layout=R.layout.item_grid_images;
         View view= LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
+
+
+
+
         return new ViewHolderImages(view);
     }
 

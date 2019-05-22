@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import java.util.Date;
 import java.util.Comparator;
+import java.util.Set;
 
 public class ImageContainer implements ImageContainerInterface{
 
@@ -12,6 +13,12 @@ public class ImageContainer implements ImageContainerInterface{
     private String path;
     private String filename;
     private Date date;
+
+    public Set<Tags> getTags() {
+        return tags;
+    }
+
+    private Set<Tags> tags;
     int size;
 
     enum PictureComperator implements Comparator<ImageContainer> {

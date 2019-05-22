@@ -8,15 +8,19 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 
@@ -27,6 +31,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -129,6 +134,63 @@ public class TagsTest {
 
 
         }
+
+
+    }
+
+    @Test
+    public void assignTag() throws Throwable {
+
+        checkAddTag();
+
+        AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
+
+        for (int i = 0; i < tv.tags_.size(); i++) {
+
+            onView(withId(R.id.TagsRecyclerId)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.tag_check_box)));
+        }
+
+        AdapterImages apt = (AdapterImages)activityTestRule.getActivity().recyclerImages.getAdapter();
+        ImageContainer img = apt.getListImages().get(0);
+
+
+        assertNotNull(img.getTags());
+        assertTrue(img.getTags().size() == tv.tags_.size());
+
+        for(int i = 0; i < tv.tags_.size(); i++) {
+            assertTrue(img.getTags().contains(tv.tags_.get(i)));
+        }
+
+    }
+
+    @Test
+    public void assignTagSearch() throws Throwable {
+
+        checkAddTag();
+
+        AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
+
+        for (int i = 0; i < tv.tags_.size(); i++) {
+
+            onView(withId(R.id.TagsRecyclerId)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.tag_check_box)));
+
+        }
+
+        //onView(withId(R.id.apply_button)).perform(click());
+
+       pressBack();
+       pressBack();
+
+        for (int i = 0; i < tv.tags_.size(); i++) {
+
+            onView(withId(R.id.search_bar)).check(matches(isDisplayed()));
+            onView(withId(R.id.search_bar)).perform(typeText(tv.tags_.get(i).getName()));
+            onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
+
+        }
+
 
 
     }

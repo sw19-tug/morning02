@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
     public final List<Tags> tags_ = new ArrayList<>();
 
 
+    private static ClickListener listener;
+
+
     public AdapterTags(List<Tags> tags) {tags_.addAll(tags);}
 
     public void addItem(String name) {
@@ -26,6 +30,16 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
         tags_.add(new_tag);
 
         notifyItemInserted(tags_.size()-1);
+    }
+
+    public void removeItem(int index) {
+
+        if (index >= tags_.size())
+            return;
+
+
+        tags_.remove(index);
+        notifyItemRemoved(index);
     }
 
 
@@ -36,6 +50,7 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
         layout = R.layout.item_tag;
 
         View view= LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
+
         return new ViewHolderTags(view);
 
     }
@@ -52,23 +67,44 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
         holder.tag_name.setId(position);
     }
 
+    public void setOnItemClickListener(AdapterTags.ClickListener listener) {
+        AdapterTags.listener = listener;
+    }
+
 
     @Override
     public int getItemCount() {
         return tags_.size();
     }
 
-    public class ViewHolderTags extends RecyclerView.ViewHolder {
+    public class ViewHolderTags extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView tag_name;
 
+        public Button delete_button;
+
         ViewHolderTags(View tagview) {
             super(tagview);
+            delete_button = tagview.findViewById(R.id.delete_tag);
 
+            delete_button.setOnClickListener(this);
             tag_name = tagview.findViewById(R.id.tag_name);
         }
 
+
+        @Override
+        public void onClick(View view) {
+            if (listener!=null){
+                listener.onItemClick(getAdapterPosition(), view);
+            }
+        }
+
     }
+
+
+
+
+
     public boolean hasItem(String name){
             boolean flag = false;
             for (int k = 0; k < tags_.size(); k++)
@@ -83,6 +119,10 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
             }
             return flag;
 
+    }
+
+    public interface ClickListener {
+        void onItemClick(int position, View v);
     }
 
 

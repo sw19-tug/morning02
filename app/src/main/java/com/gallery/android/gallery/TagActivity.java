@@ -1,6 +1,7 @@
 package com.gallery.android.gallery;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,17 @@ public class TagActivity extends AppCompatActivity {
     private void buildRecycler() {
 
         recyclerTags = findViewById(R.id.TagsRecyclerId);
-        AdapterTags adapter = new AdapterTags(tags_);
+        final AdapterTags adapter = new AdapterTags(tags_);
+
+
+        adapter.setOnItemClickListener(new AdapterTags.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                adapter.removeItem(position);
+
+            }
+        });
+
         recyclerTags.setAdapter(adapter);
         recyclerTags.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -82,6 +93,11 @@ public class TagActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    public void click_apply() {
+
+
     }
 
 

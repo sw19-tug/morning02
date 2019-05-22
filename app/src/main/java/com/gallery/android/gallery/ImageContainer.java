@@ -13,12 +13,12 @@ public class ImageContainer implements ImageContainerInterface{
     private String path;
     private String filename;
     private Date date;
+    private Set<Tags> tags;
 
     public Set<Tags> getTags() {
         return tags;
     }
 
-    private Set<Tags> tags;
     int size;
 
     enum PictureComperator implements Comparator<ImageContainer> {
@@ -75,6 +75,14 @@ public class ImageContainer implements ImageContainerInterface{
         this.path = path;
         this.date = date;
         this.filename = name;
+    }
+
+    public ImageContainer(String path, Date date, String name, Set<Tags> tags)
+    {
+        this.path = path;
+        this.date = date;
+        this.filename = name;
+        this.tags = tags;
     }
 
     public Bitmap getImage() {

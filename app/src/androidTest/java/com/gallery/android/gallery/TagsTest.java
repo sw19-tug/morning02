@@ -129,13 +129,7 @@ public class TagsTest {
             for (int n = 0; n < tv.tags_.size()-1;n++) {
                 assertNotEquals(name, (tv.tags_.get(n).getName()));
             }
-
-
-
-
         }
-
-
     }
 
     @Test
@@ -190,9 +184,6 @@ public class TagsTest {
             onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
 
         }
-
-
-
     }
 
 

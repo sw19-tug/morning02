@@ -3,9 +3,12 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 
+import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,7 +25,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class TagsTest {
 
@@ -53,18 +59,7 @@ public class TagsTest {
                 }
             });
 
-    private ActivityTestRule<TagActivity> activityTestRule3;
-    @Rule
-    public final TestRule chain3 = RuleChain
-            .outerRule(GrantPermissionRule.grant(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .around(activityTestRule3 = new ActivityTestRule<TagActivity>(TagActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    TestHelper.createFile("test.png");
-                }
-            });
+
 
 
     @Test
@@ -108,6 +103,34 @@ public class TagsTest {
 
         Integer count_after = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
         assertSame(count , count_after);
+    }
+
+    @Test
+    public void DeleteTags() throws Throwable{
+
+        checkAddTag();
+
+        Integer count = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
+
+        AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
+
+
+
+        for(Integer i = tv.tags_.size()-1; i >= 0; i--){
+            String name = tv.tags_.get(i).getName();
+            onView(withId(R.id.TagsRecyclerId)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.delete_tag)));
+
+            for (int n = 0; n < tv.tags_.size()-1;n++) {
+                assertNotEquals(name, (tv.tags_.get(n).getName()));
+            }
+
+
+
+
+        }
+
+
     }
 
 

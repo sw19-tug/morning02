@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags> {
 
-    private final List<Tags> tags_ = new ArrayList<>();
+    public final List<Tags> tags_ = new ArrayList<>();
 
 
     public AdapterTags(List<Tags> tags) {tags_.addAll(tags);}

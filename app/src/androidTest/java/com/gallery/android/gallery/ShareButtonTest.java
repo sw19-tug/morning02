@@ -2,6 +2,7 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
@@ -15,12 +16,17 @@ import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
+import androidx.test.core.app.ApplicationProvider;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class ShareButtonTest {
@@ -50,7 +56,8 @@ public class ShareButtonTest {
             return;
         
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.shareButton)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        onView(withText("Share")).perform(click());
 
         intended(hasComponent(ShareContentActivity.class.getName()));
         intended(hasAction(Intent.ACTION_CHOOSER));

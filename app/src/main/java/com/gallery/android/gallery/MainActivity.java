@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     setEditText();
                 } else {
                     finish();
-                    System.exit(0);
+                    System.exit(1212);
                 }
             }
         }

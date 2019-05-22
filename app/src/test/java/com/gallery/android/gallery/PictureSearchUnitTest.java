@@ -15,16 +15,16 @@ public class PictureSearchUnitTest {
     @Before
     public void initialize() {
         ArrayList<ImageContainer> imageList = new ArrayList<>();
-        imageList.add(new ImageContainer("somepath",new Date(),"ducky"));
-        imageList.add(new ImageContainer("somepath",new Date(),"donald duck"));
-        imageList.add(new ImageContainer("somepath",new Date(),"tick"));
-        imageList.add(new ImageContainer("somepath",new Date(),"trick"));
-        imageList.add(new ImageContainer("somepath",new Date(),"track"));
-        imageList.add(new ImageContainer("somepath",new Date(),"dagobert duck"));
-        imageList.add(new ImageContainer("somepath",new Date(),"daisy duck"));
-        imageList.add(new ImageContainer("somepath",new Date(),"gustav gans"));
-        imageList.add(new ImageContainer("somepath",new Date(),"gundel gauckele"));
-        imageList.add(new ImageContainer("somepath",new Date(),"oma duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),1000,"ducky"));
+        imageList.add(new ImageContainer("somepath",new Date(),2000,"donald duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),1000,"tick"));
+        imageList.add(new ImageContainer("/path/trick",new Date(),1500,"trick"));
+        imageList.add(new ImageContainer("somepath",new Date(),2300,"track"));
+        imageList.add(new ImageContainer("somepath",new Date(),5000,"dagobert duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),2400,"daisy duck"));
+        imageList.add(new ImageContainer("somepath",new Date(),130,"gustav gans"));
+        imageList.add(new ImageContainer("somepath",new Date(),1111,"gundel gauckele"));
+        imageList.add(new ImageContainer("somepath",new Date(),1234,"oma duck"));
 
         adapter=new AdapterImages(imageList);
     }
@@ -32,8 +32,8 @@ public class PictureSearchUnitTest {
     @Test
     public void findPicture(){
 
-        ImageContainer image = adapter.searchPictures("trick");
-        assertEquals(image.getFilename(),"trick");
+        String image = adapter.searchPictures("trick");
+        assertEquals(image,"/path/trick");
     }
 
 

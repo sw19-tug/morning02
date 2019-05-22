@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -50,10 +51,10 @@ public class FileLoaderJTest {
     public void testPathsAreRetrieved(){
         FileLoader f=new FileLoader();
         assertNotNull(f);
-        List<String> paths=f.getImagesPaths();
+        List<String> paths=f.getImagesInformation();
         assertNotNull(paths);
         assertFalse(paths.isEmpty());
-        ImageContainer iC = new ImageContainer(paths.get(0));
+        ImageContainer iC = new ImageContainer(paths.get(0),new Date(),1000,"dummyfile");
         assert(iC.getPath().compareTo(paths.get(0)) != 0);
         RecyclerView rView=activityTestRule.getActivity().recyclerImages;
         for (int childCount = rView.getChildCount(), i = 0; i < childCount; ++i) {
@@ -69,7 +70,7 @@ public class FileLoaderJTest {
 
         String absolutePath = path + "/" + name;
         FileLoader f=new FileLoader();
-        List<String> paths=f.getImagesPaths();
+        List<String> paths=f.getImagesInformation();
         boolean error = true;
         for (String currentPath : paths){
             if (absolutePath.compareTo(currentPath) == 0){
@@ -112,7 +113,7 @@ public class FileLoaderJTest {
         String path = subfolderpath + "/" + name;
         FileLoader f=new FileLoader();
 
-        List<String> paths=f.getImagesPaths();
+        List<String> paths=f.getImagesInformation();
         boolean error = true;
         for (String currentPath : paths){
             if (path.compareTo(currentPath) == 0){

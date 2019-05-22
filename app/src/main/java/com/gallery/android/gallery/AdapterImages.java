@@ -31,8 +31,8 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
     @NonNull
     public ViewHolderImages onCreateViewHolder(@NonNull ViewGroup parent, int viewType)  {
         int layout;
-        layout=R.layout.item_grid_images;
-        View view= LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
+        layout = R.layout.item_grid_images;
+        View view = LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
         return new ViewHolderImages(view);
     }
 
@@ -51,13 +51,12 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         return listImages;
     }
 
-    public ImageContainer searchPictures(String name){
+    public String searchPictures(String name){
         for(ImageContainer image : listImages)
         {
             if(image.getFilename().equals(name))
             {
-                System.out.println(name + "=" + image.getFilename());
-                return image;
+                return image.getPath();
             }
         }
         return null;

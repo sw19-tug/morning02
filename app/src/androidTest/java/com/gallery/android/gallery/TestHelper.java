@@ -1,7 +1,10 @@
 package com.gallery.android.gallery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
@@ -32,7 +35,7 @@ public class TestHelper {
         }
         try {
             FileOutputStream fos = new FileOutputStream(dest);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
         } catch (Exception e) {

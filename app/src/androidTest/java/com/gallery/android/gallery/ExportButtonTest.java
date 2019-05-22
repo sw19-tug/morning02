@@ -97,12 +97,12 @@ public class ExportButtonTest {
             });
 
             Log.e("this","export2");
-            checkExportImage(3+(i-(n-1))-1, adapter_images.getListImages().get(i).size);
+            checkExportImage(3+(i-(n-1))-1, adapter_images.getListImages().get(i).getSize());
         }
     }
 
 
-    public void checkExportImage(int number, int size) throws Throwable {
+    public void checkExportImage(int number, long size) throws Throwable {
         Log.e("this","export3 + i="+number);
         onView(withId(R.id.popupMenu)).perform(click());
         Log.e("this","export4");

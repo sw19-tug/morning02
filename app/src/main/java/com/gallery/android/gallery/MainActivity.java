@@ -2,12 +2,14 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,14 +21,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int STORAGE_READ_REQUEST = 1;
     public static final int FULLSCREEN_REQUEST = 2;
+    public static final int OPEN_ZIP_REQUEST = 3;
+    private static final int BUFFER_SIZE = 8192 ;//2048;
     RecyclerView recyclerImages;
 
     public boolean selection_mode = false;
@@ -60,10 +73,31 @@ public class MainActivity extends AppCompatActivity {
                     setEditText();
                 } else {
                     finish();
-                    System.exit(1212);
+                    System.exit(0);
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.import_zip: {
+                System.out.println("import zip pressed");
+                performFileSearch();
+                return (true);
+            }
+        }
+        return(super.onOptionsItemSelected(item));
     }
 
     @Override
@@ -242,6 +276,48 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void performFileSearch() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/zip");
+        startActivityForResult(intent, OPEN_ZIP_REQUEST);
+    }
+
+    public Boolean unzip(Uri sourceFile, String destinationFolder)  {
+        ZipInputStream zis = null;
+
+        try {
+            FileInputStream istream = (FileInputStream) this.getContentResolver().openInputStream(sourceFile);
+            zis = new ZipInputStream(new BufferedInputStream(istream));
+            ZipEntry ze;
+            int count;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while ((ze = zis.getNextEntry()) != null) {
+                String fileName = ze.getName();
+                fileName = fileName.substring(fileName.indexOf("/") + 1);
+                File file = new File(destinationFolder, fileName);
+                File dir = ze.isDirectory() ? file : file.getParentFile();
+
+                if (!dir.isDirectory() && !dir.mkdirs())
+                    throw new FileNotFoundException("Invalid path: " + dir.getAbsolutePath());
+                if (ze.isDirectory()) continue;
+                FileOutputStream fout = new FileOutputStream(file);
+                try {
+                    while ((count = zis.read(buffer)) != -1)
+                        fout.write(buffer, 0, count);
+                } finally {
+                    fout.close();
+                }
+            }
+        } catch (IOException ioe){
+            System.out.println(ioe.getStackTrace());
+            return false;
+        }  finally {
+            if(zis!=null)
+                try {
+                    zis.close();
+                } catch(IOException e) {
+
     public void refreshView()
     {
         ((AdapterImages)recyclerImages.getAdapter()).notifyDataSetChanged();
@@ -257,5 +333,11 @@ public class MainActivity extends AppCompatActivity {
         }
         this.selection_mode = selection_mode;
         this.invalidateOptionsMenu();
+    }
+}
+
+                }
+        }
+        return true;
     }
 }

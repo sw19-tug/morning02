@@ -35,5 +35,9 @@
         android:id="@+id/sort_size_desc"
         app:showAsAction="never"
         android:title="Sort by size descending"/>
+    <item
+        android:id="@+id/import_zip"
+        app:showAsAction="never"
+        android:title="Import Zip ..."/>
 
 </menu>

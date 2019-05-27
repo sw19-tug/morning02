@@ -120,4 +120,15 @@ public class FileLoader implements FileLoaderInterface {
 
         return loader.parseAllImages(paths);
     }
+    public ArrayList<String> loadAlbums(){
+        ArrayList<String> imagePaths = this.getImagesInformation();
+        ArrayList<String> albumPaths=new ArrayList<String>();
+        for(String image_path : imagePaths) {
+            String path= image_path.substring(0,image_path.lastIndexOf("/"));
+            if (!albumPaths.contains(path)){
+                albumPaths.add(path);
+            }
+        }
+        return albumPaths;
+    }
 }

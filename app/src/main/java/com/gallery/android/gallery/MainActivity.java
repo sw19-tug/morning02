@@ -2,14 +2,10 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -84,27 +79,6 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch(item.getItemId()) {
-            case R.id.import_zip: {
-                System.out.println("import zip pressed");
-                performFileSearch();
-                return (true);
-            }
-        }
-        return(super.onOptionsItemSelected(item));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
         menu.findItem(R.id.search).setVisible(!selection_mode);
         menu.findItem(R.id.sort_name_asc).setVisible(!selection_mode);
         menu.findItem(R.id.sort_name_desc).setVisible(!selection_mode);
@@ -120,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         AdapterImages adapterImages_sort = (AdapterImages) recyclerImages.getAdapter();
         switch(item.getItemId()) {
+        case R.id.import_zip: {
+            System.out.println("import zip pressed");
+            performFileSearch();
+            return (true);
+        }
         case R.id.sort_name_asc: {
             adapterImages_sort.sortByName(AdapterImages.SortOrder.ASCENDING);
             refreshView();
@@ -313,10 +292,15 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(ioe.getStackTrace());
             return false;
         }  finally {
-            if(zis!=null)
+            if (zis != null)
                 try {
                     zis.close();
-                } catch(IOException e) {
+                } catch (IOException e) {
+                    return false;
+                }
+        }
+        return true;
+    }
 
     public void refreshView()
     {
@@ -334,10 +318,5 @@ public class MainActivity extends AppCompatActivity {
         this.selection_mode = selection_mode;
         this.invalidateOptionsMenu();
     }
-}
 
-                }
-        }
-        return true;
-    }
 }

@@ -6,6 +6,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.widget.EditText;
 
 import org.junit.AfterClass;
 import org.junit.Rule;
@@ -16,11 +18,16 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.pressKey;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class RenameTest {
@@ -55,7 +62,7 @@ public class RenameTest {
     }
 
     @Test
-    public void testRenameButtonShowTextInput(){
+    public void testRenameButtonShowTextInput()throws Throwable, InterruptedException {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         if (rec_view.getAdapter().getItemCount() == 0)
             return;
@@ -63,8 +70,31 @@ public class RenameTest {
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Rename")).check(matches((isDisplayed())));
-        onView(withId(R.id.renameButton)).perform(click());
-        onView(withText("New Name:")).check(matches((isDisplayed())));
+        onView(withText("Rename")).perform(click());
+        Thread.sleep(200);
+        onView(withText("New Name: ")).check(matches(isDisplayed()));
+    }
 
+    @Test
+    public void testRenameInternal()throws Throwable, InterruptedException {
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (rec_view.getAdapter().getItemCount() == 0)
+            return;
+
+        onView(withId(R.id.idImage)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        onView(withText("Rename")).check(matches((isDisplayed())));
+        onView(withText("Rename")).perform(click());
+        Thread.sleep(200);
+        onView(isAssignableFrom(EditText.class)).perform(typeText("NewNameOfImage"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withText("yes")).perform(click());
+        Thread.sleep(200);
+        AdapterImages adapterImages = ((AdapterImages)rec_view.getAdapter());
+
+        if(!adapterImages.getListImages().isEmpty())
+        {
+            String newName = adapterImages.getListImages().get(0).getFilename();
+            assertTrue(newName.equals("NewNameOfImage"));
+        }
     }
 }

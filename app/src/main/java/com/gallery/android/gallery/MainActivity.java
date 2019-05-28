@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -214,17 +216,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == FULLSCREEN_REQUEST) {
-            if(resultCode == Activity.RESULT_OK){
-                int result=data.getIntExtra("deletePos",-1);
-                if(result > -1)
-                {
+            if (resultCode == Activity.RESULT_OK) {
+                int result = data.getIntExtra("deletePos", -1);
+                if (result > -1) {
                     AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
                     adapterImages.getListImages().remove(result);
                     adapterImages.notifyItemRemoved(result);
-                    adapterImages.notifyItemRangeChanged(result,adapterImages.getListImages().size());
+                    adapterImages.notifyItemRangeChanged(result, adapterImages.getListImages().size());
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
+
+        if(requestCode == OPEN_ZIP_REQUEST ){
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    Uri path = data.getData();
+                    if (!unzip(path, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()))
+                    {
+                        Toast.makeText(this, "Could not unzip.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    buildRecycler();
+                }
             }
         }
     }

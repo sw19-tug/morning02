@@ -1,8 +1,10 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +27,7 @@ import static junit.framework.TestCase.assertTrue;
 public class AlbumTest {
     private ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
     private ActivityTestRule<AlbumOverviewActivity> album_overview_rule;
+    private ActivityTestRule<MainActivity> album_images_activity;
 
     @Rule
     public final TestRule chain = RuleChain
@@ -33,22 +36,35 @@ public class AlbumTest {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .around(album_overview_rule = new ActivityTestRule<AlbumOverviewActivity>(AlbumOverviewActivity.class) {
                 protected void beforeActivityLaunched() {
-                    TestHelper.createFile("test1.png");
-                    TestHelper.createFile("test2.png");
+                    TestHelper.createFile("test.png");
                 }
+            })
+            /*.around(album_images_activity = new ActivityTestRule<MainActivity>(MainActivity.class) {
+                @Override
+                protected Intent getActivityIntent() {
+                    Context targetContext = InstrumentationRegistry.getInstrumentation()
+                            .getTargetContext();
+                    Intent result = new Intent(targetContext, MainActivity.class);
+                    result.putExtra("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
+                    result.putExtra("include_subfolders", false);
+                    return result;
+                }
+                protected void beforeActivityLaunched() {
+                    TestHelper.createFile("test.png");
+                }
+            })*/
+            .around(activityTestRule);
 
-            });
 
 
     @AfterClass
     public static void tearDownClass() {
-        TestHelper.deleteFile("test1.png");
-        TestHelper.deleteFile("test2.png");
+        TestHelper.deleteFile("test.png");
     }
     @Test
     public void buttonExists(){
-        Intent intent=new Intent();
-        activityTestRule.launchActivity(intent);
+        /*Intent intent=new Intent();
+        activityTestRule.launchActivity(intent);*/
         assertNotNull(activityTestRule.getActivity().findViewById(R.id.albums));
         // onView(withId(R.id.albums)).check(matches(isDisplayed()));
     }
@@ -70,4 +86,22 @@ public class AlbumTest {
         assertTrue(path_exists);
 
     }
+
+  /*  @Test
+    public void PictureExistsInAlbum(){
+
+        RecyclerView image_recycler = album_images_activity.getActivity().findViewById(R.id.RecyclerId);
+        boolean image_exists = false;
+
+        for (int childCount = image_recycler.getChildCount(), i = 0; i < childCount; ++i) {
+            AdapterAlbums.ViewHolderAlbums holder = (AdapterAlbums.ViewHolderAlbums) image_recycler.getChildViewHolder(image_recycler.getChildAt(i));
+            if (holder.path.getText().equals("test.png")) {
+                image_exists = true;
+                break;
+            }
+        }
+
+        assertTrue(image_exists);
+
+    }*/
 }

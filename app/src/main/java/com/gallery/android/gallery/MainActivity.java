@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int OPEN_ZIP_REQUEST = 3;
     private static final int BUFFER_SIZE = 8192 ;//2048;
     RecyclerView recyclerImages;
+    private String path;
+    private Boolean include_subfolders;
 
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
@@ -44,6 +47,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            path = getIntent().getExtras().getString("path");
+        } catch (Exception e)
+        {
+            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        }
+        if (path == null)
+        {
+            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+        }
+
+        try {
+            include_subfolders = getIntent().getExtras().getBoolean("include_subfolders");
+        } catch (Exception e)
+        {
+            include_subfolders = true;
+        }
+        if (path == null)
+        {
+            include_subfolders = true;
+        }
+
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -141,10 +166,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
                 startActivity(albumIntent);
             }
-
-
-
-
     }
         return(super.onOptionsItemSelected(item));
     }
@@ -173,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
-        final ArrayList<ImageContainer> image_list = f.loadImageContainers(this);
+        final ArrayList<ImageContainer> image_list = f.loadImageContainersForPath(path, include_subfolders, this);
 
         AdapterImages adapter = new AdapterImages(image_list);
 

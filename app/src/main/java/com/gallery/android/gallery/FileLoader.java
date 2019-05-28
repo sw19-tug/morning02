@@ -34,7 +34,7 @@ public class FileLoader implements FileLoaderInterface {
     private List<Bitmap> bitmapList;
     private List<String> extentions;
 
-    private void search(File[] filelist, List<String> paths) {
+    private void search(File[] filelist, List<String> paths, boolean include_subfolders) {
         for (File f : filelist) {
             for (String extension : extentions) {
                 if(f.getName().startsWith(".")) {
@@ -45,13 +45,18 @@ public class FileLoader implements FileLoaderInterface {
                     break;
                 }
                 if (f.isDirectory()) {
-                    File[] newfilelist = f.listFiles();
-                    search(newfilelist, paths);
-                    break;
+                    if (include_subfolders) {
+                        File[] newfilelist = f.listFiles();
+                        search(newfilelist, paths, true);
+                        break;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
     }
+
 
     @Override
     public Bitmap getAndAddBitMap(String s) {
@@ -80,7 +85,24 @@ public class FileLoader implements FileLoaderInterface {
         }
         ArrayList<String> paths = new ArrayList<String>();
         if(filelist != null)
-            search(filelist, paths);
+            search(filelist, paths, true);
+        return paths;
+    }
+
+    public ArrayList<String> getImagesInformationForPath(String path, boolean include_subfolders) {
+
+        File dir = new File(path);
+        File[] filelist = dir.listFiles();
+        boolean success = false;
+        if(!dir.exists() && !dir.isDirectory()){
+            success=dir.mkdirs();
+            if(success)
+                filelist = dir.listFiles();
+        }
+        ArrayList<String> paths = new ArrayList<String>();
+        if(filelist != null) {
+            search(filelist, paths, include_subfolders);
+        }
         return paths;
     }
 
@@ -120,6 +142,7 @@ public class FileLoader implements FileLoaderInterface {
 
         return loader.parseAllImages(paths);
     }
+
     public ArrayList<String> loadAlbums(){
         ArrayList<String> imagePaths = this.getImagesInformation();
         ArrayList<String> albumPaths=new ArrayList<String>();
@@ -130,5 +153,13 @@ public class FileLoader implements FileLoaderInterface {
             }
         }
         return albumPaths;
+    }
+
+    public ArrayList<ImageContainer> loadImageContainersForPath(String album_path, boolean include_subfolders, Context context) {
+        ArrayList<String> paths = this.getImagesInformationForPath(album_path, include_subfolders);
+
+        MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
+
+        return loader.parseAllImages(paths);
     }
 }

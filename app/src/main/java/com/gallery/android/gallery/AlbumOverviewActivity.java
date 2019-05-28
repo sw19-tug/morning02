@@ -38,12 +38,17 @@ public class AlbumOverviewActivity extends AppCompatActivity {
             public void onItemClick(int position, View v) {
 
 
-                //String albumPath = album.get(position).getPath();
+                String albumPath = albumList.get(position);
                 /*
                 Intent fullscreenImageIntent = new Intent(MainActivity.this, AlbumMainActivity.class);
                 fullscreenImageIntent.putExtra("path", albumPath);
                 startActivityForResult(AlbumMainActivity,FULLSCREEN_REQUEST);
                 */
+
+                Intent main_activity_intent = new Intent(AlbumOverviewActivity.this, MainActivity.class);
+                main_activity_intent.putExtra("path", albumPath);
+                main_activity_intent.putExtra("include_subfolders", false);
+                startActivity(main_activity_intent);
 
             }
 

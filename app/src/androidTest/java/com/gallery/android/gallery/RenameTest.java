@@ -44,13 +44,27 @@ public class RenameTest {
     }
 
     @Test
-    public void testDialogIsShown(){
+    public void testRenameButtonIsShown(){
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         if (rec_view.getAdapter().getItemCount() == 0)
             return;
         
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
-        onView(withText("Rename")).check(matches(not(isDisplayed())));
+        onView(withText("Rename")).check(matches((isDisplayed())));
+    }
+
+    @Test
+    public void testRenameButtonShowTextInput(){
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (rec_view.getAdapter().getItemCount() == 0)
+            return;
+
+        onView(withId(R.id.idImage)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        onView(withText("Rename")).check(matches((isDisplayed())));
+        onView(withId(R.id.renameButton)).perform(click());
+        onView(withText("New Name:")).check(matches((isDisplayed())));
+
     }
 }

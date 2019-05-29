@@ -7,11 +7,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,18 +26,22 @@ public class TagActivity extends AppCompatActivity {
 
     String insert_text= "";
     public List<Tags> tags_ = new ArrayList<Tags>();
-
+    private List<String> checkedTags=new ArrayList<String>();
     public RecyclerView recyclerTags;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_tags);
 
         tags_.addAll(Tags.createTagsList());
-    buildRecycler();
+        buildRecycler();
+        System.out.println("aqui empieza");
+        //RecyclerView r= findViewById();
+
+
 
     }
 
@@ -81,9 +87,6 @@ public class TagActivity extends AppCompatActivity {
                 if(!a.hasItem(insert_text))
                     ad.addItem(insert_text);
 
-
-
-
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -97,17 +100,39 @@ public class TagActivity extends AppCompatActivity {
     }
 
     public void click_apply(View view) {
-        CheckBox checkBox = (CheckBox)view;
-        Boolean selected = checkBox.isChecked();
 
-        for(int i=0; i<= tags_.size();i++){
+
+        for(int i=0; i< tags_.size();i++){
 
             Tags actual_tag = tags_.get(i);
-            String tag_name = actual_tag.getName();
-            int tag_id = actual_tag.getTagId();
 
-            CheckBox checkBox1 = (CheckBox) view.findViewById(R.id.tag_check_box);
-            checkBox1.setChecked(selected);
+            String tag_name = actual_tag.getName();
+            int actual_tag_id = actual_tag.getTagId();
+            System.out.println("tag_id_+100="+actual_tag_id+100);
+
+            int tag_id=100+actual_tag_id;
+            int tag_id2=200+actual_tag_id;
+            System.out.println("tag_id="+tag_id);
+
+            CheckBox checkBox = (CheckBox) findViewById(tag_id);
+            TextView text_checkBox=(TextView) findViewById(tag_id2);
+
+            String tagName=(String)text_checkBox.getText();
+            System.out.println(checkBox.getId());
+
+            Boolean selected= checkBox.isChecked();
+            ArrayList<String> checked=new ArrayList<String>();
+
+            if(selected == true){
+                checkBox.setChecked(true);
+                checked.add(tagName);
+                System.out.println("Checked"+checkBox.getId());
+            }
+            else{
+                checkBox.setChecked(false);
+            }
+
+            //GAL-015 imagecontainer
         }
 
     }

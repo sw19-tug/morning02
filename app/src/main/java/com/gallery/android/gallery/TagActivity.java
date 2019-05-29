@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -95,8 +96,19 @@ public class TagActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void click_apply() {
+    public void click_apply(View view) {
+        CheckBox checkBox = (CheckBox)view;
+        Boolean selected = checkBox.isChecked();
 
+        for(int i=0; i<= tags_.size();i++){
+
+            Tags actual_tag = tags_.get(i);
+            String tag_name = actual_tag.getName();
+            int tag_id = actual_tag.getTagId();
+
+            CheckBox checkBox1 = (CheckBox) view.findViewById(R.id.tag_check_box);
+            checkBox1.setChecked(selected);
+        }
 
     }
 

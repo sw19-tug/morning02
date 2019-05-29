@@ -33,4 +33,8 @@ public class Tags {
 
         return contacts;
     }
+
+    public int getTagId() {
+        return tagid;
+    }
 }

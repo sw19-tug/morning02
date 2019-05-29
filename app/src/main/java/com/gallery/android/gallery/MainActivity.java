@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int STORAGE_READ_REQUEST = 1;
 
+    DummyParceable new_parceable = new DummyParceable(1);
+
     RecyclerView recyclerImages;
 
     public boolean selection_mode = false;
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
                     AdapterImages adapterImages = (AdapterImages)recyclerImages.getAdapter();
                     ImageContainer imageContainer = adapterImages.getListImages().get(position);
-                    fullscreenImageIntent.putExtra("imageContainer", imageContainer);
+                    fullscreenImageIntent.putExtra("parceable", new_parceable);
 
                     startActivity(fullscreenImageIntent);
 

@@ -228,11 +228,18 @@ public class MainActivity extends AppCompatActivity {
                 int renameindex = data.getIntExtra("indexRename",-1);
                 if(nameresult != "" && renameindex > -1){
                     AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
-                    adapterImages.getListImages().get(renameindex).setFilename(nameresult);
+
                     String oldPath = adapterImages.getListImages().get(renameindex).getPath();
                     String newPath =  oldPath.substring(0,oldPath.lastIndexOf("/")+1);
                     newPath = newPath + nameresult + oldPath.substring(oldPath.lastIndexOf("."));
-                    adapterImages.getListImages().get(renameindex).setPath(newPath);
+
+                    File from = new File(oldPath);
+                    File to = new File(newPath);
+                    if(from.exists()) {
+                        from.renameTo(to);
+                        adapterImages.getListImages().get(renameindex).setFilename(nameresult);
+                        adapterImages.getListImages().get(renameindex).setPath(newPath);
+                    }
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {

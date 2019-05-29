@@ -114,7 +114,6 @@ public class RenameTest {
         if (rec_view.getAdapter().getItemCount() == 0)
             return;
 
-        String oldPath = ((AdapterImages)(rec_view.getAdapter())).getListImages().get(0).getPath();
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Rename")).perform(click());
@@ -129,6 +128,34 @@ public class RenameTest {
             String newPath = adapterImages.getListImages().get(0).getPath();
             File imageFile = new File(newPath);
             assertTrue(imageFile.exists());
+        }
+    }
+
+    @Test
+    public void testRenameOnFileSystemDuplicate()throws Throwable, InterruptedException {
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
+        if (rec_view.getAdapter().getItemCount() < 2)
+            return;
+
+        String dupName = ((AdapterImages)(rec_view.getAdapter())).getListImages().get(1).getFilename();
+        onView(withId(R.id.idImage)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        onView(withText("Rename")).perform(click());
+        Thread.sleep(200);
+        onView(isAssignableFrom(EditText.class)).perform(typeText(dupName), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withText("yes")).perform(click());
+        Thread.sleep(200);
+        AdapterImages adapterImages = ((AdapterImages)rec_view.getAdapter());
+
+        if(!adapterImages.getListImages().isEmpty())
+        {
+            String newPath = adapterImages.getListImages().get(0).getPath();
+            File imageFile = new File(newPath);
+            assertTrue(imageFile.exists());
+
+            String newName = adapterImages.getListImages().get(0).getFilename();
+            assertTrue(newName.equals(dupName + "_copy"));
         }
     }
 

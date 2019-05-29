@@ -100,6 +100,11 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
 
                     public void onClick(DialogInterface dialog, int which) {
                         String newName = input.getText().toString();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("indexRename",index);
+                        returnIntent.putExtra("newName",newName);
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        ImageFullscreenActivity.this.finish();
                         dialog.dismiss();
                     }
                 });

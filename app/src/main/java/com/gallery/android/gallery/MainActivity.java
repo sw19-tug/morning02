@@ -224,6 +224,12 @@ public class MainActivity extends AppCompatActivity {
                     adapterImages.notifyItemRemoved(result);
                     adapterImages.notifyItemRangeChanged(result, adapterImages.getListImages().size());
                 }
+                String nameresult = data.getStringExtra("newName");
+                int renameindex = data.getIntExtra("indexRename",-1);
+                if(nameresult != "" && renameindex > -1){
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    adapterImages.getListImages().get(renameindex).setFilename(nameresult);
+                }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
             }

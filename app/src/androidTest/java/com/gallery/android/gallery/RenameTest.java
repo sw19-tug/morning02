@@ -78,9 +78,11 @@ public class RenameTest {
     @Test
     public void testRenameInternal()throws Throwable, InterruptedException {
         RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
         if (rec_view.getAdapter().getItemCount() == 0)
             return;
 
+        String oldPath = ((AdapterImages)(rec_view.getAdapter())).getListImages().get(0).getPath();
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Rename")).check(matches((isDisplayed())));
@@ -94,7 +96,15 @@ public class RenameTest {
         if(!adapterImages.getListImages().isEmpty())
         {
             String newName = adapterImages.getListImages().get(0).getFilename();
+            String newPath = adapterImages.getListImages().get(0).getPath();
             assertTrue(newName.equals("NewNameOfImage"));
+            assertTrue(!newPath.equals(oldPath));
+            String compareName =  newPath.substring(newPath.lastIndexOf("/") + 1);
+            compareName = compareName.substring(0, compareName.lastIndexOf("."));
+            assertTrue(newName.equals(compareName));
+
         }
     }
+
+
 }

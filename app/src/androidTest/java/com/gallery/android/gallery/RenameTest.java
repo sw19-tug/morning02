@@ -16,6 +16,8 @@ import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
@@ -102,7 +104,31 @@ public class RenameTest {
             String compareName =  newPath.substring(newPath.lastIndexOf("/") + 1);
             compareName = compareName.substring(0, compareName.lastIndexOf("."));
             assertTrue(newName.equals(compareName));
+        }
+    }
 
+    @Test
+    public void testRenameOnFileSystem()throws Throwable, InterruptedException {
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+
+        if (rec_view.getAdapter().getItemCount() == 0)
+            return;
+
+        String oldPath = ((AdapterImages)(rec_view.getAdapter())).getListImages().get(0).getPath();
+        onView(withId(R.id.idImage)).perform(click());
+        onView(withId(R.id.popupMenu)).perform(click());
+        onView(withText("Rename")).perform(click());
+        Thread.sleep(200);
+        onView(isAssignableFrom(EditText.class)).perform(typeText("NewNameOfImage"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(withText("yes")).perform(click());
+        Thread.sleep(200);
+        AdapterImages adapterImages = ((AdapterImages)rec_view.getAdapter());
+
+        if(!adapterImages.getListImages().isEmpty())
+        {
+            String newPath = adapterImages.getListImages().get(0).getPath();
+            File imageFile = new File(newPath);
+            assertTrue(imageFile.exists());
         }
     }
 

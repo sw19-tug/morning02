@@ -229,6 +229,10 @@ public class MainActivity extends AppCompatActivity {
                 if(nameresult != "" && renameindex > -1){
                     AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
                     adapterImages.getListImages().get(renameindex).setFilename(nameresult);
+                    String oldPath = adapterImages.getListImages().get(renameindex).getPath();
+                    String newPath =  oldPath.substring(0,oldPath.lastIndexOf("/")+1);
+                    newPath = newPath + nameresult + oldPath.substring(oldPath.lastIndexOf("."));
+                    adapterImages.getListImages().get(renameindex).setPath(newPath);
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {

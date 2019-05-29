@@ -224,6 +224,31 @@ public class MainActivity extends AppCompatActivity {
                     adapterImages.notifyItemRemoved(result);
                     adapterImages.notifyItemRangeChanged(result, adapterImages.getListImages().size());
                 }
+                String nameresult = data.getStringExtra("newName");
+                int renameindex = data.getIntExtra("indexRename",-1);
+                if(nameresult != "" && renameindex > -1){
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+
+                    String oldPath = adapterImages.getListImages().get(renameindex).getPath();
+                    String newPath =  oldPath.substring(0,oldPath.lastIndexOf("/")+1);
+                    newPath = newPath + nameresult + oldPath.substring(oldPath.lastIndexOf("."));
+
+                    if(!newPath.equals(oldPath)) {
+                        while (existsName(newPath,oldPath))
+                        {
+                            nameresult = nameresult + "_copy";
+                            newPath = newPath.substring(0,newPath.lastIndexOf("/")+1) + nameresult + newPath.substring(newPath.lastIndexOf("."));
+                        }
+
+                        File from = new File(oldPath);
+                        File to = new File(newPath);
+                        if (from.exists()) {
+                            from.renameTo(to);
+                            adapterImages.getListImages().get(renameindex).setFilename(nameresult);
+                            adapterImages.getListImages().get(renameindex).setPath(newPath);
+                        }
+                    }
+                }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
             }
@@ -242,6 +267,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private boolean existsName(String newPath, String oldPath) {
+        String dirPath = newPath.substring(0,newPath.lastIndexOf("/"));
+        File dir = new File(dirPath);
+        if(dir.exists() && dir.isDirectory())
+        {
+            File[] filelist = dir.listFiles();
+            for (File f : filelist) {
+                if(f.getPath().equals(newPath) && !f.getPath().equals(oldPath))
+                    return true;
+            }
+        }
+        return false;
     }
 
     private void onSearchClicked(AdapterImages adapter) {

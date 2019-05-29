@@ -10,9 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.PopupMenu;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -86,6 +88,35 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
+                return true;
+            case R.id.renameButton:
+                AlertDialog.Builder inputTextBuilder = new AlertDialog.Builder(ImageFullscreenActivity.this);
+                inputTextBuilder.setTitle("New Name: ");
+                final EditText input = new EditText(this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+                inputTextBuilder.setView(input);
+
+                inputTextBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newName = input.getText().toString();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("indexRename",index);
+                        returnIntent.putExtra("newName",newName);
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        ImageFullscreenActivity.this.finish();
+                        dialog.dismiss();
+                    }
+                });
+
+                inputTextBuilder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog inputTextDialog = inputTextBuilder.create();
+                inputTextDialog.show();
                 return true;
             default:
                 return false;

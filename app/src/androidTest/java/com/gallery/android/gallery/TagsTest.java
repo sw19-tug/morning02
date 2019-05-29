@@ -3,20 +3,25 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.matcher.RootMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.checkerframework.checker.units.qual.A;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -26,9 +31,12 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.hamcrest.CoreMatchers.anything;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -184,6 +192,42 @@ public class TagsTest {
             onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
 
         }
+    }
+
+
+
+    @Test
+    public void checkTagApplied() throws Throwable {
+
+        RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
+        runOnUiThread(new MyRunnable(recycler_view, 0) {
+            public void run() {
+                this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performClick();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex1) {
+                    return;
+                }
+            }
+        });
+
+        onView(withId(R.id.tagsButton)).perform(click());
+
+
+        onView(withId(R.id.tag_check_box)).check(matches(isDisplayed()));
+        /*onView(withId(1)).perform(click());
+
+        CheckBox checkBox = activityTestRule2.getActivity().findViewById(1);
+        checkBox.setChecked(true);*/
+
+
+
+
+
+
+
+
     }
 
 

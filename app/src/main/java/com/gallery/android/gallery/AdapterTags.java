@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -57,14 +58,18 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderTags holder, int position) {
-
-
         Tags actual_tag = tags_.get(position);
 
         TextView textView = holder.tag_name;
 
-        textView.setText(actual_tag.getName());
-        holder.tag_name.setId(position);
+        holder.tag_name.setId(actual_tag.getTagId()+200);
+
+        holder.tag_name.setText(actual_tag.getName());
+
+        holder.checkbox1.setId(actual_tag.getTagId()+100);
+
+        System.out.println("dale-"+holder.checkbox1.getId()+","+holder.tag_name.getText()+","+holder.tag_name.getId());
+
     }
 
     public void setOnItemClickListener(AdapterTags.ClickListener listener) {
@@ -81,7 +86,9 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
         public TextView tag_name;
 
-        public Button delete_button;
+        final CheckBox checkbox1;
+
+        final Button delete_button;
 
         ViewHolderTags(View tagview) {
             super(tagview);
@@ -89,6 +96,8 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
             delete_button.setOnClickListener(this);
             tag_name = tagview.findViewById(R.id.tag_name);
+            checkbox1=tagview.findViewById(R.id.tag_check_box);
+
         }
 
 

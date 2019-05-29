@@ -39,8 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             buildRecycler();
+
+
             setEditText();
         }
+
     }
 
     @Override
@@ -109,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
                     Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
                     fullscreenImageIntent.putExtra("path", image_path);
                     startActivity(fullscreenImageIntent);
+
+
+
                 }
             }
         });

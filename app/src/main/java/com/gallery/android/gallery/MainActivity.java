@@ -233,12 +233,20 @@ public class MainActivity extends AppCompatActivity {
                     String newPath =  oldPath.substring(0,oldPath.lastIndexOf("/")+1);
                     newPath = newPath + nameresult + oldPath.substring(oldPath.lastIndexOf("."));
 
-                    File from = new File(oldPath);
-                    File to = new File(newPath);
-                    if(from.exists()) {
-                        from.renameTo(to);
-                        adapterImages.getListImages().get(renameindex).setFilename(nameresult);
-                        adapterImages.getListImages().get(renameindex).setPath(newPath);
+                    if(!newPath.equals(oldPath)) {
+                        while (existsName(newPath,oldPath))
+                        {
+                            nameresult = nameresult + "_copy";
+                            newPath = newPath.substring(0,newPath.lastIndexOf("/")+1) + nameresult + newPath.substring(newPath.lastIndexOf("."));
+                        }
+
+                        File from = new File(oldPath);
+                        File to = new File(newPath);
+                        if (from.exists()) {
+                            from.renameTo(to);
+                            adapterImages.getListImages().get(renameindex).setFilename(nameresult);
+                            adapterImages.getListImages().get(renameindex).setPath(newPath);
+                        }
                     }
                 }
             }
@@ -259,6 +267,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private boolean existsName(String newPath, String oldPath) {
+        String dirPath = newPath.substring(0,newPath.lastIndexOf("/"));
+        File dir = new File(dirPath);
+        if(dir.exists() && dir.isDirectory())
+        {
+            File[] filelist = dir.listFiles();
+            for (File f : filelist) {
+                if(f.getPath().equals(newPath) && !f.getPath().equals(oldPath))
+                    return true;
+            }
+        }
+        return false;
     }
 
     private void onSearchClicked(AdapterImages adapter) {

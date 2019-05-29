@@ -84,13 +84,15 @@ public class RenameTest {
         if (rec_view.getAdapter().getItemCount() == 0)
             return;
 
+        Long timestampLong = System.currentTimeMillis();
+        String timestamp = timestampLong.toString();
         String oldPath = ((AdapterImages)(rec_view.getAdapter())).getListImages().get(0).getPath();
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Rename")).check(matches((isDisplayed())));
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
-        onView(isAssignableFrom(EditText.class)).perform(typeText("NewNameOfImage"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(isAssignableFrom(EditText.class)).perform(typeText(timestamp), pressKey(KeyEvent.KEYCODE_ENTER));
         onView(withText("yes")).perform(click());
         Thread.sleep(200);
         AdapterImages adapterImages = ((AdapterImages)rec_view.getAdapter());
@@ -99,7 +101,7 @@ public class RenameTest {
         {
             String newName = adapterImages.getListImages().get(0).getFilename();
             String newPath = adapterImages.getListImages().get(0).getPath();
-            assertTrue(newName.equals("NewNameOfImage"));
+            assertTrue(newName.equals(timestamp));
             assertTrue(!newPath.equals(oldPath));
             String compareName =  newPath.substring(newPath.lastIndexOf("/") + 1);
             compareName = compareName.substring(0, compareName.lastIndexOf("."));
@@ -114,11 +116,13 @@ public class RenameTest {
         if (rec_view.getAdapter().getItemCount() == 0)
             return;
 
+        Long timestampLong = System.currentTimeMillis();
+        String timestamp = timestampLong.toString();
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
-        onView(isAssignableFrom(EditText.class)).perform(typeText("NewNameOfImage"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(isAssignableFrom(EditText.class)).perform(typeText(timestamp), pressKey(KeyEvent.KEYCODE_ENTER));
         onView(withText("yes")).perform(click());
         Thread.sleep(200);
         AdapterImages adapterImages = ((AdapterImages)rec_view.getAdapter());
@@ -155,9 +159,8 @@ public class RenameTest {
             assertTrue(imageFile.exists());
 
             String newName = adapterImages.getListImages().get(0).getFilename();
-            assertTrue(newName.equals(dupName + "_copy"));
+            assertTrue(newName.startsWith(dupName) && newName.endsWith("_copy"));
         }
     }
-
 
 }

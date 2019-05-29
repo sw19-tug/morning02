@@ -111,7 +111,13 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println(image_path);
                     Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
                     fullscreenImageIntent.putExtra("path", image_path);
+
+                    AdapterImages adapterImages = (AdapterImages)recyclerImages.getAdapter();
+                    ImageContainer imageContainer = adapterImages.getListImages().get(position);
+                    fullscreenImageIntent.putExtra("imageContainer", imageContainer);
+
                     startActivity(fullscreenImageIntent);
+
 
 
 

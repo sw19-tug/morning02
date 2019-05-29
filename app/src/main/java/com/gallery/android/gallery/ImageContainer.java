@@ -2,12 +2,14 @@ package com.gallery.android.gallery;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Date;
 import java.util.Comparator;
 import java.util.Set;
 
-public class ImageContainer implements ImageContainerInterface{
+public class ImageContainer implements ImageContainerInterface, Parcelable {
 
     private Bitmap image;
     private String path;
@@ -15,11 +17,44 @@ public class ImageContainer implements ImageContainerInterface{
     private Date date;
     private Set<Tags> tags;
 
+    protected ImageContainer(Parcel in) {
+        image = in.readParcelable(Bitmap.class.getClassLoader());
+        path = in.readString();
+        filename = in.readString();
+        size = in.readInt();
+    }
+
+    public static final Creator<ImageContainer> CREATOR = new Creator<ImageContainer>() {
+        @Override
+        public ImageContainer createFromParcel(Parcel in) {
+            return new ImageContainer(in);
+        }
+
+        @Override
+        public ImageContainer[] newArray(int size) {
+            return new ImageContainer[size];
+        }
+    };
+
     public Set<Tags> getTags() {
         return tags;
     }
 
     int size;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        //dest.writeValue(image);
+        dest.writeString(path);
+        dest.writeString(filename);
+        dest.writeSerializable(date);
+        dest.writeValue(tags);
+    }
 
     enum PictureComperator implements Comparator<ImageContainer> {
         NAME {
@@ -146,4 +181,5 @@ public class ImageContainer implements ImageContainerInterface{
             }
         };
     }
+
 }

@@ -11,11 +11,14 @@ import android.widget.ImageView;
 
 public class    ImageFullscreenActivity extends AppCompatActivity {
 
+    ImageContainer actual_image;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
         String path = getIntent().getExtras().getString("path");
+        actual_image = (ImageContainer)getIntent().getExtras().getSerializable("imageContainer");
         setContentView(R.layout.activity_image_fullscreen);
         ImageView image = findViewById(R.id.fullscreen_image_view);
         Bitmap bitmap = BitmapFactory.decodeFile(path);

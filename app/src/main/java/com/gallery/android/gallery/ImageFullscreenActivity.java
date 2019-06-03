@@ -118,6 +118,13 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                 AlertDialog inputTextDialog = inputTextBuilder.create();
                 inputTextDialog.show();
                 return true;
+            case R.id.rotateButton:
+                        int rotateIndex = index;
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("indexRotate",rotateIndex);
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        ImageFullscreenActivity.this.finish();
+                return true;
             default:
                 return false;
         }

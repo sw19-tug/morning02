@@ -58,18 +58,18 @@ public class RotateImageJTest {
     }
 
     @Test
-    public  void rotationTest() throws Throwable,InterruptedException
+    public  void rotationTestInternal() throws Throwable,InterruptedException
     {
         RecyclerView rView=activityTestRule.getActivity().recyclerImages;
 
         if(rView.getAdapter().getItemCount() == 0)
             return;
 
-        Bitmap mybitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
+        Bitmap myBitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
-        Bitmap rotated = Bitmap.createBitmap(mybitmap, 0, 0, mybitmap.getWidth(),
-                mybitmap.getHeight(), matrix, true);
+        Bitmap rotated = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(),
+                myBitmap.getHeight(), matrix, true);
 
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(200);
@@ -78,16 +78,48 @@ public class RotateImageJTest {
         onView(withText("Rotate")).perform(click());
         Thread.sleep(200);
 
-        Bitmap newbitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
+        Bitmap newBitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
         
         ByteBuffer rotatedBuffer = ByteBuffer.allocate(rotated.getHeight() * rotated.getRowBytes());
         rotated.copyPixelsToBuffer(rotatedBuffer);
 
-        ByteBuffer newBuffer = ByteBuffer.allocate(newbitmap.getHeight() * newbitmap.getRowBytes());
-        newbitmap.copyPixelsToBuffer(newBuffer);
+        ByteBuffer newBuffer = ByteBuffer.allocate(newBitmap.getHeight() * newBitmap.getRowBytes());
+        newBitmap.copyPixelsToBuffer(newBuffer);
 
         assertTrue(Arrays.equals(rotatedBuffer.array(), newBuffer.array()));
+    }
 
+    @Test
+    public  void rotationTestExternal() throws Throwable,InterruptedException
+    {
+        RecyclerView rView=activityTestRule.getActivity().recyclerImages;
+
+        if(rView.getAdapter().getItemCount() == 0)
+            return;
+
+        Bitmap myBitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
+        String path = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getPath();
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap rotated = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(),
+                myBitmap.getHeight(), matrix, true);
+
+        onView(withId(R.id.idImage)).perform(click());
+        Thread.sleep(200);
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Rotate")).perform(click());
+        Thread.sleep(200);
+
+        Bitmap newBitmap = BitmapFactory.decodeFile(path);
+
+        ByteBuffer rotatedBuffer = ByteBuffer.allocate(rotated.getHeight() * rotated.getRowBytes());
+        rotated.copyPixelsToBuffer(rotatedBuffer);
+
+        ByteBuffer newBuffer = ByteBuffer.allocate(newBitmap.getHeight() * newBitmap.getRowBytes());
+        newBitmap.copyPixelsToBuffer(newBuffer);
+
+        assertTrue(Arrays.equals(rotatedBuffer.array(), newBuffer.array()));
     }
 
 }

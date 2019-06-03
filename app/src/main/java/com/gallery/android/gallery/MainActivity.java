@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int STORAGE_READ_REQUEST = 1;
     public static final int FULLSCREEN_REQUEST = 2;
     public static final int OPEN_ZIP_REQUEST = 3;
+    public static final int ROTATE_REQUEST = 4;
     private static final int BUFFER_SIZE = 8192 ;//2048;
     RecyclerView recyclerImages;
 
@@ -190,11 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     String image_path = image_list.get(position).getPath();
                     System.out.println(image_path);
-                    Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                    fullscreenImageIntent.putExtra("path", image_path);
-                    fullscreenImageIntent.putExtra("index", position);
-                    startActivityForResult(fullscreenImageIntent,FULLSCREEN_REQUEST);
-
+                    startFullScreenActivity(position,image_path);
                 }
             }
         });
@@ -249,6 +248,19 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                int rotateIndex = data.getIntExtra("indexRotate",-1);
+                if(rotateIndex > -1){
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    Bitmap oldBitmap = adapterImages.getListImages().get(rotateIndex).getImage();
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(90);
+                    Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0, oldBitmap.getWidth(),
+                            oldBitmap.getHeight(), matrix, true);
+                    adapterImages.getListImages().get(rotateIndex).setImage(newBitmap);
+                    adapterImages.notifyItemChanged(rotateIndex);
+                    String path = adapterImages.getListImages().get(rotateIndex).getPath();
+                    startFullScreenActivity(rotateIndex, path);
+                }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
             }
@@ -267,6 +279,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void startFullScreenActivity(int pos, String path) {
+        Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+        fullscreenImageIntent.putExtra("path", path);
+        fullscreenImageIntent.putExtra("index", pos);
+        startActivityForResult(fullscreenImageIntent,FULLSCREEN_REQUEST);
     }
 
     private boolean existsName(String newPath, String oldPath) {

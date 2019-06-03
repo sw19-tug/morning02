@@ -4,6 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int STORAGE_READ_REQUEST = 1;
     public static final int FULLSCREEN_REQUEST = 2;
     public static final int OPEN_ZIP_REQUEST = 3;
+    public static final int ROTATE_REQUEST = 4;
     private static final int BUFFER_SIZE = 8192 ;//2048;
     RecyclerView recyclerImages;
 
@@ -190,11 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     String image_path = image_list.get(position).getPath();
                     System.out.println(image_path);
-                    Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                    fullscreenImageIntent.putExtra("path", image_path);
-                    fullscreenImageIntent.putExtra("index", position);
-                    startActivityForResult(fullscreenImageIntent,FULLSCREEN_REQUEST);
-
+                    startFullScreenActivity(position,image_path);
                 }
             }
         });
@@ -249,6 +250,58 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                int rotateIndex = data.getIntExtra("indexRotate",-1);
+                if(rotateIndex > -1){
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    Bitmap oldBitmap = BitmapFactory.decodeFile(adapterImages.getListImages().get(rotateIndex).getPath());
+                    Bitmap oldThumbnailBitmap = adapterImages.getListImages().get(rotateIndex).getImage();
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(90);
+
+                    Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0,
+                            oldBitmap.getWidth(),oldBitmap.getHeight(), matrix, true);
+
+                    Bitmap newThumbnailBitmap = Bitmap.createBitmap(oldThumbnailBitmap, 0, 0,
+                            oldThumbnailBitmap.getWidth(),oldThumbnailBitmap.getHeight(), matrix, true);
+
+                    adapterImages.getListImages().get(rotateIndex).setImage(newThumbnailBitmap);
+                    adapterImages.notifyItemChanged(rotateIndex);
+                    String path = adapterImages.getListImages().get(rotateIndex).getPath();
+
+                    String extension = path.substring(path.lastIndexOf("."));
+                    Bitmap.CompressFormat myFormat = Bitmap.CompressFormat.PNG;
+
+                    switch (extension.toUpperCase()){
+                        case "PNG":
+                            myFormat = Bitmap.CompressFormat.PNG;
+                            break;
+                        case "JPEG":
+                            myFormat = Bitmap.CompressFormat.JPEG;
+                            break;
+                        case "WEBP":
+                            myFormat = Bitmap.CompressFormat.WEBP;
+                            break;
+                        default:
+                            break;
+                    }
+                    OutputStream fOut = null;
+                    File file = new File(path);
+                    try {
+                        fOut = new FileOutputStream(file);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    newBitmap.compress(myFormat, 100, fOut);
+                    try {
+                        fOut.flush();
+                        fOut.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    startFullScreenActivity(rotateIndex, path);
+                }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
             }
@@ -267,6 +320,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void startFullScreenActivity(int pos, String path) {
+        Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+        fullscreenImageIntent.putExtra("path", path);
+        fullscreenImageIntent.putExtra("index", pos);
+        startActivityForResult(fullscreenImageIntent,FULLSCREEN_REQUEST);
     }
 
     private boolean existsName(String newPath, String oldPath) {

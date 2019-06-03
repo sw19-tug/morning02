@@ -30,7 +30,10 @@ public class TestHelper {
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         for(int x = 0; x < 100; x++){
             for(int y = 0; y < 100; y++){
-                bitmap.setPixel(x, y, Color.rgb(2, 100, 56));
+                if(y==x)
+                    bitmap.setPixel(x, y, Color.rgb(255, 255, 255));
+                else
+                    bitmap.setPixel(x, y, Color.rgb(66, 81, 181));
             }
         }
         try {

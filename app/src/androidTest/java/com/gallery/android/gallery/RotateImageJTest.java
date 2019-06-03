@@ -2,6 +2,8 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
@@ -25,6 +27,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 
@@ -53,4 +56,38 @@ public class RotateImageJTest {
         Thread.sleep(100);
         onView(withText("Rotate")).check(matches(isDisplayed()));
     }
+
+    @Test
+    public  void rotationTest() throws Throwable,InterruptedException
+    {
+        RecyclerView rView=activityTestRule.getActivity().recyclerImages;
+
+        if(rView.getAdapter().getItemCount() == 0)
+            return;
+
+        Bitmap mybitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap rotated = Bitmap.createBitmap(mybitmap, 0, 0, mybitmap.getWidth(),
+                mybitmap.getHeight(), matrix, true);
+
+        onView(withId(R.id.idImage)).perform(click());
+        Thread.sleep(200);
+        onView(withId(R.id.popupMenu)).perform(click());
+        Thread.sleep(100);
+        onView(withText("Rotate")).perform(click());
+        Thread.sleep(200);
+
+        Bitmap newbitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
+        
+        ByteBuffer rotatedBuffer = ByteBuffer.allocate(rotated.getHeight() * rotated.getRowBytes());
+        rotated.copyPixelsToBuffer(rotatedBuffer);
+
+        ByteBuffer newBuffer = ByteBuffer.allocate(newbitmap.getHeight() * newbitmap.getRowBytes());
+        newbitmap.copyPixelsToBuffer(newBuffer);
+
+        assertTrue(Arrays.equals(rotatedBuffer.array(), newBuffer.array()));
+
+    }
+
 }

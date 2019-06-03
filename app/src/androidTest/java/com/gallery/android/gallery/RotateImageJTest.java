@@ -41,10 +41,10 @@ public class RotateImageJTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .around(activityTestRule =new IntentsTestRule<MainActivity>(MainActivity.class) {
-                @Override
+                /*@Override
                 protected void beforeActivityLaunched() {
                     TestHelper.createFile("testClick.png");
-                }
+                }*/
             });
 
     @Test
@@ -96,9 +96,9 @@ public class RotateImageJTest {
 
         if(rView.getAdapter().getItemCount() == 0)
             return;
-
-        Bitmap myBitmap = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getImage();
         String path = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getPath();
+        Bitmap myBitmap = BitmapFactory.decodeFile(path);
+
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
         Bitmap rotated = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(),

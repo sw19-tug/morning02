@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -251,14 +253,53 @@ public class MainActivity extends AppCompatActivity {
                 int rotateIndex = data.getIntExtra("indexRotate",-1);
                 if(rotateIndex > -1){
                     AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
-                    Bitmap oldBitmap = adapterImages.getListImages().get(rotateIndex).getImage();
+                    Bitmap oldBitmap = BitmapFactory.decodeFile(adapterImages.getListImages().get(rotateIndex).getPath());
+                    Bitmap oldThumbnailBitmap = adapterImages.getListImages().get(rotateIndex).getImage();
                     Matrix matrix = new Matrix();
                     matrix.postRotate(90);
-                    Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0, oldBitmap.getWidth(),
-                            oldBitmap.getHeight(), matrix, true);
-                    adapterImages.getListImages().get(rotateIndex).setImage(newBitmap);
+
+                    Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0,
+                            oldBitmap.getWidth(),oldBitmap.getHeight(), matrix, true);
+
+                    Bitmap newThumbnailBitmap = Bitmap.createBitmap(oldThumbnailBitmap, 0, 0,
+                            oldThumbnailBitmap.getWidth(),oldThumbnailBitmap.getHeight(), matrix, true);
+
+                    adapterImages.getListImages().get(rotateIndex).setImage(newThumbnailBitmap);
                     adapterImages.notifyItemChanged(rotateIndex);
                     String path = adapterImages.getListImages().get(rotateIndex).getPath();
+
+                    String extension = path.substring(path.lastIndexOf("."));
+                    Bitmap.CompressFormat myFormat = Bitmap.CompressFormat.PNG;
+
+                    switch (extension.toUpperCase()){
+                        case "PNG":
+                            myFormat = Bitmap.CompressFormat.PNG;
+                            break;
+                        case "JPEG":
+                            myFormat = Bitmap.CompressFormat.JPEG;
+                            break;
+                        case "WEBP":
+                            myFormat = Bitmap.CompressFormat.WEBP;
+                            break;
+                        default:
+                            break;
+                    }
+                    OutputStream fOut = null;
+                    File file = new File(path);
+                    try {
+                        fOut = new FileOutputStream(file);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    newBitmap.compress(myFormat, 100, fOut);
+                    try {
+                        fOut.flush();
+                        fOut.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     startFullScreenActivity(rotateIndex, path);
                 }
             }

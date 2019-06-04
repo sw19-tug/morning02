@@ -4,7 +4,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:id="@+id/TagLayout"
-        android:layout_height="80dp"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:paddingTop="10dp"
@@ -18,7 +18,7 @@
                 />
 
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="270dp"
                 android:layout_height="match_parent"
                 android:id="@+id/tag_name"
                 android:textSize="25sp"

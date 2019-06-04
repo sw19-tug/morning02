@@ -3,6 +3,7 @@ package com.gallery.android.gallery;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,8 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +35,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -59,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_READ_REQUEST);
 
         } else {
+
+            SharedPreferences sharedPref =
+                    PreferenceManager.getDefaultSharedPreferences(this);
+
+            /*Boolean switchPref = sharedPref.getBoolean
+                    (SettingsActivity.KEY_PREF_TEST_SWITCH, true);
+
+            Toast.makeText(this, switchPref.toString(), Toast.LENGTH_LONG).show();*/
+
             buildRecycler();
             setEditText();
         }
@@ -136,13 +149,19 @@ public class MainActivity extends AppCompatActivity {
             refreshView();
             return true;
         }
-        case R.id.search:
+        case R.id.search: {
             EditText search_bar = findViewById(R.id.search_bar);
             if (search_bar.getVisibility() == View.GONE)
                 search_bar.setVisibility(View.VISIBLE);
             else
                 search_bar.setVisibility(View.GONE);
             return true;
+        }
+        case R.id.settings: {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
 
     }
         return(super.onOptionsItemSelected(item));

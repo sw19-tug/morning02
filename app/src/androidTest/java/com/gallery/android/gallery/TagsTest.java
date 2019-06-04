@@ -205,17 +205,24 @@ public class TagsTest {
 
         CheckBox checkBox = activityTestRule2.getActivity().findViewById(1);
         checkBox.setChecked(true);*/
-
-
-
-
-
-
-
-
     }
 
-
-
-
+    @Test
+    public void removeAllButtonExists() throws Throwable, InterruptedException{
+        RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
+        runOnUiThread(new MyRunnable(recycler_view, 0) {
+            public void run() {
+                this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performClick();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex1) {
+                    return;
+                }
+            }
+        });
+        onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.tagsButton)).perform(click());
+        onView(withId(R.id.remove_all_button)).check(matches(isDisplayed()));
+    }
 }

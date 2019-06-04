@@ -7,6 +7,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.widget.CheckBox;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -20,6 +22,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
@@ -225,7 +228,6 @@ public class TagsTest {
         onView(withId(R.id.tagsButton)).perform(click());
         onView(withId(R.id.remove_all_button)).check(matches(isDisplayed()));
     }
-}
 
     @Test
     public void selectAllButtonExists() throws Throwable, InterruptedException{
@@ -245,4 +247,37 @@ public class TagsTest {
         onView(withId(R.id.tagsButton)).perform(click());
         onView(withId(R.id.select_all_button)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void checkIfAllSelected() throws Throwable, InterruptedException {
+        RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
+        AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
+
+        runOnUiThread(new MyRunnable(recycler_view, 0) {
+            public void run() {
+                this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performClick();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex1) {
+                    return;
+                }
+            }
+        });
+        onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.tagsButton)).perform(click());
+        onView(withId(R.id.select_all_button)).perform(click());
+
+        /*for(int i=0; i< tv.tags_.size();i++) {
+            Tags actual_tag = tv.tags_.get(i);
+            int actual_tag_id = actual_tag.getTagId();
+            int tag_id=100+actual_tag_id;
+            CheckBox checkBox = (CheckBox) findViewById(tag_id);
+            Boolean selected= checkBox.isChecked();
+            assertTrue(selected);
+        }*/
+        }
+
+
 }
+

@@ -35,8 +35,4 @@
                 android:textColor="@color/white"
                 android:text="Delete" />
 
-
-
-
-
 </LinearLayout>

@@ -30,8 +30,8 @@ public class TagsMenuTest {
     @Test
     public void buttonExistsTest(){
 
-        onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.tags_menu)).check(matches(isDisplayed()));
+        onView(withId(R.id.activity_tags)).perform(click());
+        onView(withId(R.id.tagsMenu)).check(matches(isDisplayed()));
     }
 
 

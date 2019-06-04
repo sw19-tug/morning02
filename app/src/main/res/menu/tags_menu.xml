@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">>
+
+
+    <item
+        android:id="@+id/apply_button_menu"
+        app:showAsAction="never"
+        android:title="Apply"/>
+
+    <item
+        android:id="@+id/add_tag"
+        app:showAsAction="never"
+        android:title="Add new tag"/>
+
+    <item
+        android:id="@+id/select_all_tags"
+        app:showAsAction="never"
+        android:title="Select all tags"/>
+    <item
+        android:id="@+id/remove_selected_tags"
+        app:showAsAction="never"
+        android:title="Remove all selected tags"/>
+
+</menu>

@@ -136,13 +136,19 @@ public class MainActivity extends AppCompatActivity {
             refreshView();
             return true;
         }
-        case R.id.search:
+        case R.id.search: {
             EditText search_bar = findViewById(R.id.search_bar);
             if (search_bar.getVisibility() == View.GONE)
                 search_bar.setVisibility(View.VISIBLE);
             else
                 search_bar.setVisibility(View.GONE);
             return true;
+        }
+        case R.id.settings: {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
 
     }
         return(super.onOptionsItemSelected(item));

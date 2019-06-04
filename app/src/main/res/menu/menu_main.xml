@@ -40,4 +40,9 @@
         app:showAsAction="never"
         android:title="Import Zip ..."/>
 
+    <item
+        android:id="@+id/settings"
+        app:showAsAction="never"
+        android:title="Settings"/>
+
 </menu>

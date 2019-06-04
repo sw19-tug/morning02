@@ -31,7 +31,7 @@ public class TagsMenuTest {
     public void buttonExistsTest(){
 
         onView(withId(R.id.activity_tags)).perform(click());
-        onView(withId(R.id.tagsMenu)).check(matches(isDisplayed()));
+        onView(withId(R.id.button_tagsactivity_menu)).check(matches(isDisplayed()));
     }
 
 

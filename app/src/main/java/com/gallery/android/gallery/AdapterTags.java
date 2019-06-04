@@ -1,6 +1,5 @@
 package com.gallery.android.gallery;
 
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,9 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags> {
@@ -92,11 +89,11 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
         ViewHolderTags(View tagview) {
             super(tagview);
-            delete_button = tagview.findViewById(R.id.delete_tag);
+            delete_button = tagview.findViewById(R.id.button_tagitem_delete);
 
             delete_button.setOnClickListener(this);
-            tag_name = tagview.findViewById(R.id.tag_name);
-            checkbox1=tagview.findViewById(R.id.tag_check_box);
+            tag_name = tagview.findViewById(R.id.textview_tagitem_text);
+            checkbox1=tagview.findViewById(R.id.checkbox_tagitem_tick);
 
         }
 

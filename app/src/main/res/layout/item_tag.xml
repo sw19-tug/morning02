@@ -3,7 +3,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-        android:id="@+id/TagLayout"
+        android:id="@+id/linearlayout_tag_item"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -13,20 +13,20 @@
             <CheckBox
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/tag_check_box"
+                android:id="@+id/checkbox_tagitem_tick"
                 android:background="@color/cardview_light_background"
                 />
 
             <TextView
                 android:layout_width="270dp"
                 android:layout_height="match_parent"
-                android:id="@+id/tag_name"
+                android:id="@+id/textview_tagitem_text"
                 android:textSize="25sp"
                 android:gravity="center"
                 android:background="@color/gray" />
 
             <Button
-                android:id="@+id/delete_tag"
+                android:id="@+id/button_tagitem_delete"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:textSize="15sp"

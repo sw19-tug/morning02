@@ -7,7 +7,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.widget.CheckBox;
+
+import org.hamcrest.Matchers;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,14 +19,23 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -48,43 +58,33 @@ public class TagsTest {
 
 
     private ActivityTestRule<TagActivity> activityTestRule2;
-    @Rule
-    public final TestRule chain2 = RuleChain
-            .outerRule(GrantPermissionRule.grant(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .around(activityTestRule2 = new ActivityTestRule<TagActivity>(TagActivity.class) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    TestHelper.createFile("test.png");
-                }
-            });
+
+    public void goToTagsActivity() {
+
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
 
 
+        onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.tagsButton)).perform(click());
+    }
 
 
     @Test
     public void checkAddTag() throws Throwable, InterruptedException {
-        RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
-        AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
-            runOnUiThread(new MyRunnable(recycler_view, 0) {
-                public void run() {
-                    this.resycler_view.findViewHolderForAdapterPosition(0).itemView.performClick();
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ex1) {
-                        return;
-                    }
-                }
-            });
-            onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
-            onView(withId(R.id.tagsButton)).perform(click());
-            onView(withId(R.id.add_tag)).perform(click());
-            onView(withId(R.id.input)).check(matches(isDisplayed()));
-            onView(withId(R.id.input)).perform(typeText("Test"));
-            onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
-            onView(withText("Test")).check(matches(isDisplayed()));
+        goToTagsActivity();
+
+
+        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+        onView(withText("Add new tag")).check(matches(isDisplayed()));
+        onView(withText("Add new tag")).perform(click());
+
+
+        onView(withId(R.id.input)).perform(typeText("TestNewTag"));
+        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+
+        onView(withText("TestNewTag")).check(matches(isDisplayed()));
 
 
     }
@@ -95,50 +95,68 @@ public class TagsTest {
 
         checkAddTag();
 
-        Integer count = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
+        int itemcount = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
 
-        onView(withId(R.id.add_tag)).perform(click());
-        onView(withId(R.id.input)).check(matches(isDisplayed()));
-        onView(withId(R.id.input)).perform(typeText("Test"));
-        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+        checkAddTag();
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(new RecyclerViewItemCountAssertion(5));
 
-        Integer count_after = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
-        assertSame(count , count_after);
+        int itemcount_after = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
+        assertSame(itemcount, itemcount_after);
+
     }
 
     @Test
     public void DeleteTags() throws Throwable{
 
-        checkAddTag();
+        goToTagsActivity();
 
-        Integer count = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.button_tagitem_delete)));
 
-        AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
+        Thread.sleep(1000);
+
+        onView(withText("T1")).check(doesNotExist());
 
 
 
-        for(Integer i = tv.tags_.size()-1; i >= 0; i--){
-            String name = tv.tags_.get(i).getName();
-            onView(withId(R.id.TagsRecyclerId)).perform(
-                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.delete_tag)));
 
-            for (int n = 0; n < tv.tags_.size()-1;n++) {
-                assertNotEquals(name, (tv.tags_.get(n).getName()));
-            }
-        }
     }
+
+
 
     @Test
     public void assignTag() throws Throwable {
 
-        checkAddTag();
+        goToTagsActivity();
 
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
+        RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.checkbox_tagitem_tick));
+
+
+        pressBack();
+        Thread.sleep(100);
+
+        onView(withId(R.id.tagsButton)).perform(click());
+
+        Thread.sleep(100);
+
+
+        //onView(allOf(hasSibling(withText("T1")), withId(R.id.checkbox_tagitem_tick))).check(matches(isDisplayed()));
+
+
+        //onView(allOf(withParent(withChild(withText("T1"))), withId(R.id.checkbox_tagitem_tick))).check(matches(isChecked()));
+
+        // Check that the item has the special text.
+
+
+
+/*
         AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
 
         for (int i = 0; i < tv.tags_.size(); i++) {
 
-            onView(withId(R.id.TagsRecyclerId)).perform(
-                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.tag_check_box)));
+            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
         }
 
         AdapterImages apt = (AdapterImages)activityTestRule.getActivity().recyclerImages.getAdapter();
@@ -150,7 +168,7 @@ public class TagsTest {
 
         for(int i = 0; i < tv.tags_.size(); i++) {
             assertTrue(img.getTags().contains(tv.tags_.get(i)));
-        }
+        }*/
 
     }
 
@@ -163,8 +181,8 @@ public class TagsTest {
 
         for (int i = 0; i < tv.tags_.size(); i++) {
 
-            onView(withId(R.id.TagsRecyclerId)).perform(
-                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.tag_check_box)));
+            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
 
         }
 
@@ -203,7 +221,7 @@ public class TagsTest {
         onView(withId(R.id.tagsButton)).perform(click());
 
 
-        onView(withId(R.id.tag_check_box)).check(matches(isDisplayed()));
+        onView(withId(R.id.checkbox_tagitem_tick)).check(matches(isDisplayed()));
         /*onView(withId(1)).perform(click());
 
         CheckBox checkBox = activityTestRule2.getActivity().findViewById(1);
@@ -226,7 +244,7 @@ public class TagsTest {
         });
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
         onView(withId(R.id.tagsButton)).perform(click());
-        onView(withId(R.id.remove_all_button)).check(matches(isDisplayed()));
+        //onView(withId(R.id.remove_all_button)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -245,7 +263,7 @@ public class TagsTest {
         });
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
         onView(withId(R.id.tagsButton)).perform(click());
-        onView(withId(R.id.select_all_button)).check(matches(isDisplayed()));
+        //onView(withId(R.id.select_all_button)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -266,7 +284,7 @@ public class TagsTest {
         });
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
         onView(withId(R.id.tagsButton)).perform(click());
-        onView(withId(R.id.select_all_button)).perform(click());
+        //onView(withId(R.id.select_all_button)).perform(click());
 
         /*for(int i=0; i< tv.tags_.size();i++) {
             Tags actual_tag = tv.tags_.get(i);

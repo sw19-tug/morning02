@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">>
+    android:layout_height="match_parent">
 
 
     <item
@@ -12,16 +12,16 @@
         android:title="Apply"/>
 
     <item
-        android:id="@+id/add_tag"
+        android:id="@+id/item_tagsmenu_addtag"
         app:showAsAction="never"
         android:title="Add new tag"/>
 
     <item
-        android:id="@+id/select_all_tags"
+        android:id="@+id/item_tagsmenu_selectall"
         app:showAsAction="never"
         android:title="Select all tags"/>
     <item
-        android:id="@+id/remove_selected_tags"
+        android:id="@+id/item_tagsmenu_unselectall"
         app:showAsAction="never"
         android:title="Remove all selected tags"/>
 

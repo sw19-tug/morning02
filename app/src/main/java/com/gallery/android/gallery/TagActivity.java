@@ -1,7 +1,6 @@
 package com.gallery.android.gallery;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +11,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +73,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 return true;
 
 
-            case R.id.add_tag:
+            case R.id.item_tagsmenu_addtag:
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("New tag");
@@ -112,7 +109,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 return true;
 
 
-            case R.id.select_all_tags:
+            case R.id.item_tagsmenu_selectall:
                 //Toast.makeText(getBaseContext(), "You select select all tags button", Toast.LENGTH_SHORT);
                 //click_apply();
 
@@ -150,7 +147,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 return true;
 
 
-            case R.id.remove_selected_tags:
+            case R.id.item_tagsmenu_unselectall:
                 //Toast.makeText(getBaseContext(), "You select remove all selective tag button", Toast.LENGTH_SHORT);
                 //click_add_tag(item.getActionView());
                 return true;
@@ -173,7 +170,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
     private void buildRecycler() {
 
-        recyclerTags = findViewById(R.id.TagsRecyclerId);
+        recyclerTags = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
         final AdapterTags adapter = new AdapterTags(tags_);
 
 

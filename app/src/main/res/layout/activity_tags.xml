@@ -31,7 +31,7 @@
         android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:text="Remove all selected tags"
-        android:onClick="clic"
+        android:onClick="click_remove_all_button"
         android:layout_margin="10dp"/>
 
     <Button
@@ -44,7 +44,7 @@
         android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:text="Select all tags"
-        android:onClick="clic"
+        android:onClick="click_select_all_button"
         android:layout_margin="10dp"/>
 
     <Button

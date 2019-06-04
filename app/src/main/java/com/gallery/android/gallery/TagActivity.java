@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -130,6 +131,40 @@ public class TagActivity extends AppCompatActivity {
         }
 
     }
+
+
+/* void click_select_all_button (View view)  {
+
+        for(int j=0; j< tags_.size();j++){
+
+            Tags actual_tag = tags_.get(j);
+
+            String tag_name = actual_tag.getName();
+            int actual_tag_id = actual_tag.getTagId();
+            System.out.println("SELECT ALL tag_id_+100="+actual_tag_id+100);
+
+            int tag_id=100+actual_tag_id;
+            int tag_id2=200+actual_tag_id;
+            System.out.println("tag_id="+tag_id);
+
+            CheckBox checkBox = (CheckBox) findViewById(tag_id);
+            TextView text_checkBox=(TextView) findViewById(tag_id2);
+
+            String tagName=(String)text_checkBox.getText();
+            System.out.println("CHECK SELECT ALL" +checkBox.getId());
+
+
+
+            if(checkBox.isChecked()){
+                System.out.println(checkBox.getText() + " is selected. \n");
+                //checkBox.setChecked(true);
+            }
+            else{
+                System.out.println(checkBox.getText() + " is not selected. \n");
+                //checkBox.setChecked(true);
+            }
+        }
+    }*/
 
 
 

@@ -1,6 +1,8 @@
 package com.gallery.android.gallery;
 
+import android.app.Application;
 import android.content.DialogInterface;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,10 +26,13 @@ import java.util.List;
 
 public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener, PopupMenu.OnMenuItemClickListener {
 
+    int imageId = -1;
+
     String insert_text= "";
-    public List<Tags> tags_ = new ArrayList<Tags>();
+    public List<Tags> tags_ ;
     private List<String> checkedTags=new ArrayList<String>();
     public RecyclerView recyclerTags;
+    private ImageContainer actual_image_container;
 
     public void TagsMenu(View view) {
         PopupMenu tags_menu = new PopupMenu(this, view);
@@ -38,7 +43,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
     }
 
     @Override
-     public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.apply_button_menu:
@@ -89,14 +94,21 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         dialog.dismiss();
                         insert_text = input.getText().toString();
 
-                        AdapterTags ad = (AdapterTags)recyclerTags.getAdapter();
+                        Tags new_tag = new Tags(insert_text);
 
-                        AdapterTags a = (AdapterTags)recyclerTags.getAdapter();
-                        if(!a.hasItem(insert_text))
-                            ad.addItem(insert_text);
+                        ((GalleryApplication)getApplication()).tags.add(new_tag);
+
+
+                        AdapterTags adapter = (AdapterTags)recyclerTags.getAdapter();
+                        adapter.addItem(new_tag);
+
+
+                        recyclerTags.getAdapter().notifyItemInserted(recyclerTags.getAdapter().getItemCount());
+
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -139,40 +151,113 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
         return false;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_tags);
+        Bundle bundle = getIntent().getExtras();
 
-        tags_.addAll(Tags.createTagsList());
-        buildRecycler();
-        System.out.println("aqui empieza");
-        //RecyclerView r= findViewById();
+        try {
+
+            imageId = bundle.getInt("imageId");
+            actual_image_container = ((GalleryApplication) getApplication()).imgs.get(imageId);
+
+            tags_ = ((GalleryApplication) getApplication()).tags;
+
+        }
+        catch (NullPointerException null_exception) {
+            System.out.println("ImageContainer is faulty!");
+            actual_image_container = new ImageContainer();
+
+            ArrayList<Tags> tagsList = new ArrayList<Tags>();
+
+            String basic_tags[] = {"T1", "T2", "T3", "T4", "T5"};
+
+            for (int i = 0; i < basic_tags.length; i++) {
+                tagsList.add(new Tags(basic_tags[i]));
+            }
+
+
+            tags_ = tagsList;
+        }
+
+
+        setContentView(R.layout.activity_tags);
+        setUpRecyclerTags();
+
     }
 
-    private void buildRecycler() {
+    private void setUpRecyclerTags() {
 
         recyclerTags = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
-        final AdapterTags adapter = new AdapterTags(tags_);
+        final AdapterTags adapter = new AdapterTags(tags_,actual_image_container );
 
 
-        adapter.setOnItemClickListener(new AdapterTags.ClickListener() {
+        adapter.setOnItemDeleteClickListener(new AdapterTags.ClickDeleteListener() {
             @Override
-            public void onItemClick(int position, View v) {
+            public void onItemDeleteClick(int position, View v) {
                 adapter.removeItem(position);
+
+            }
+        });
+
+        adapter.setOnItemTickListener(new AdapterTags.ClickTickListener() {
+            @Override
+            public void onItemTick(int position, View v) {
+                actual_image_container.tags.add(adapter.tags_.get(position));
             }
         });
 
         recyclerTags.setAdapter(adapter);
         recyclerTags.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
+    public void click_add_tag(View view){
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New tag");
+
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.add_name_tags, (ViewGroup) findViewById(R.id.frame), false);
+
+        final EditText input = (EditText) viewInflated.findViewById(R.id.input);
+        builder.setView(viewInflated);
+
+        // Set up the buttons
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                insert_text = input.getText().toString();
+
+                Tags new_tag = new Tags(insert_text);
+
+                ((GalleryApplication)getApplication()).tags.add(new_tag);
+
+
+                AdapterTags adapter = (AdapterTags)recyclerTags.getAdapter();
+                adapter.addItem(new_tag);
+
+
+                recyclerTags.getAdapter().notifyItemInserted(recyclerTags.getAdapter().getItemCount());
+/*
+                ;
+                if(!a.hasItem(insert_text))
+                    ad.addItem(insert_text);*/
+
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
+
 
 
 

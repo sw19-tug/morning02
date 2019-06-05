@@ -2,6 +2,7 @@ package com.gallery.android.gallery;
 
 
 import android.Manifest;
+import android.app.Application;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
@@ -28,6 +29,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -45,6 +47,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class TagsTest {
+
+
 
     private ActivityTestRule<MainActivity> activityTestRule;
     @Rule
@@ -67,6 +71,7 @@ public class TagsTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .around(activityTestRule2 = new ActivityTestRule<TagActivity>(TagActivity.class) {
+
             });
 
 
@@ -163,6 +168,24 @@ public class TagsTest {
             pressBack();
             pressBack();
         }
+
+
+    }
+
+    @Test
+    public void removeTagfromPicture() throws Throwable {
+
+        checkIfAllSelected();
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+
+        pressBack();
+        onView(withId(R.id.tagsButton)).perform(click());
+
+        onView(withRecyclerView(R.id.recyclerview_tagsactivity_tagscontainer)
+                .atPositionOnView(0, R.id.checkbox_tagitem_tick))
+                .check(matches(isNotChecked()));
+        
 
 
     }

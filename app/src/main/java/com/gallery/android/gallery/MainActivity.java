@@ -1,6 +1,7 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
+import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int STORAGE_READ_REQUEST = 1;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         FileLoader f = new FileLoader();
         final ArrayList<ImageContainer> imageList = f.loadImageContainers();
+        ((GalleryApplication)this.getApplication()).imgs = imageList;
 
         AdapterImages adapter = new AdapterImages(imageList);
 
@@ -114,9 +119,10 @@ public class MainActivity extends AppCompatActivity {
                     Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
                     fullscreenImageIntent.putExtra("path", image_path);
 
-                    AdapterImages adapterImages = (AdapterImages)recyclerImages.getAdapter();
-                    ImageContainer imageContainer = adapterImages.getListImages().get(position);
-                    fullscreenImageIntent.putExtra("parceable", new_parceable);
+                    //put extra the id of the ImageContainer
+                    //AdapterImages adapterImages = (AdapterImages)recyclerImages.getAdapter();
+                    Integer image_id = position;
+                    fullscreenImageIntent.putExtra("imageId", image_id);
 
                     startActivity(fullscreenImageIntent);
 

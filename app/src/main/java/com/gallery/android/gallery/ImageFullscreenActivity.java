@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 public class    ImageFullscreenActivity extends AppCompatActivity {
 
-
+    private int imageId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -20,7 +20,9 @@ public class    ImageFullscreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         String path = bundle.getString("path");
-        DummyParceable actual_image = bundle.getParcelable("parceable");
+        int actual_image = bundle.getInt("imageId");
+        System.out.println("ImageId: "+actual_image);
+        imageId = actual_image;
 
 
 
@@ -42,6 +44,8 @@ public class    ImageFullscreenActivity extends AppCompatActivity {
         tagsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent tagsContentActivity = new Intent(ImageFullscreenActivity.this, TagActivity.class);
+                tagsContentActivity.putExtra("imageId", imageId);
+
                 startActivity(tagsContentActivity);
             }
         });

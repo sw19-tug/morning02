@@ -1,5 +1,6 @@
 package com.gallery.android.gallery;
 
+import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,14 +19,19 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
     public final List<Tags> tags_ = new ArrayList<>();
 
 
-    private static ClickListener listener;
+    private static ClickDeleteListener listener_delete;
+    private static ClickTickListener listener_tick;
+
+    private ImageContainer actual_image;
 
 
-    public AdapterTags(List<Tags> tags) {tags_.addAll(tags);}
+    public AdapterTags(List<Tags> tags, ImageContainer imageContainer) {
+        tags_.addAll(tags);
+        actual_image = imageContainer;
+    }
 
-    public void addItem(String name) {
-        Tags new_tag = new Tags(name);
-        tags_.add(new_tag);
+    public void addItem(Tags tag) {
+        tags_.add(tag);
 
         notifyItemInserted(tags_.size()-1);
     }
@@ -55,22 +61,31 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderTags holder, int position) {
+
         Tags actual_tag = tags_.get(position);
-
         TextView textView = holder.tag_name;
+        CheckBox checkBox = holder.checkbox1;
 
-        //holder.tag_name.setId(actual_tag.getTagId()+200);
+        /*
+        holder.tag_name.setId(actual_tag.getTagId()+200);
+        holder.checkbox1.setId(actual_tag.getTagId()+100);*/
 
         holder.tag_name.setText(actual_tag.getName());
 
-        //holder.checkbox1.setId(actual_tag.getTagId()+100);
+        if (actual_image.tags.contains(tags_.get(position)))
+            checkBox.setChecked(true);
 
+        //remove later
         System.out.println("dale-"+holder.checkbox1.getId()+","+holder.tag_name.getText()+","+holder.tag_name.getId());
 
     }
 
-    public void setOnItemClickListener(AdapterTags.ClickListener listener) {
-        AdapterTags.listener = listener;
+    public void setOnItemDeleteClickListener(ClickDeleteListener listener) {
+        AdapterTags.listener_delete = listener;
+    }
+
+    public void setOnItemTickListener(ClickTickListener listener) {
+        AdapterTags.listener_tick = listener;
     }
 
 
@@ -89,20 +104,30 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
         ViewHolderTags(View tagview) {
             super(tagview);
+
             delete_button = tagview.findViewById(R.id.button_tagitem_delete);
 
             delete_button.setOnClickListener(this);
-            tag_name = tagview.findViewById(R.id.textview_tagitem_text);
+
+
             checkbox1=tagview.findViewById(R.id.checkbox_tagitem_tick);
+            checkbox1.setOnClickListener(this);
+            tag_name = tagview.findViewById(R.id.textview_tagitem_text);
 
         }
 
 
         @Override
         public void onClick(View view) {
-            if (listener!=null){
-                listener.onItemClick(getAdapterPosition(), view);
+
+            switch (view.getId()) {
+                case R.id.button_tagitem_delete :
+                    listener_delete.onItemDeleteClick(getAdapterPosition(), view);
+                case R.id.checkbox_tagitem_tick:
+                    listener_tick.onItemTick(getAdapterPosition(), view);
             }
+
+
         }
 
     }
@@ -127,8 +152,12 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
     }
 
-    public interface ClickListener {
-        void onItemClick(int position, View v);
+    public interface ClickDeleteListener {
+        void onItemDeleteClick(int position, View v);
+    }
+
+    public interface ClickTickListener {
+        void onItemTick(int position, View v);
     }
 
 

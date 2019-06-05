@@ -21,17 +21,7 @@ public class Tags {
     private static int lastTagId = 0;
 
 
-    public static ArrayList<Tags> createTagsList() {
-        ArrayList<Tags> tagsList = new ArrayList<Tags>();
 
-        String basic_tags[] = {"T1", "T2", "T3", "T4", "T5"};
-
-        for (int i = 0; i < basic_tags.length; i++) {
-            tagsList.add(new Tags(basic_tags[i]));
-        }
-
-        return tagsList;
-    }
 
     public int getTagId() {
         return tagid;

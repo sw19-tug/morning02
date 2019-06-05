@@ -7,6 +7,7 @@ import android.os.Parcelable;
 
 import java.util.Date;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ImageContainer implements ImageContainerInterface, Parcelable {
@@ -15,7 +16,7 @@ public class ImageContainer implements ImageContainerInterface, Parcelable {
     private String path;
     private String filename;
     private Date date;
-    private Set<Tags> tags;
+    public Set<Tags> tags = new HashSet<>();
 
     protected ImageContainer(Parcel in) {
         image = in.readParcelable(Bitmap.class.getClassLoader());

@@ -2,25 +2,21 @@ package com.gallery.android.gallery;
 
 import android.Manifest;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
-import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -28,15 +24,13 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.Matchers.not;
-
+import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
 public class BulkEditJTest {
@@ -83,9 +77,9 @@ public class BulkEditJTest {
             return;
 
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.longClickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(0, TestHelper.longClickChildViewWithId(R.id.ImageLayout)));
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(1, TestHelper.clickChildViewWithId(R.id.ImageLayout)));
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
@@ -100,9 +94,9 @@ public class BulkEditJTest {
             return;
 
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.longClickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(0, TestHelper.longClickChildViewWithId(R.id.ImageLayout)));
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(1, TestHelper.clickChildViewWithId(R.id.ImageLayout)));
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
@@ -117,9 +111,9 @@ public class BulkEditJTest {
             return;
 
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.longClickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(0, TestHelper.longClickChildViewWithId(R.id.ImageLayout)));
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(1, TestHelper.clickChildViewWithId(R.id.ImageLayout)));
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
@@ -146,9 +140,9 @@ public class BulkEditJTest {
                 oldBitmap2.getHeight(), matrix2, true);
 
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.longClickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(0, TestHelper.longClickChildViewWithId(R.id.ImageLayout)));
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(1, TestHelper.clickChildViewWithId(R.id.ImageLayout)));
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
@@ -173,49 +167,29 @@ public class BulkEditJTest {
         assertTrue(Arrays.equals(oldBitmap2Buffer.array(), newBitmap2Buffer.array()));
     }
 
-}
+    @Test
+    public void testDeleteFunctionality() throws InterruptedException {
 
- class MyViewAction {
+        RecyclerView resycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (resycler_view.getAdapter().getItemCount() < 2)
+            return;
 
-    public static ViewAction clickChildViewWithId(final int id) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return null;
-            }
+        String path1 = ((AdapterImages)(resycler_view.getAdapter())).getListImages().get(0).getPath();
+        String path2 = ((AdapterImages)(resycler_view.getAdapter())).getListImages().get(1).getPath();
 
-            @Override
-            public String getDescription() {
-                return "Click on a child view with specified id.";
-            }
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, TestHelper.longClickChildViewWithId(R.id.ImageLayout)));
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(1, TestHelper.clickChildViewWithId(R.id.ImageLayout)));
 
-            @Override
-            public void perform(UiController uiController,
-                                View view) {
-                View v = view.findViewById(id);
-                v.performClick();
-            }
-        };
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Delete All")).perform(click());
+
+        File file1 = new File(path1);
+        assertTrue(file1.exists());
+        File file2 = new File(path1);
+        assertFalse(file2.exists());
     }
 
-     public static ViewAction longClickChildViewWithId(final int id) {
-         return new ViewAction() {
-             @Override
-             public Matcher<View> getConstraints() {
-                 return null;
-             }
-
-             @Override
-             public String getDescription() {
-                 return "Longclick on a child view with specified id.";
-             }
-
-             @Override
-             public void perform(UiController uiController,
-                                 View view) {
-                 View v = view.findViewById(id);
-                 v.performLongClick();
-             }
-         };
-     }
 }

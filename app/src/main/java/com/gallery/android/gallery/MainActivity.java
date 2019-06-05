@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
+    public List<Integer> selection_pos_list = new ArrayList<>();
     EditText editText;
 
     @Override
@@ -160,6 +161,18 @@ public class MainActivity extends AppCompatActivity {
                 search_bar.setVisibility(View.GONE);
             return true;
         }
+        case R.id.rotate_all: {
+            if (selection_list.size() == selection_pos_list.size()) {
+                for (int index = 0; index < selection_pos_list.size(); index++) {
+                    rotateImage((int) selection_pos_list.get(index));
+                }
+                resetSelectionMode();
+            }
+            selection_list.clear();
+            selection_pos_list.clear();
+            setSelectionMode(false);
+            return true;
+        }
         case R.id.settings: {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -170,21 +183,76 @@ public class MainActivity extends AppCompatActivity {
         return(super.onOptionsItemSelected(item));
     }
 
+    private void rotateImage(int pos) {
+        AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+        Bitmap oldBitmap = BitmapFactory.decodeFile(adapterImages.getListImages().get(pos).getPath());
+        Bitmap oldThumbnailBitmap = adapterImages.getListImages().get(pos).getImage();
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
+        Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0,
+                oldBitmap.getWidth(),oldBitmap.getHeight(), matrix, true);
+
+        Bitmap newThumbnailBitmap = Bitmap.createBitmap(oldThumbnailBitmap, 0, 0,
+                oldThumbnailBitmap.getWidth(),oldThumbnailBitmap.getHeight(), matrix, true);
+
+        adapterImages.getListImages().get(pos).setImage(newThumbnailBitmap);
+        adapterImages.notifyItemChanged(pos);
+        String path = adapterImages.getListImages().get(pos).getPath();
+
+        String extension = path.substring(path.lastIndexOf(".")+1);
+        Bitmap.CompressFormat myFormat = Bitmap.CompressFormat.PNG;
+
+        switch (extension.toUpperCase()){
+            case "PNG":
+                myFormat = Bitmap.CompressFormat.PNG;
+                break;
+            case "JPEG":
+                myFormat = Bitmap.CompressFormat.JPEG;
+                break;
+            case "WEBP":
+                myFormat = Bitmap.CompressFormat.WEBP;
+                break;
+            default:
+                break;
+        }
+        OutputStream fOut = null;
+        File file = new File(path);
+        try {
+            fOut = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        newBitmap.compress(myFormat, 100, fOut);
+        try {
+            fOut.flush();
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (selection_mode) {
-            RecyclerView rec_view = (RecyclerView) this.findViewById(R.id.RecyclerId);
-
-            for (int i = 0; i < rec_view.getChildCount(); i++) {
-                RelativeLayout rel_layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(i).itemView;
-                rel_layout.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
-            }
-
-            selection_list.clear();
-            setSelectionMode(false);
+            resetSelectionMode();
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void resetSelectionMode() {
+        RecyclerView rec_view = (RecyclerView) this.findViewById(R.id.RecyclerId);
+
+        for (int i = 0; i < rec_view.getChildCount(); i++) {
+            RelativeLayout rel_layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(i).itemView;
+            rel_layout.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
+        }
+
+        selection_list.clear();
+        selection_pos_list.clear();
+        setSelectionMode(false);
     }
 
 
@@ -205,10 +273,12 @@ public class MainActivity extends AppCompatActivity {
                 if (selection_mode) {
 
                     if (selection_list.contains(image_list.get(position))) {
+                        selection_pos_list.remove((Integer)position);
                         selection_list.remove(image_list.get(position));
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
                     } else {
                         selection_list.add(image_list.get(position));
+                        selection_pos_list.add(position);
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                     }
 
@@ -227,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemLongClick(int position, View v) {
                 if (!selection_mode) {
                     selection_list.add(image_list.get(position));
+                    selection_pos_list.add(position);
                     setSelectionMode(true);
                     v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                 }
@@ -274,55 +345,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 int rotateIndex = data.getIntExtra("indexRotate",-1);
                 if(rotateIndex > -1){
+                    rotateImage(rotateIndex);
                     AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
-                    Bitmap oldBitmap = BitmapFactory.decodeFile(adapterImages.getListImages().get(rotateIndex).getPath());
-                    Bitmap oldThumbnailBitmap = adapterImages.getListImages().get(rotateIndex).getImage();
-                    Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-
-                    Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0,
-                            oldBitmap.getWidth(),oldBitmap.getHeight(), matrix, true);
-
-                    Bitmap newThumbnailBitmap = Bitmap.createBitmap(oldThumbnailBitmap, 0, 0,
-                            oldThumbnailBitmap.getWidth(),oldThumbnailBitmap.getHeight(), matrix, true);
-
-                    adapterImages.getListImages().get(rotateIndex).setImage(newThumbnailBitmap);
-                    adapterImages.notifyItemChanged(rotateIndex);
-                    String path = adapterImages.getListImages().get(rotateIndex).getPath();
-
-                    String extension = path.substring(path.lastIndexOf("."));
-                    Bitmap.CompressFormat myFormat = Bitmap.CompressFormat.PNG;
-
-                    switch (extension.toUpperCase()){
-                        case "PNG":
-                            myFormat = Bitmap.CompressFormat.PNG;
-                            break;
-                        case "JPEG":
-                            myFormat = Bitmap.CompressFormat.JPEG;
-                            break;
-                        case "WEBP":
-                            myFormat = Bitmap.CompressFormat.WEBP;
-                            break;
-                        default:
-                            break;
-                    }
-                    OutputStream fOut = null;
-                    File file = new File(path);
-                    try {
-                        fOut = new FileOutputStream(file);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    newBitmap.compress(myFormat, 100, fOut);
-                    try {
-                        fOut.flush();
-                        fOut.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    startFullScreenActivity(rotateIndex, path);
+                    startFullScreenActivity(rotateIndex, adapterImages.getListImages().get(rotateIndex).getPath());
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -454,5 +479,4 @@ public class MainActivity extends AppCompatActivity {
         this.selection_mode = selection_mode;
         this.invalidateOptionsMenu();
     }
-
 }

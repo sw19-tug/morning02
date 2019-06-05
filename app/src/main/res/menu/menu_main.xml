@@ -48,6 +48,10 @@
         app:showAsAction="never"
         android:title="Delete All"/>
     <item
+        android:id="@+id/share_all"
+        app:showAsAction="never"
+        android:title="Share All"/>
+    <item
         android:id="@+id/settings"
         app:showAsAction="never"
         android:title="Settings"/>

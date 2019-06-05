@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.sort_size_desc).setVisible(!selection_mode);
         menu.findItem(R.id.rotate_all).setVisible(selection_mode);
         menu.findItem(R.id.delete_all).setVisible(selection_mode);
+        menu.findItem(R.id.share_all).setVisible(selection_mode);
 
         return true;
     }

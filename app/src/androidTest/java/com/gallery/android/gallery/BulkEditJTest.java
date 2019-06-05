@@ -125,6 +125,54 @@ public class BulkEditJTest {
         Thread.sleep(100);
         onView(withText("Share All")).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void testRotateFunctionality() throws InterruptedException {
+
+        RecyclerView resycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (resycler_view.getAdapter().getItemCount() < 2)
+            return;
+
+        Bitmap oldBitmap1 = ((AdapterImages)(resycler_view.getAdapter())).getListImages().get(0).getImage();
+        Matrix matrix1 = new Matrix();
+        matrix1.postRotate(90);
+        Bitmap rotated1 = Bitmap.createBitmap(oldBitmap1, 0, 0, oldBitmap1.getWidth(),
+                oldBitmap1.getHeight(), matrix1, true);
+
+        Bitmap oldBitmap2 = ((AdapterImages)(resycler_view.getAdapter())).getListImages().get(1).getImage();
+        Matrix matrix2 = new Matrix();
+        matrix2.postRotate(90);
+        Bitmap rotated2 = Bitmap.createBitmap(oldBitmap2, 0, 0, oldBitmap2.getWidth(),
+                oldBitmap2.getHeight(), matrix2, true);
+
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.longClickChildViewWithId(R.id.ImageLayout)));
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Rotate All")).perform(click());
+
+        Bitmap newBitmap1 = ((AdapterImages)(resycler_view.getAdapter())).getListImages().get(0).getImage();
+        Bitmap newBitmap2 = ((AdapterImages)(resycler_view.getAdapter())).getListImages().get(1).getImage();
+
+        ByteBuffer oldBitmap1Buffer = ByteBuffer.allocate(rotated1.getHeight() * rotated1.getRowBytes());
+        rotated1.copyPixelsToBuffer(oldBitmap1Buffer);
+
+        ByteBuffer oldBitmap2Buffer = ByteBuffer.allocate(rotated2.getHeight() * rotated2.getRowBytes());
+        rotated2.copyPixelsToBuffer(oldBitmap2Buffer);
+
+        ByteBuffer newBitmap1Buffer = ByteBuffer.allocate(newBitmap1.getHeight() * newBitmap1.getRowBytes());
+        newBitmap1.copyPixelsToBuffer(newBitmap1Buffer);
+
+        ByteBuffer newBitmap2Buffer = ByteBuffer.allocate(newBitmap2.getHeight() * newBitmap2.getRowBytes());
+        newBitmap2.copyPixelsToBuffer(newBitmap2Buffer);
+
+        assertTrue(Arrays.equals(oldBitmap1Buffer.array(), newBitmap1Buffer.array()));
+        assertTrue(Arrays.equals(oldBitmap2Buffer.array(), newBitmap2Buffer.array()));
+    }
+
 }
 
  class MyViewAction {

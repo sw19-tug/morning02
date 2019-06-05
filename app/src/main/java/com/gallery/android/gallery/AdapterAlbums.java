@@ -1,7 +1,11 @@
 package com.gallery.android.gallery;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +16,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolderAlbums>  {
-    private final ArrayList<String> listAlbums;
+    private final ArrayList<Pair<String, Bitmap>> listAlbums;
     private static AdapterAlbums.ClickListener listener;
 
-    public AdapterAlbums(ArrayList<String> listAlbums) {
+    public AdapterAlbums(ArrayList<Pair<String, Bitmap>> listAlbums) {
         this.listAlbums = listAlbums;
     }
 
@@ -32,7 +36,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
         return listAlbums.size();
     }
 
-    public ArrayList<String> getListAlbums() {
+    public ArrayList<Pair<String, Bitmap>> getListAlbums() {
         return listAlbums;
     }
 
@@ -45,9 +49,14 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull AdapterAlbums.ViewHolderAlbums holder, int position) {
-        ((TextView) holder.album.findViewById(R.id.albumName)).setText(listAlbums.get(position));
-        holder.album.setId(holder.album.getId()+position);
 
+        String path = listAlbums.get(position).first;
+        String album_name = path.substring(path.lastIndexOf("/") + 1);
+
+        ((TextView) holder.album.findViewById(R.id.albumName)).setText(album_name);
+        ((ImageView) holder.album.findViewById(R.id.idImage)).setImageBitmap(listAlbums.get(position).second);
+
+        holder.album.setId(holder.album.getId()+position);
     }
 
     public class ViewHolderAlbums extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -57,7 +66,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
         ViewHolderAlbums(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            album= itemView.findViewById(R.id.albumLayout);
+            album = itemView.findViewById(R.id.albumLayout);
         }
 
         @Override

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int BUFFER_SIZE = 8192 ;//2048;
     public static RecyclerView recyclerImages;
     public static String path;
+    public static boolean album_mode = false;
     private Boolean include_subfolders = true;
 
     public boolean selection_mode = false;
@@ -163,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
 
             selection_list.clear();
             setSelectionMode(false);
+        } else if (album_mode) {
+            Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
+            startActivity(albumIntent);
         } else {
             super.onBackPressed();
         }

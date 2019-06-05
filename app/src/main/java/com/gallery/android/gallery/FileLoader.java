@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.Image;
+import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Pair;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -143,13 +145,27 @@ public class FileLoader implements FileLoaderInterface {
         return loader.parseAllImages(paths);
     }
 
-    public ArrayList<String> loadAlbums(){
+    public ArrayList<Pair<String, Bitmap>> loadAlbums(){
         ArrayList<String> imagePaths = this.getImagesInformation();
-        ArrayList<String> albumPaths=new ArrayList<String>();
+        ArrayList<Pair<String, Bitmap>> albumPaths=new ArrayList<Pair<String, Bitmap>>();
         for(String image_path : imagePaths) {
             String path= image_path.substring(0,image_path.lastIndexOf("/"));
-            if (!albumPaths.contains(path)){
-                albumPaths.add(path);
+
+            boolean found = false;
+
+            for (Pair<String, Bitmap> album : albumPaths)
+            {
+                if (album.first.equals(path))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found){
+                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(image_path),
+                        256, 256);
+                albumPaths.add(Pair.create(path, thumbnail));
             }
         }
         return albumPaths;

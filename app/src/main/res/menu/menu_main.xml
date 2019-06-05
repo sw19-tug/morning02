@@ -39,6 +39,10 @@
         android:id="@+id/import_zip"
         app:showAsAction="never"
         android:title="Import Zip ..."/>
+    <item
+        android:id="@+id/rotate_all"
+        app:showAsAction="never"
+        android:title="Rotate All"/>
 
     <item
         android:id="@+id/settings"

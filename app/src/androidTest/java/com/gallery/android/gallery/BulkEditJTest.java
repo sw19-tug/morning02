@@ -34,6 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.Matchers.not;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -65,8 +66,15 @@ public class BulkEditJTest {
                 RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
 
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText("Rotate All")).check(matches(isDisplayed()));
         Thread.sleep(100);
+        onView(withText("Rotate All")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testRotateOptionInvisible() throws InterruptedException {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Rotate All")).check(matches(not(isDisplayed())));
     }
 }
 

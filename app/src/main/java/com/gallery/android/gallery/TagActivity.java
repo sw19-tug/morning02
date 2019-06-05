@@ -128,7 +128,11 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
                     LinearLayout lin = (LinearLayout)res.findViewHolderForAdapterPosition(j).itemView;
                     CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
-                    checkBox.setChecked(true);
+                    //checkBox.setChecked(true);
+                    if (!checkBox.isChecked()) {
+                        checkBox.performClick();
+                    }
+
                 }
 
                 return true;
@@ -141,7 +145,11 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
                     LinearLayout lin = (LinearLayout)res1.findViewHolderForAdapterPosition(j).itemView;
                     CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
-                    checkBox.setChecked(false);
+
+                    if (checkBox.isChecked()) {
+                        checkBox.performClick();
+                    }
+
                 }
                 return true;
         }
@@ -201,7 +209,14 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
         adapter.setOnItemTickListener(new AdapterTags.ClickTickListener() {
             @Override
             public void onItemTick(int position, View v) {
-                actual_image_container.tags.add(adapter.tags_.get(position));
+                CheckBox c = (CheckBox)v;
+                if (c.isChecked()) {
+                    actual_image_container.tags.add(adapter.tags_.get(position));
+                }
+                else {
+                    actual_image_container.tags.remove(adapter.tags_.get(position));
+                }
+
             }
         });
 

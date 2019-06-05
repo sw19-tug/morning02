@@ -107,7 +107,9 @@ public class TagsTest {
         onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.button_tagitem_delete)));
 
-        Thread.sleep(1000);
+        Thread.sleep(100);
+        pressBack();
+        onView(withId(R.id.tagsButton)).perform(click());
 
         onView(withText("T1")).check(doesNotExist());
     }
@@ -235,6 +237,28 @@ public class TagsTest {
             CheckBox checkbox = activityTestRule2.getActivity().recyclerTags.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.checkbox_tagitem_tick);
             assertFalse(checkbox.isChecked());
         }
+    }
+
+    @Test
+    public void assignAndDeleteTag() {
+
+        goToTagsActivity();
+
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+
+        pressBack();
+        onView(withId(R.id.tagsButton)).perform(click());
+
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.button_tagitem_delete)));
+
+        pressBack();
+        onView(withId(R.id.tagsButton)).perform(click());
+
+
+
+
     }
 
 }

@@ -123,16 +123,16 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
             switch (view.getId()) {
                 case R.id.button_tagitem_delete :
                     listener_delete.onItemDeleteClick(getAdapterPosition(), view);
+                    break;
                 case R.id.checkbox_tagitem_tick:
                     listener_tick.onItemTick(getAdapterPosition(), view);
+                    break;
             }
 
 
         }
 
     }
-
-
 
 
 

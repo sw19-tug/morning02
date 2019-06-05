@@ -58,7 +58,7 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
     public ImageContainer searchPictures(String name){
         for(ImageContainer image : listImages)
         {
-            if(image.getFilename().equals(name))
+            if(image.getFilename().equals(name) || (image.getTags().contains(name)))
             {
                 System.out.println(name + "=" + image.getFilename());
                 return image;

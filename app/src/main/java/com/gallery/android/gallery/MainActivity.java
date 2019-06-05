@@ -1,7 +1,6 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
-import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -24,8 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int STORAGE_READ_REQUEST = 1;
 
-    DummyParceable new_parceable = new DummyParceable(1);
-
     RecyclerView recyclerImages;
 
     public boolean selection_mode = false;
@@ -45,11 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             buildRecycler();
-
-
             setEditText();
         }
-
     }
 
     @Override
@@ -126,9 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
                     startActivity(fullscreenImageIntent);
 
-
-
-
                 }
             }
         });
@@ -148,8 +139,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSearchClicked(AdapterImages adapter) {
         EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
+        String search_text = (searchbar_input.getText().toString());
         System.out.println(searchbar_input.getText().toString());
-        ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
+        ImageContainer image = adapter.searchPictures(search_text);
 
         if (image != null) {
             searchbar_input.setText("Found: " + image.getFilename());
@@ -168,5 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
 }

@@ -1,16 +1,12 @@
 package com.gallery.android.gallery;
 
-
 import android.Manifest;
-import android.app.Application;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
-import android.support.v7.widget.RecyclerView;
+
 import android.view.KeyEvent;
 import android.widget.CheckBox;
-
-import org.hamcrest.Matchers;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,30 +21,17 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 
 import static android.support.test.espresso.matcher.RootMatchers.isDialog;
-import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withParent;
-import static android.support.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
 import static com.gallery.android.gallery.TestUtils.withRecyclerView;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class TagsTest {
-
-
 
     private ActivityTestRule<MainActivity> activityTestRule;
     @Rule
@@ -71,10 +54,7 @@ public class TagsTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .around(activityTestRule2 = new ActivityTestRule<TagActivity>(TagActivity.class) {
-
             });
-
-
 
 
     public void goToTagsActivity() {
@@ -86,7 +66,6 @@ public class TagsTest {
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
         onView(withId(R.id.tagsButton)).perform(click());
     }
-
 
     @Test
     public void checkAddTag() throws Throwable, InterruptedException {
@@ -104,9 +83,7 @@ public class TagsTest {
 
         onView(withText("TestNewTag")).check(matches(isDisplayed()));
 
-
     }
-
 
     @Test
     public void checkAddDoubleTags() throws Throwable {
@@ -120,7 +97,6 @@ public class TagsTest {
 
         int itemcount_after = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
         assertSame(itemcount, itemcount_after);
-
     }
 
     @Test
@@ -164,11 +140,9 @@ public class TagsTest {
                         .atPositionOnView(n, R.id.checkbox_tagitem_tick))
                         .check(matches(isChecked()));
             }
-
             pressBack();
             pressBack();
         }
-
 
     }
 
@@ -185,9 +159,6 @@ public class TagsTest {
         onView(withRecyclerView(R.id.recyclerview_tagsactivity_tagscontainer)
                 .atPositionOnView(0, R.id.checkbox_tagitem_tick))
                 .check(matches(isNotChecked()));
-        
-
-
     }
 
     @Test
@@ -217,8 +188,6 @@ public class TagsTest {
     }
 
 
-
-
     @Test
     public void removeAllButtonExists() throws Throwable, InterruptedException{
         goToTagsActivity();
@@ -228,7 +197,6 @@ public class TagsTest {
 
         onView(withText("Remove all selected tags")).check(matches(isDisplayed()));
         onView(withText("Remove all selected tags")).perform(click());
-
     }
 
     @Test
@@ -268,7 +236,6 @@ public class TagsTest {
             assertFalse(checkbox.isChecked());
         }
     }
-
 
 }
 

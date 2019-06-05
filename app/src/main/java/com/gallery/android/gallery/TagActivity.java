@@ -1,12 +1,9 @@
 package com.gallery.android.gallery;
 
-import android.app.Application;
 import android.content.DialogInterface;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

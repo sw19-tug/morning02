@@ -29,6 +29,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -74,7 +75,27 @@ public class BulkEditJTest {
     public void testRotateOptionInvisible() throws InterruptedException {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
-        onView(withText("Rotate All")).check(matches(not(isDisplayed())));
+        onView(withText("Rotate All")).check(doesNotExist());
+    }
+
+    @Test
+    public void testDeleteOptionVisibility() throws InterruptedException {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Delete All")).check(doesNotExist());
+
+        RecyclerView resycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (resycler_view.getAdapter().getItemCount() < 2)
+            return;
+
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.longClickChildViewWithId(R.id.ImageLayout)));
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Delete All")).check(matches(isDisplayed()));
     }
 }
 

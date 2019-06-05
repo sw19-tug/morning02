@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -110,39 +112,15 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
 
             case R.id.item_tagsmenu_selectall:
-                //Toast.makeText(getBaseContext(), "You select select all tags button", Toast.LENGTH_SHORT);
-                //click_apply();
 
-                /* for(int j=0; j< tags_.size();j++){
+                RecyclerView res = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
+                
+                for(int j=0; j< tags_.size();j++){
 
-                    Tags actual_tag = tags_.get(j);
-
-                    String tag_name = actual_tag.getName();
-                    int actual_tag_id = actual_tag.getTagId();
-                    System.out.println("SELECT ALL tag_id_+100="+actual_tag_id+100);
-
-                    int tag_id=100+actual_tag_id;
-                    int tag_id2=200+actual_tag_id;
-                    System.out.println("tag_id="+tag_id);
-
-                    CheckBox checkBox = (CheckBox) findViewById(tag_id);
-                    TextView text_checkBox=(TextView) findViewById(tag_id2);
-
-                    String tagName=(String)text_checkBox.getText();
-                    System.out.println("CHECK SELECT ALL" +checkBox.getId());
-
-
-
-                    if(checkBox.isChecked()){
-                        System.out.println(checkBox.getText() + " is selected. \n");
-                        //checkBox.setChecked(true);
-                    }
-                    else{
-                        System.out.println(checkBox.getText() + " is not selected. \n");
-                        //checkBox.setChecked(true);
-                    }
-                } */
-
+                    LinearLayout lin = (LinearLayout)res.findViewHolderForAdapterPosition(j).itemView;
+                    CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
+                    checkBox.setChecked(true);
+                }
 
                 return true;
 

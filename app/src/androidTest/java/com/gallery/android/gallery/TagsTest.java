@@ -129,13 +129,7 @@ public class TagsTest {
         Thread.sleep(1000);
 
         onView(withText("T1")).check(doesNotExist());
-
-
-
-
     }
-
-
 
     @Test
     public void assignTag() throws Throwable {
@@ -177,14 +171,12 @@ public class TagsTest {
     public void assignTagSearch() throws Throwable {
 
         checkAddTag();
-
         AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
 
         for (int i = 0; i < tv.tags_.size(); i++) {
 
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
                     RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
-
         }
 
         //onView(withId(R.id.apply_button)).perform(click());

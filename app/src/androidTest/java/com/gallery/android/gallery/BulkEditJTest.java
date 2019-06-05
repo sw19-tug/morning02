@@ -55,6 +55,27 @@ public class BulkEditJTest {
             });
 
     @Test
+    public void testRotateOptionInvisible() throws InterruptedException {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Rotate All")).check(doesNotExist());
+    }
+
+    @Test
+    public void testDeleteOptionInvisible() throws InterruptedException {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Delete All")).check(doesNotExist());
+    }
+
+    @Test
+    public void testShareOptionInvisible() throws InterruptedException {
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Share All")).check(doesNotExist());
+    }
+
+    @Test
     public void testRotateOptionVisible() throws InterruptedException {
 
         RecyclerView resycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
@@ -72,17 +93,7 @@ public class BulkEditJTest {
     }
 
     @Test
-    public void testRotateOptionInvisible() throws InterruptedException {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        Thread.sleep(100);
-        onView(withText("Rotate All")).check(doesNotExist());
-    }
-
-    @Test
-    public void testDeleteOptionVisibility() throws InterruptedException {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        Thread.sleep(100);
-        onView(withText("Delete All")).check(doesNotExist());
+    public void testDeleteOptionVisible() throws InterruptedException {
 
         RecyclerView resycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         if (resycler_view.getAdapter().getItemCount() < 2)
@@ -96,6 +107,23 @@ public class BulkEditJTest {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Delete All")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testShareOptionVisible() throws InterruptedException {
+
+        RecyclerView resycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        if (resycler_view.getAdapter().getItemCount() < 2)
+            return;
+
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.longClickChildViewWithId(R.id.ImageLayout)));
+        onView(withId(R.id.RecyclerId)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        Thread.sleep(100);
+        onView(withText("Share All")).check(matches(isDisplayed()));
     }
 }
 

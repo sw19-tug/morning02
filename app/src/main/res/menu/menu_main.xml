@@ -43,7 +43,10 @@
         android:id="@+id/rotate_all"
         app:showAsAction="never"
         android:title="Rotate All"/>
-
+    <item
+        android:id="@+id/delete_all"
+        app:showAsAction="never"
+        android:title="Delete All"/>
     <item
         android:id="@+id/settings"
         app:showAsAction="never"

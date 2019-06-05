@@ -92,8 +92,13 @@ public class TagsTest {
 
         int itemcount = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
 
-        checkAddTag();
-        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(new RecyclerViewItemCountAssertion(5));
+        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+        onView(withText("Add new tag")).check(matches(isDisplayed()));
+        onView(withText("Add new tag")).perform(click());
+
+
+        onView(withId(R.id.input)).perform(typeText("TestNewTag"));
+        onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
         int itemcount_after = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
         assertSame(itemcount, itemcount_after);
@@ -162,7 +167,7 @@ public class TagsTest {
                 .atPositionOnView(0, R.id.checkbox_tagitem_tick))
                 .check(matches(isNotChecked()));
     }
-
+/*
     @Test
     public void assignTagSearch() throws Throwable {
 
@@ -187,7 +192,7 @@ public class TagsTest {
             onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
 
         }
-    }
+    }*/
 
 
     @Test

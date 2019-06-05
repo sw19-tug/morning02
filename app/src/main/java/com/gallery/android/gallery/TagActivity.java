@@ -93,14 +93,27 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                     public void onClick(DialogInterface dialog, int which) {
 
                         dialog.dismiss();
+
+                        AdapterTags adapter = (AdapterTags)recyclerTags.getAdapter();
+
+
+
                         insert_text = input.getText().toString();
+
+                        for (int i = 0; i < adapter.getItemCount(); i++) {
+                            if (adapter.tags_.get(i).getName().equals(insert_text))
+                                return;
+                        }
 
                         Tags new_tag = new Tags(insert_text);
 
                         ((GalleryApplication)getApplication()).tags.add(new_tag);
 
 
-                        AdapterTags adapter = (AdapterTags)recyclerTags.getAdapter();
+
+
+
+
                         adapter.addItem(new_tag);
 
 
@@ -202,6 +215,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
             @Override
             public void onItemDeleteClick(int position, View v) {
                 adapter.removeItem(position);
+                ((GalleryApplication)getApplication()).tags.remove(position);
 
             }
         });

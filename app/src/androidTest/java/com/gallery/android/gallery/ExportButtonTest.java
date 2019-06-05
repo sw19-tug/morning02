@@ -19,7 +19,9 @@ package com.gallery.android.gallery;
         import java.io.File;
         import java.util.logging.Logger;
 
+        import static android.support.test.InstrumentationRegistry.getInstrumentation;
         import static android.support.test.espresso.Espresso.onView;
+        import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
         import static android.support.test.espresso.action.ViewActions.click;
         import static android.support.test.espresso.assertion.ViewAssertions.matches;
         import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
@@ -31,7 +33,6 @@ package com.gallery.android.gallery;
 
 
 public class ExportButtonTest {
-
 
     String files[] = {"test1.png", "test2.png", "test3.png"};
 
@@ -57,9 +58,13 @@ public class ExportButtonTest {
     public void testClick() throws Throwable, InterruptedException {
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
-        for (int i = 0; i < adapter_images.getItemCount(); i++ ) {
+
+
+        for (int i = 0; i < adapter_images.getListImages().size() && i<15; i++ ) {
+
             runOnUiThread(new MyRunnable(recycler_view, i) {
                 public void run() {
+
                     this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
                     try {
                         Thread.sleep(100);
@@ -69,7 +74,7 @@ public class ExportButtonTest {
                 }
             });
             System.out.println("this yes");
-            Log.e("this","xes");
+
             onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
         }
     }
@@ -79,11 +84,19 @@ public class ExportButtonTest {
     @Test
     public void exportAllImages() throws Throwable, InterruptedException {
         Log.e("this","export");
+
+
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText("Sort by date descending")).perform(click());
+
+
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         final AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
         Integer n=adapter_images.getItemCount();
-        Log.e("export n= ",n.toString());
-        for (int i = n-1; i >n-4; i-- ) {
+
+        for (int i = 0; i <3; i++ ) {
+
             Log.e("export mira i=",Integer.toString(i));
             runOnUiThread(new MyRunnable(recycler_view, i) {
                 public void run() {
@@ -96,25 +109,27 @@ public class ExportButtonTest {
                 }
             });
 
-            Log.e("this","export2");
-            checkExportImage(3+(i-(n-1))-1, adapter_images.getListImages().get(i).getSize());
+
+            checkExportImage(i, adapter_images.getListImages().get(i).getSize());
         }
+
     }
 
 
     public void checkExportImage(int number, long size) throws Throwable {
-        Log.e("this","export3 + i="+number);
+
         onView(withId(R.id.popupMenu)).perform(click());
-        Log.e("this","export4");
+
+
         onView(withText("Export")).perform(click());
 
         String export_phase = "_export.zip";
-        Log.e("this","TEST "+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +"/"+ files[number] + export_phase);
-        System.out.println("TEST "+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +"/"+ files[number] + export_phase);
+
+
         File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() +"/"+ files[number] + export_phase);
 
         assertTrue((f.exists() && f.isFile()));
-        assertTrue(((int)f.length()) >= size);
+        assertTrue(((int)f.length()) <= size);
 
 
     }

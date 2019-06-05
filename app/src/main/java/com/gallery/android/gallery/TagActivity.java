@@ -114,7 +114,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
             case R.id.item_tagsmenu_selectall:
 
                 RecyclerView res = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
-                
+
                 for(int j=0; j< tags_.size();j++){
 
                     LinearLayout lin = (LinearLayout)res.findViewHolderForAdapterPosition(j).itemView;
@@ -126,8 +126,14 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
 
             case R.id.item_tagsmenu_unselectall:
-                //Toast.makeText(getBaseContext(), "You select remove all selective tag button", Toast.LENGTH_SHORT);
-                //click_add_tag(item.getActionView());
+                RecyclerView res1 = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
+
+                for(int j=0; j< tags_.size();j++){
+
+                    LinearLayout lin = (LinearLayout)res1.findViewHolderForAdapterPosition(j).itemView;
+                    CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
+                    checkBox.setChecked(false);
+                }
                 return true;
         }
         return false;

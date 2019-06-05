@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
     @NonNull
     public AdapterAlbums.ViewHolderAlbums onCreateViewHolder(@NonNull ViewGroup parent, int viewType)  {
         int layout;
-        layout = R.layout.item_albums;
+        layout = R.layout.album_view;
         View view = LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
         return new AdapterAlbums.ViewHolderAlbums(view);
     }
@@ -44,17 +45,19 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull AdapterAlbums.ViewHolderAlbums holder, int position) {
-        holder.path.setText(listAlbums.get(position));
-        holder.path.setId(holder.path.getId()+position);
+        ((TextView) holder.album.findViewById(R.id.albumName)).setText(listAlbums.get(position));
+        holder.album.setId(holder.album.getId()+position);
+
     }
 
     public class ViewHolderAlbums extends RecyclerView.ViewHolder implements View.OnClickListener{
-        final TextView path;
+        final RelativeLayout album;
+
 
         ViewHolderAlbums(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            path= itemView.findViewById(R.id.albumText);
+            album= itemView.findViewById(R.id.albumLayout);
         }
 
         @Override

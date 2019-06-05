@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
     public static final int FULLSCREEN_REQUEST = 2;
     public static final int OPEN_ZIP_REQUEST = 3;
     private static final int BUFFER_SIZE = 8192 ;//2048;
-    RecyclerView recyclerImages;
-    private String path;
-    private Boolean include_subfolders;
+    public static RecyclerView recyclerImages;
+    public static String path;
+    private Boolean include_subfolders = true;
 
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
@@ -47,27 +47,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            path = getIntent().getExtras().getString("path");
-        } catch (Exception e)
-        {
-            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        }
-        if (path == null)
-        {
-            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
-        }
 
-        try {
-            include_subfolders = getIntent().getExtras().getBoolean("include_subfolders");
-        } catch (Exception e)
-        {
-            include_subfolders = true;
-        }
-        if (path == null)
-        {
-            include_subfolders = true;
-        }
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)

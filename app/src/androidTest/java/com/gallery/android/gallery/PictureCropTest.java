@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
@@ -52,21 +53,5 @@ public class PictureCropTest {
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Crop")).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void testDialogIsShown() {
-        //Intents.init();
-        onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
-        onView(withText("Crop")).perform(click());;
-
-
-        intended(hasComponent(CropImageActivity.class.getName()));
-        intended(hasAction("com.android.camera.action.CROP"));
-
-    }
-
-
-
 
 }

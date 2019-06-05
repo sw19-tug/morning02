@@ -34,6 +34,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withParentIndex;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static com.gallery.android.gallery.TestUtils.withRecyclerView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNotEquals;
@@ -138,7 +139,13 @@ public class TagsTest {
 
         onView(withId(R.id.tagsButton)).perform(click());
 
-        Thread.sleep(100);
+        Thread.sleep(1000);
+
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
+
+        onView(withRecyclerView(R.id.recyclerview_tagsactivity_tagscontainer)
+                .atPositionOnView(1, R.id.checkbox_tagitem_tick))
+                .check(matches(isChecked()));
 
 
         //onView(allOf(hasSibling(withText("T1")), withId(R.id.checkbox_tagitem_tick))).check(matches(isDisplayed()));

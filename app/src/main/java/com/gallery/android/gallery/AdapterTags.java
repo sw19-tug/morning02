@@ -59,11 +59,11 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
         TextView textView = holder.tag_name;
 
-        holder.tag_name.setId(actual_tag.getTagId()+200);
+        //holder.tag_name.setId(actual_tag.getTagId()+200);
 
         holder.tag_name.setText(actual_tag.getName());
 
-        holder.checkbox1.setId(actual_tag.getTagId()+100);
+        //holder.checkbox1.setId(actual_tag.getTagId()+100);
 
         System.out.println("dale-"+holder.checkbox1.getId()+","+holder.tag_name.getText()+","+holder.tag_name.getId());
 

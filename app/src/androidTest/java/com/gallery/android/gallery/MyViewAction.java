@@ -24,11 +24,13 @@ public class MyViewAction {
 
             @Override
             public String getDescription() {
-                return "Click on a child view with specified id.";
+                return
+                        "Click on a child view with specified id.";
             }
 
             @Override
-            public void perform(UiController uiController, View view) {
+            public void perform(UiController uiController,
+                                View view) {
                 View v = view.findViewById(id);
                 v.performClick();
             }

@@ -1,5 +1,6 @@
 package com.gallery.android.gallery;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,8 +22,11 @@ import java.util.ArrayList;
 
 public class AlbumOverviewActivity extends AppCompatActivity {
 
+    public static final int SELECTION_REQUEST = 4;
+
     public static RecyclerView recyclerAlbums;
     private String album_name = "";
+    private String album_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -157,12 +161,12 @@ public class AlbumOverviewActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 album_name = input.getText().toString();
 
-                String folder = createDirectory(album_name);
-                if (folder != null)
+                album_path = createDirectory(album_name);
+                if (album_path != null)
                 {
                     Intent SelectionIntent = new Intent(AlbumOverviewActivity.this, PictureSelectionActivity.class);
-                    SelectionIntent.putExtra("path", folder);
-                    startActivity(SelectionIntent);
+                    SelectionIntent.putExtra("path", album_path);
+                    startActivityForResult(SelectionIntent, SELECTION_REQUEST);
                     System.out.println("Created directory " + album_name);
                 }
                 else {
@@ -192,6 +196,19 @@ public class AlbumOverviewActivity extends AppCompatActivity {
             }
         }
         return(super.onOptionsItemSelected(item));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == SELECTION_REQUEST) {
+            if(resultCode == Activity.RESULT_OK){
+                buildRecycler();
+            }
+            else if (resultCode == Activity.RESULT_CANCELED) {
+                new File(album_path).delete();
+            }
+        }
     }
 }
 

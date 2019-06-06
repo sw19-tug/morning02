@@ -1,6 +1,7 @@
 package com.gallery.android.gallery;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -159,6 +160,9 @@ public class AlbumOverviewActivity extends AppCompatActivity {
                 String folder = createDirectory(album_name);
                 if (folder != null)
                 {
+                    Intent SelectionIntent = new Intent(AlbumOverviewActivity.this, PictureSelectionActivity.class);
+                    SelectionIntent.putExtra("path", folder);
+                    startActivity(SelectionIntent);
                     System.out.println("Created directory " + album_name);
                 }
                 else {

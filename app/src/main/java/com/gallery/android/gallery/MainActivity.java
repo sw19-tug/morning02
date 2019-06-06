@@ -186,14 +186,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void buildRecycler() {
-
         recyclerImages = findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
-        final ArrayList<ImageContainer> image_list = f.loadImageContainers(this);
 
-        AdapterImages adapter = new AdapterImages(image_list);
+        ((GalleryApplication)getApplication()).imgs.clear();
+        ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainers(this));
+        //final ArrayList<ImageContainer> image_list =
+        //((GalleryApplication)this.getApplication()).imgs = imageList;
+
+        AdapterImages adapter = new AdapterImages(((GalleryApplication)getApplication()).imgs);
 
         adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
             @Override
@@ -201,20 +204,21 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(position);
                 if (selection_mode) {
 
-                    if (selection_list.contains(image_list.get(position))) {
-                        selection_list.remove(image_list.get(position));
+                    if (selection_list.contains(((GalleryApplication)getApplication()).imgs.get(position))) {
+                        selection_list.remove(((GalleryApplication)getApplication()).imgs.get(position));
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
                     } else {
-                        selection_list.add(image_list.get(position));
+                        selection_list.add(((GalleryApplication)getApplication()).imgs.get(position));
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                     }
 
                     if (selection_list.isEmpty())
                         setSelectionMode(false);
                 } else {
-                    String image_path = image_list.get(position).getPath();
+                    String image_path = ((GalleryApplication)getApplication()).imgs.get(position).getPath();
                     System.out.println(image_path);
                     startFullScreenActivity(position,image_path);
+
                 }
             }
         });
@@ -223,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(int position, View v) {
                 if (!selection_mode) {
-                    selection_list.add(image_list.get(position));
+                    selection_list.add(((GalleryApplication)getApplication()).imgs.get(position));
                     setSelectionMode(true);
                     v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                 }
@@ -386,6 +390,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
 
     public void performFileSearch() {

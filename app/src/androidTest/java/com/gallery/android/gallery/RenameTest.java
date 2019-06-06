@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import java.io.File;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -150,7 +151,7 @@ public class RenameTest {
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
-        onView(isAssignableFrom(EditText.class)).perform(typeText("test"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(isAssignableFrom(EditText.class)).perform(typeText("test2"), pressKey(KeyEvent.KEYCODE_ENTER));
         onView(withText("yes")).perform(click());
         Thread.sleep(200);
         AdapterImages adapterImages = ((AdapterImages)rec_view.getAdapter());

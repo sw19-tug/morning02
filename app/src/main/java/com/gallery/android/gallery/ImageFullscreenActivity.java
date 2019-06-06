@@ -19,13 +19,16 @@ import android.widget.ImageView;
 
 import java.io.IOException;
 
+
 public class ImageFullscreenActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
     String path="";
     int index = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
+
         path = getIntent().getExtras().getString("path");
         index = getIntent().getExtras().getInt("index");
         setContentView(R.layout.activity_image_fullscreen);
@@ -125,6 +128,14 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                         setResult(Activity.RESULT_OK,returnIntent);
                         ImageFullscreenActivity.this.finish();
                 return true;
+            case R.id.tagsButton:
+
+                Intent tagsContentActivity = new Intent(ImageFullscreenActivity.this, TagActivity.class);
+                tagsContentActivity.putExtra("index", index);
+                startActivity(tagsContentActivity);
+
+                return  true;
+
             default:
                 return false;
         }

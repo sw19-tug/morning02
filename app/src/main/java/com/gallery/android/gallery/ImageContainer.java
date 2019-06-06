@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 
 import java.util.Date;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ImageContainer implements ImageContainerInterface{
 
@@ -16,6 +18,14 @@ public class ImageContainer implements ImageContainerInterface{
     private int width;
     private long size;
     private String orientation;
+
+    public Set<Tags> tags = new HashSet<>();
+
+
+
+    public Set<Tags> getTags() {
+        return tags;
+    }
 
 
     enum PictureComperator implements Comparator<ImageContainer> {
@@ -46,6 +56,12 @@ public class ImageContainer implements ImageContainerInterface{
         }
     }
 
+    public ImageContainer()
+    {
+        this.image = null;
+        this.path = "";
+        this.date = new Date();
+    }
 
 
     public ImageContainer(String path, Date date, long size, String filename) {
@@ -71,7 +87,6 @@ public class ImageContainer implements ImageContainerInterface{
             int width,
             long size,
             String orientation) {
-
        this.image = image;
        this.path = path;
        this.filename = filename;
@@ -83,7 +98,20 @@ public class ImageContainer implements ImageContainerInterface{
    }
 
 
+    public ImageContainer(String path,Date date, String name)
+    {
+        this.path = path;
+        this.date = date;
+        this.filename = name;
+    }
 
+    public ImageContainer(String path, Date date, String name, Set<Tags> tags)
+    {
+        this.path = path;
+        this.date = date;
+        this.filename = name;
+        this.tags = tags;
+    }
 
     public Bitmap getImage() {
         return image;

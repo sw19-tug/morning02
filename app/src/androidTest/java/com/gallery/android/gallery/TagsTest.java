@@ -221,6 +221,7 @@ public class TagsTest {
         goToTagsActivity();
 
         onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+        Thread.sleep(1000);
 
         onView(withText("Select all tags")).perform(click());
 

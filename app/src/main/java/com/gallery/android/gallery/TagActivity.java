@@ -139,14 +139,25 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
                 for(int j=0; j< tags_.size();j++){
 
-                    LinearLayout lin = (LinearLayout)res.findViewHolderForAdapterPosition(j).itemView;
-                    CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
-                    //checkBox.setChecked(true);
-                    if (!checkBox.isChecked()) {
-                        checkBox.performClick();
+                    if (!actual_image_container.tags.contains(tags_.get(j))) {
+
+                        actual_image_container.tags.add(tags_.get(j));
+
                     }
 
+
+
+/*
+                    LinearLayout lin = (LinearLayout)res.findViewHolderForAdapterPosition(j).itemView;
+                    CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
+
+                    if (!checkBox.isChecked()) {
+                        checkBox.callOnClick();
+                        checkBox.setChecked(true);
+                    }*/
+
                 }
+                res.getAdapter().notifyDataSetChanged();
 
                 return true;
 
@@ -155,13 +166,20 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 RecyclerView res1 = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
 
                 for(int j=0; j< tags_.size();j++){
+                    /*
+                    if (!actual_image_container.tags.contains(tags_.get(j))) {
+
+                        actual_image_container.tags.add(tags_.get(j));
+
+                    }
+
 
                     LinearLayout lin = (LinearLayout)res1.findViewHolderForAdapterPosition(j).itemView;
                     CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
 
                     if (checkBox.isChecked()) {
                         checkBox.performClick();
-                    }
+                    }*/
 
                 }
                 return true;

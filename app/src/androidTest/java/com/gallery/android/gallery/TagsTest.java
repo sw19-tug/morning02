@@ -43,6 +43,7 @@ public class TagsTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     TestHelper.createFile("test.png");
+                    TestHelper.createFile("test1.png");
                 }
             });
 
@@ -57,10 +58,10 @@ public class TagsTest {
             });
 
 
-    public void goToTagsActivity() {
+    public void goToTagsActivity(int image_position) {
 
         onView(withId(R.id.RecyclerId)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+                RecyclerViewActions.actionOnItemAtPosition(image_position, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
 
 
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
@@ -70,7 +71,7 @@ public class TagsTest {
     @Test
     public void checkAddTag() throws Throwable, InterruptedException {
 
-        goToTagsActivity();
+        goToTagsActivity(0);
 
 
         onView(withId(R.id.button_tagsactivity_menu)).perform(click());
@@ -107,7 +108,7 @@ public class TagsTest {
     @Test
     public void DeleteTags() throws Throwable{
 
-        goToTagsActivity();
+        goToTagsActivity(0);
 
         onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.button_tagitem_delete)));
@@ -123,7 +124,7 @@ public class TagsTest {
     public void assignTag() throws Throwable {
 
         for (int i = 0; i < activityTestRule.getActivity().recyclerImages.getAdapter().getItemCount(); i++) {
-            goToTagsActivity();
+            goToTagsActivity(i);
 
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
 
@@ -139,7 +140,7 @@ public class TagsTest {
             pressBack();
             Thread.sleep(100);
             onView(withId(R.id.tagsButton)).perform(click());
-            Thread.sleep(1000);
+            Thread.sleep(100);
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
 
             for (int n = 0; n < activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount(); n++) {
@@ -197,7 +198,7 @@ public class TagsTest {
 
     @Test
     public void removeAllButtonExists() throws Throwable, InterruptedException{
-        goToTagsActivity();
+        goToTagsActivity(0);
 
         onView(withId(R.id.button_tagsactivity_menu)).check(matches(isDisplayed()));
         onView(withId(R.id.button_tagsactivity_menu)).perform(click());
@@ -208,7 +209,7 @@ public class TagsTest {
 
     @Test
     public void selectAllButtonExists() throws Throwable, InterruptedException{
-        goToTagsActivity();
+        goToTagsActivity(0);
 
         onView(withId(R.id.button_tagsactivity_menu)).check(matches(isDisplayed()));
         onView(withId(R.id.button_tagsactivity_menu)).perform(click());
@@ -218,7 +219,7 @@ public class TagsTest {
 
     @Test
     public void checkIfAllSelected() throws Throwable, InterruptedException {
-        goToTagsActivity();
+        goToTagsActivity(0);
 
         onView(withId(R.id.button_tagsactivity_menu)).perform(click());
         Thread.sleep(1000);
@@ -248,7 +249,7 @@ public class TagsTest {
     @Test
     public void assignAndDeleteTag() {
 
-        goToTagsActivity();
+        goToTagsActivity(0);
 
         onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
@@ -268,7 +269,7 @@ public class TagsTest {
     public void add_assign_remove_Tags() throws InterruptedException {
 
         for (int i = 0; i < activityTestRule.getActivity().recyclerImages.getAdapter().getItemCount(); i++) {
-            goToTagsActivity();
+            goToTagsActivity(i);
 
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
 
@@ -295,7 +296,7 @@ public class TagsTest {
             pressBack();
             pressBack();
 
-            goToTagsActivity();
+            goToTagsActivity(i);
 
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
                     RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
@@ -308,7 +309,50 @@ public class TagsTest {
 
             pressBack();
             onView(withId(R.id.tagsButton)).perform(click());
+            pressBack();
+            pressBack();
         }
+
+    }
+
+    @Test
+    public void checkIfDeletedTagsRemovedFromImageContainer() {
+
+        goToTagsActivity(0);
+
+        Tags tag = ((AdapterTags)activityTestRule2.getActivity().recyclerTags.getAdapter()).tags_.get(0);
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.button_tagitem_delete)));
+
+        pressBack();
+        pressBack();
+
+        AdapterImages adapterTags = (AdapterImages)(activityTestRule.getActivity().recyclerImages.getAdapter());
+
+        assertFalse(adapterTags.getListImages().get(0).getTags().contains(tag));
+
+    }
+
+    @Test
+    public void deleteAllTagsAndAddNewTags() throws  Throwable{
+
+        goToTagsActivity(0);
+
+        for (Integer i = activityTestRule2.getActivity().tags_.size()-1; i >= 0; i--) {
+
+            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(i, MyViewAction.clickChildViewWithId(R.id.button_tagitem_delete)));
+
+
+        }
+
+        pressBack();
+
+        pressBack();
+
+        checkAddTag();
+
+
 
     }
 

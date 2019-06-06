@@ -7,8 +7,8 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="15dp">
 
             <CheckBox
                 android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:id="@+id/textview_tagitem_text"
                 android:textSize="25sp"
                 android:gravity="center"
-                android:background="@color/cardview_shadow_start_color" />
+                android:background="@color/white" />
 
             <Button
                 android:id="@+id/button_tagitem_delete"
@@ -33,6 +33,7 @@
                 android:gravity="center"
                 android:background="@color/colorError"
                 android:textColor="@color/white"
-                android:text="Delete" />
+                android:text="Delete"
+                android:layout_marginRight="5dp"/>
 
 </LinearLayout>

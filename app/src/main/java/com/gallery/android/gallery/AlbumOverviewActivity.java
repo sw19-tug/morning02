@@ -1,23 +1,27 @@
 package com.gallery.android.gallery;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class AlbumOverviewActivity extends AppCompatActivity {
 
     public static RecyclerView recyclerAlbums;
+    private String album_name = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -126,6 +130,64 @@ public class AlbumOverviewActivity extends AppCompatActivity {
         }
     }
 
+    private String createDirectory(String directory_name) {
+        String full_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/" + directory_name;
+        File dir = new File(full_path);
 
+        if(!dir.exists() && dir.mkdirs()) {
+            return full_path;
+        }
+        return null;
+    }
+
+    private boolean enterAlbumName()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add album");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                album_name = input.getText().toString();
+
+                String folder = createDirectory(album_name);
+                if (folder != null)
+                {
+                    System.out.println("Created directory " + album_name);
+                }
+                else {
+                    System.out.println("Album creation failed.");
+                }
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(AlbumOverviewActivity.this, "Cancelled", Toast.LENGTH_LONG);
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+        return !album_name.isEmpty();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.add_album: {
+                enterAlbumName();
+                return (true);
+            }
+        }
+        return(super.onOptionsItemSelected(item));
+    }
 }
 

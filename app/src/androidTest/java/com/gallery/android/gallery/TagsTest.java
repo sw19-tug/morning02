@@ -261,8 +261,53 @@ public class TagsTest {
         pressBack();
         onView(withId(R.id.tagsButton)).perform(click());
 
+    }
+
+    @Test
+    public void add_assign_remove_Tags() throws InterruptedException {
+
+        for (int i = 0; i < activityTestRule.getActivity().recyclerImages.getAdapter().getItemCount(); i++) {
+            goToTagsActivity();
+
+            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
+
+            Thread.sleep(100);
 
 
+            for (int n = 0; n < activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount(); n++) {
+
+                onView(withId(R.id.recyclerview_tagsactivity_tagscontainer))
+                        .perform(RecyclerViewActions.actionOnItemAtPosition(n, MyViewAction.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+            }
+
+            pressBack();
+            Thread.sleep(100);
+            onView(withId(R.id.tagsButton)).perform(click());
+            Thread.sleep(1000);
+            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
+
+            for (int n = 0; n < activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount(); n++) {
+                onView(withRecyclerView(R.id.recyclerview_tagsactivity_tagscontainer)
+                        .atPositionOnView(n, R.id.checkbox_tagitem_tick))
+                        .check(matches(isChecked()));
+            }
+            pressBack();
+            pressBack();
+
+            goToTagsActivity();
+
+            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+
+            pressBack();
+            onView(withId(R.id.tagsButton)).perform(click());
+
+            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                    RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.button_tagitem_delete)));
+
+            pressBack();
+            onView(withId(R.id.tagsButton)).perform(click());
+        }
 
     }
 

@@ -307,6 +307,16 @@ public class TagsTest {
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
                     RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.button_tagitem_delete)));
 
+
+            onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+            onView(withText("Add new tag")).check(matches(isDisplayed()));
+            onView(withText("Add new tag")).perform(click());
+
+
+            onView(withId(R.id.input)).perform(typeText("TestNewTag New " + i));
+            onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
+
+
             pressBack();
             onView(withId(R.id.tagsButton)).perform(click());
             pressBack();
@@ -342,18 +352,20 @@ public class TagsTest {
 
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
                     RecyclerViewActions.actionOnItemAtPosition(i, MyViewAction.clickChildViewWithId(R.id.button_tagitem_delete)));
-
-
         }
 
-        pressBack();
 
-        pressBack();
+        for(int j =1; j <6; j++){
 
-        checkAddTag();
+            onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+            onView(withText("Add new tag")).check(matches(isDisplayed()));
+            onView(withText("Add new tag")).perform(click());
 
 
+            onView(withId(R.id.input)).perform(typeText("T" + j));
+            onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
+        }
     }
 
 }

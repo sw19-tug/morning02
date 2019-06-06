@@ -25,9 +25,9 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
     int imageId = -1;
 
-    String insert_text= "";
-    public List<Tags> tags_ ;
-    private List<String> checkedTags=new ArrayList<String>();
+    String insert_text = "";
+    public List<Tags> tags_;
+    private List<String> checkedTags = new ArrayList<String>();
     public RecyclerView recyclerTags;
     private ImageContainer actual_image_container;
 
@@ -44,33 +44,32 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
         switch (item.getItemId()) {
 
             case R.id.apply_button_menu:
-                for(int i=0; i< tags_.size();i++){
+                for (int i = 0; i < tags_.size(); i++) {
 
                     Tags actual_tag = tags_.get(i);
 
                     String tag_name = actual_tag.getName();
                     int actual_tag_id = actual_tag.getTagId();
-                    System.out.println("tag_id_+100="+actual_tag_id+100);
+                    System.out.println("tag_id_+100=" + actual_tag_id + 100);
 
-                    int tag_id=100+actual_tag_id;
-                    int tag_id2=200+actual_tag_id;
-                    System.out.println("tag_id="+tag_id);
+                    int tag_id = 100 + actual_tag_id;
+                    int tag_id2 = 200 + actual_tag_id;
+                    System.out.println("tag_id=" + tag_id);
 
                     CheckBox checkBox = (CheckBox) findViewById(tag_id);
-                    TextView text_checkBox=(TextView) findViewById(tag_id2);
+                    TextView text_checkBox = (TextView) findViewById(tag_id2);
 
-                    String tagName=(String)text_checkBox.getText();
+                    String tagName = (String) text_checkBox.getText();
                     System.out.println(checkBox.getId());
 
-                    Boolean selected= checkBox.isChecked();
-                    ArrayList<String> checked=new ArrayList<String>();
+                    Boolean selected = checkBox.isChecked();
+                    ArrayList<String> checked = new ArrayList<String>();
 
-                    if(selected == true){
+                    if (selected == true) {
                         checkBox.setChecked(true);
                         checked.add(tagName);
-                        System.out.println("Checked"+checkBox.getId());
-                    }
-                    else{
+                        System.out.println("Checked" + checkBox.getId());
+                    } else {
                         checkBox.setChecked(false);
                     }
                 }
@@ -94,8 +93,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
                         dialog.dismiss();
 
-                        AdapterTags adapter = (AdapterTags)recyclerTags.getAdapter();
-
+                        AdapterTags adapter = (AdapterTags) recyclerTags.getAdapter();
 
 
                         insert_text = input.getText().toString();
@@ -107,11 +105,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
                         Tags new_tag = new Tags(insert_text);
 
-                        ((GalleryApplication)getApplication()).tags.add(new_tag);
-
-
-
-
+                        ((GalleryApplication) getApplication()).tags.add(new_tag);
 
 
                         adapter.addItem(new_tag);
@@ -137,7 +131,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
                 RecyclerView res = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
 
-                for(int j=0; j< tags_.size();j++){
+                for (int j = 0; j < tags_.size(); j++) {
 
                     if (!actual_image_container.tags.contains(tags_.get(j))) {
 
@@ -163,29 +157,19 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
 
             case R.id.item_tagsmenu_unselectall:
+
                 RecyclerView res1 = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
-
-                for(int j=0; j< tags_.size();j++){
-                    /*
-                    if (!actual_image_container.tags.contains(tags_.get(j))) {
-
-                        actual_image_container.tags.add(tags_.get(j));
-
-                    }
-
-
-                    LinearLayout lin = (LinearLayout)res1.findViewHolderForAdapterPosition(j).itemView;
-                    CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
-
-                    if (checkBox.isChecked()) {
-                        checkBox.performClick();
-                    }*/
-
+                for (int j = 0; j < tags_.size(); j++) {
+                    actual_image_container.tags.clear();
                 }
-                return true;
-        }
-        return false;
+                res1.getAdapter().notifyDataSetChanged();
+
+
+        return true;
     }
+        return false;
+
+}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

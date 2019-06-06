@@ -74,7 +74,8 @@ public class AdapterTags extends RecyclerView.Adapter<AdapterTags.ViewHolderTags
 
         if (actual_image.tags.contains(tags_.get(position)))
             checkBox.setChecked(true);
-
+        else
+            checkBox.setChecked(false);
         //remove later
         System.out.println("dale-"+holder.checkbox1.getId()+","+holder.tag_name.getText()+","+holder.tag_name.getId());
 

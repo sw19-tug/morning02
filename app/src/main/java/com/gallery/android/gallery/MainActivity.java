@@ -34,6 +34,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public List<ImageContainer> selection_list = new ArrayList<>();
     public List<Integer> selection_pos_list = new ArrayList<>();
     EditText editText;
+    FileDeleter mainDeleter = new FileDeleter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +176,26 @@ public class MainActivity extends AppCompatActivity {
             setSelectionMode(false);
             return true;
         }
+            case R.id.delete_all: {
+                if (selection_list.size() == selection_pos_list.size()) {
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    for (int index = 0; index < selection_pos_list.size(); index++) {
+                        mainDeleter.delete(adapterImages.getListImages().get(index).getPath());
+                    }
+                    Collections.sort(selection_pos_list, Collections.<Integer>reverseOrder());
+                    for (int index = 0; index < selection_pos_list.size(); index++) {
+                        adapterImages.getListImages().remove((int)selection_pos_list.get(index));
+                        adapterImages.notifyItemRemoved(selection_pos_list.get(index));
+                        //adapterImages.notifyItemRangeChanged(selection_pos_list.get(index),adapterImages.getListImages().size());
+                    }
+                    adapterImages.notifyItemRangeChanged(0, adapterImages.getListImages().size());
+
+                    selection_list.clear();
+                    selection_pos_list.clear();
+                    setSelectionMode(false);
+                }
+                return true;
+            }
         case R.id.settings: {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
@@ -182,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
     }
         return(super.onOptionsItemSelected(item));
     }
+
 
     private void rotateImage(int pos) {
         AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
@@ -314,6 +338,7 @@ public class MainActivity extends AppCompatActivity {
                 int result = data.getIntExtra("deletePos", -1);
                 if (result > -1) {
                     AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    mainDeleter.delete(adapterImages.getListImages().get(result).getPath());
                     adapterImages.getListImages().remove(result);
                     adapterImages.notifyItemRemoved(result);
                     adapterImages.notifyItemRangeChanged(result, adapterImages.getListImages().size());

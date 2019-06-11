@@ -69,8 +69,6 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                 builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        FileDeleter delete = new FileDeleter();
-                        delete.delete(path);
                         int deletePos = index;
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("deletePos",deletePos);

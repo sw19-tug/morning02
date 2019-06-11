@@ -45,6 +45,7 @@ public class BulkEditJTest {
                 @Override
                 protected void beforeActivityLaunched() {
                     TestHelper.createFile("testClick.png");
+                    TestHelper.createFile("testClick2.png");
                 }
             });
 
@@ -187,9 +188,12 @@ public class BulkEditJTest {
         onView(withText("Delete All")).perform(click());
 
         File file1 = new File(path1);
-        assertTrue(file1.exists());
-        File file2 = new File(path1);
+        assertFalse(file1.exists());
+        File file2 = new File(path2);
         assertFalse(file2.exists());
+
+        /*TestHelper.createFile(((Long)System.currentTimeMillis()).toString());
+        TestHelper.createFile(((Long)System.currentTimeMillis()).toString());*/
     }
 
 }

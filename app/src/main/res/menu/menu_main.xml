@@ -39,7 +39,18 @@
         android:id="@+id/import_zip"
         app:showAsAction="never"
         android:title="Import Zip ..."/>
-
+    <item
+        android:id="@+id/rotate_all"
+        app:showAsAction="never"
+        android:title="Rotate All"/>
+    <item
+        android:id="@+id/delete_all"
+        app:showAsAction="never"
+        android:title="Delete All"/>
+    <item
+        android:id="@+id/share_all"
+        app:showAsAction="never"
+        android:title="Share All"/>
     <item
         android:id="@+id/settings"
         app:showAsAction="never"

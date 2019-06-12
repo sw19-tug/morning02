@@ -39,6 +39,7 @@
         android:id="@+id/import_zip"
         app:showAsAction="never"
         android:title="Import Zip ..."/>
+
     <item
         android:id="@+id/rotate_all"
         app:showAsAction="never"
@@ -55,5 +56,11 @@
         android:id="@+id/settings"
         app:showAsAction="never"
         android:title="Settings"/>
+    <item
+        android:id="@+id/addImage"
+        android:icon="@drawable/add_image"
+        app:showAsAction="always"
+        android:title="Add Image"/>
+
 
 </menu>

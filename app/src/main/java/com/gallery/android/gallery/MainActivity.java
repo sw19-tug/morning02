@@ -164,18 +164,19 @@ public class MainActivity extends AppCompatActivity {
                 search_bar.setVisibility(View.GONE);
             return true;
         }
-        case R.id.rotate_all: {
-            if (selection_list.size() == selection_pos_list.size()) {
-                for (int index = 0; index < selection_pos_list.size(); index++) {
-                    rotateImage((int) selection_pos_list.get(index));
+
+            case R.id.rotate_all: {
+                if (selection_list.size() == selection_pos_list.size()) {
+                    for (int index = 0; index < selection_pos_list.size(); index++) {
+                        rotateImage((int) selection_pos_list.get(index));
+                    }
+                    resetSelectionMode();
                 }
-                resetSelectionMode();
+                selection_list.clear();
+                selection_pos_list.clear();
+                setSelectionMode(false);
+                return true;
             }
-            selection_list.clear();
-            selection_pos_list.clear();
-            setSelectionMode(false);
-            return true;
-        }
             case R.id.delete_all: {
                 if (selection_list.size() == selection_pos_list.size()) {
                     AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
@@ -196,11 +197,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             }
-        case R.id.settings: {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
+            case R.id.settings: {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+            case R.id.addImage:{
+                Intent addImageIntent = new Intent(MainActivity.this, AddImageActivity.class);
+                startActivity(addImageIntent);
+                return true;
+            }
 
     }
         return(super.onOptionsItemSelected(item));
@@ -281,10 +288,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void buildRecycler() {
+
         recyclerImages = findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
+        final ArrayList<ImageContainer> image_list = f.loadImageContainers(this);
 
         ((GalleryApplication)getApplication()).imgs.clear();
         ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainers(this));

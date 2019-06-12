@@ -176,33 +176,27 @@ public class TagsTest {
                 .atPositionOnView(0, R.id.checkbox_tagitem_tick))
                 .check(matches(isNotChecked()));
     }
-/*
+
     @Test
     public void assignTagSearch() throws Throwable {
 
-        checkAddTag();
-        AdapterTags tv = (AdapterTags) activityTestRule2.getActivity().recyclerTags.getAdapter();
+        goToTagsActivity(0);
 
-        for (int i = 0; i < tv.tags_.size(); i++) {
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
 
-            onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
-                    RecyclerViewActions.actionOnItemAtPosition(i, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
-        }
+        pressBack();
+        pressBack();
 
-        //onView(withId(R.id.apply_button)).perform(click());
+        onView(withId(R.id.search)).perform(click());
 
-       pressBack();
-       pressBack();
+        onView(withId(R.id.search_bar)).perform(typeText("T1"));
+        onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
 
-        for (int i = 0; i < tv.tags_.size(); i++) {
+        Thread.sleep(100);
 
-            onView(withId(R.id.search_bar)).check(matches(isDisplayed()));
-            onView(withId(R.id.search_bar)).perform(typeText(tv.tags_.get(i).getName()));
-            onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
-
-        }
-    }*/
-
+        assertTrue(activityTestRule.getActivity().recyclerImages.getAdapter().getItemCount() == 1);
+    }
 
     @Test
     public void removeAllButtonExists() throws Throwable, InterruptedException{

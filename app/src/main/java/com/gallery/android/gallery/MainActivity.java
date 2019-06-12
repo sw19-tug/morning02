@@ -26,6 +26,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -288,8 +291,27 @@ public class MainActivity extends AppCompatActivity {
 
         ((GalleryApplication)getApplication()).imgs.clear();
         ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainers(this));
-        //final ArrayList<ImageContainer> image_list =
-        //((GalleryApplication)this.getApplication()).imgs = imageList;
+
+        SharedPreferences prefs = android.support.v7.preference.PreferenceManager
+                .getDefaultSharedPreferences(getApplication());
+        List<Tags> tags = ((GalleryApplication) getApplication()).tags;
+
+        for(ImageContainer image_container: ((GalleryApplication)getApplication()).imgs){
+            String jsonString = prefs.getString(image_container.getPath(), "");
+            if(!jsonString.equals("")){
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonString);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        for(Tags tag: tags) {
+                            if(tag.getName().equals(jsonArray.getString(i)))
+                                image_container.tags.add(tag);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         AdapterImages adapter = new AdapterImages(((GalleryApplication)getApplication()).imgs);
 

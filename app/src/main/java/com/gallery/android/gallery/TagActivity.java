@@ -1,9 +1,11 @@
 package com.gallery.android.gallery;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +18,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +79,6 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 }
                 return true;
 
-
             case R.id.item_tagsmenu_addtag:
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -106,11 +109,8 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                         Tags new_tag = new Tags(insert_text);
 
                         ((GalleryApplication) getApplication()).tags.add(new_tag);
-
-
+                        updateTagPreferences();
                         adapter.addItem(new_tag);
-
-
                         recyclerTags.getAdapter().notifyItemInserted(recyclerTags.getAdapter().getItemCount());
 
                     }
@@ -136,25 +136,13 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                     if (!actual_image_container.tags.contains(tags_.get(j))) {
 
                         actual_image_container.tags.add(tags_.get(j));
-
                     }
 
-
-
-/*
-                    LinearLayout lin = (LinearLayout)res.findViewHolderForAdapterPosition(j).itemView;
-                    CheckBox checkBox = (CheckBox) lin.findViewById(R.id.checkbox_tagitem_tick);
-
-                    if (!checkBox.isChecked()) {
-                        checkBox.callOnClick();
-                        checkBox.setChecked(true);
-                    }*/
-
                 }
+                updateImageTagPreferance();
                 res.getAdapter().notifyDataSetChanged();
 
                 return true;
-
 
             case R.id.item_tagsmenu_unselectall:
 
@@ -162,14 +150,27 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 for (int j = 0; j < tags_.size(); j++) {
                     actual_image_container.tags.clear();
                 }
+                updateImageTagPreferance();
                 res1.getAdapter().notifyDataSetChanged();
-
 
         return true;
     }
-        return false;
+    return false;
 
 }
+
+    private void updateTagPreferences() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getApplication());
+        JSONArray jsonArray = new JSONArray();
+        for(Tags t: ((GalleryApplication) getApplication()).tags)
+        {
+            jsonArray.put(t.getName());
+        }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("tags", jsonArray.toString());
+        editor.commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +202,6 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
             tags_ = tagsList;
         }
 
-
         setContentView(R.layout.activity_tags);
         setUpRecyclerTags();
 
@@ -218,7 +218,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
             public void onItemDeleteClick(int position, View v) {
                 adapter.removeItem(position);
                 ((GalleryApplication)getApplication()).tags.remove(position);
-
+                updateTagPreferences();
             }
         });
 
@@ -232,13 +232,26 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 else {
                     actual_image_container.tags.remove(adapter.tags_.get(position));
                 }
-
+                updateImageTagPreferance();
             }
         });
 
         recyclerTags.setAdapter(adapter);
         recyclerTags.setLayoutManager(new LinearLayoutManager(this));
 
+    }
+
+    private void updateImageTagPreferance() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getApplication());
+        JSONArray jsonArray = new JSONArray();
+        for(Tags t:  actual_image_container.tags)
+        {
+            jsonArray.put(t.getName());
+        }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(actual_image_container.getPath(), jsonArray.toString());
+        editor.commit();
     }
 
     public void click_add_tag(View view){
@@ -269,10 +282,6 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
 
                 recyclerTags.getAdapter().notifyItemInserted(recyclerTags.getAdapter().getItemCount());
-/*
-                ;
-                if(!a.hasItem(insert_text))
-                    ad.addItem(insert_text);*/
 
             }
         });

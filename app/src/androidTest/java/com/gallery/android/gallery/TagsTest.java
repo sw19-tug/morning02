@@ -467,13 +467,11 @@ public class TagsTest {
                     RecyclerViewActions.actionOnItemAtPosition(i, MyViewAction.clickChildViewWithId(R.id.button_tagitem_delete)));
         }
 
-
         for(int j =1; j <6; j++){
 
             onView(withId(R.id.button_tagsactivity_menu)).perform(click());
             onView(withText("Add new tag")).check(matches(isDisplayed()));
             onView(withText("Add new tag")).perform(click());
-
 
             onView(withId(R.id.input)).perform(typeText("T" + j));
             onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
@@ -493,23 +491,20 @@ public class TagsTest {
     public void checkTagsSaved() throws Throwable{
 
         goToTagsActivity(0);
-        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
-        pressBack();
-        pressBack();
+        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+        Thread.sleep(1000);
+        onView(withText("Select all tags")).perform(click());
+        Thread.sleep(1000);
 
         activityTestRule.finishActivity();
-
-
+        Thread.sleep(1000);
         activityTestRule.launchActivity(null);
 
         goToTagsActivity(0);
-        onView(withRecyclerView(R.id.recyclerview_tagsactivity_tagscontainer)
-                .atPositionOnView(0, R.id.checkbox_tagitem_tick))
-                .check(matches(isChecked()));
-
-
-
+        for(int i=0; i< activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount(); i++) {
+            CheckBox checkbox = activityTestRule2.getActivity().recyclerTags.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.checkbox_tagitem_tick);
+            assertTrue(checkbox.isChecked());
+        }
     }
 
 }

@@ -3,24 +3,13 @@ package com.gallery.android.gallery;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
-import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Pair;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FileLoader implements FileLoaderInterface {
@@ -110,34 +99,7 @@ public class FileLoader implements FileLoaderInterface {
 
 
     public ArrayList<ImageContainer> loadImageContainers(Context context){
-        /*
-        List<String> paths=this.getImagesInformation();
-        ArrayList<ImageContainer> imageList = new ArrayList<ImageContainer>();
-        for(int i = 0; i < paths.size(); i++ )
-        {
-            ExifInterface exif = null;
-            try {
-                 exif = new ExifInterface(paths.get(i));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            File file = new File(paths.get(i));
-            System.out.println(paths.get(i));
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
-            String datestring = exif.getAttribute(ExifInterface.TAG_DATETIME);
-            System.out.println(datestring);
-            try{
-                Date date = simpleDateFormat.parse(datestring);
-                imageList.add(new ImageContainer(paths.get(i), date, file.length()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            catch(NullPointerException n) {
-                System.out.println("Datestring : " + datestring);
-            }
 
-        }
-        return imageList;*/
         ArrayList<String> paths = this.getImagesInformation();
 
         MediaStoreDataLoader loader = new MediaStoreDataLoader(context);

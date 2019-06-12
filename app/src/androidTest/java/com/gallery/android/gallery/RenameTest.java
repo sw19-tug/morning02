@@ -144,14 +144,16 @@ public class RenameTest {
             return;
 
         String dupPath = ((AdapterImages)(rec_view.getAdapter())).getListImages().get(0).getPath();
+        Long timestampLong = System.currentTimeMillis();
+        String timestamp = timestampLong.toString();
         String extension = dupPath.substring(dupPath.lastIndexOf("."));
-        TestHelper.createFile("test" + extension);
+        TestHelper.createFile(timestamp + extension);
 
         onView(withId(R.id.idImage)).perform(click());
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
-        onView(isAssignableFrom(EditText.class)).perform(typeText("test2"), pressKey(KeyEvent.KEYCODE_ENTER));
+        onView(isAssignableFrom(EditText.class)).perform(typeText(timestamp), pressKey(KeyEvent.KEYCODE_ENTER));
         onView(withText("yes")).perform(click());
         Thread.sleep(200);
         AdapterImages adapterImages = ((AdapterImages)rec_view.getAdapter());
@@ -163,7 +165,7 @@ public class RenameTest {
             assertTrue(imageFile.exists());
 
             String newName = adapterImages.getListImages().get(0).getFilename();
-            assertTrue(newName.startsWith("test") && newName.endsWith("_copy"));
+            assertTrue(newName.startsWith(timestamp) && newName.endsWith("_copy"));
         }
     }
 

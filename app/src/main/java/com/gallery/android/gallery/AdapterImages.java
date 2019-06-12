@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 import static com.gallery.android.gallery.ImageContainer.PictureComperator.DATE;
 import static com.gallery.android.gallery.ImageContainer.PictureComperator.NAME;
 import static com.gallery.android.gallery.ImageContainer.PictureComperator.SIZE;
@@ -24,7 +26,7 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
     }
 
     public AdapterImages(ArrayList<ImageContainer> listImages) {
-        this.listImages = listImages;
+        this.listImages = new ArrayList<>(listImages);
     }
 
     @Override
@@ -49,6 +51,35 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
 
     public ArrayList<ImageContainer> getListImages() {
         return listImages;
+    }
+
+    public void replaceItems(List<ImageContainer> new_list) {
+
+        try {
+            listImages.clear();
+            if (!new_list.isEmpty())
+                listImages.addAll(new_list);
+
+            notifyDataSetChanged();
+        }
+        catch (NullPointerException nullptr_exeption ) {
+            nullptr_exeption.printStackTrace();
+        }
+
+    }
+
+    public void addItems(List<ImageContainer> new_list) {
+
+        if (!new_list.isEmpty()) {
+            listImages.addAll(new_list);
+            notifyDataSetChanged();
+        }
+
+    }
+
+    public void addItem(ImageContainer new_item) {
+        listImages.add(new_item);
+        notifyDataSetChanged();
     }
 
     public String searchPictures(String name){

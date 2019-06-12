@@ -243,6 +243,8 @@ public class TagsTest {
         onView(withId(R.id.search_bar)).perform(typeText(tag2.getName()));
         onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
 
+        Thread.sleep(100);
+
         RecyclerView rec_view2 = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         List<ImageContainer> imageList2 = ((AdapterImages)(rec_view2.getAdapter())).getListImages();
 
@@ -254,6 +256,52 @@ public class TagsTest {
                 fail();
             }
         }
+    }
+
+    @Test
+    public void searchForDeletedTag() throws Throwable{
+        goToTagsActivity(0);
+
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+        RecyclerView tag_rec_view = activityTestRule2.getActivity().findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
+        String tag_name = ((AdapterTags)tag_rec_view.getAdapter()).tags_.get(0).getName();
+        pressBack();
+        pressBack();
+
+        goToTagsActivity(1);
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.button_tagitem_delete)));
+        pressBack();
+        pressBack();
+
+        onView(withId(R.id.search)).perform(click());
+
+        onView(withId(R.id.search_bar)).perform(typeText(tag_name));
+        onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
+
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        List<ImageContainer> imageList = ((AdapterImages)(rec_view.getAdapter())).getListImages();
+
+        if (imageList.isEmpty()) {
+            return;
+        }
+        else {
+
+            for (ImageContainer image: imageList) {
+
+                for (Tags tag: image.getTags()) {
+
+                    if (tag.getName().equals(tag_name)) {
+                        fail();
+                    }
+                }
+            }
+
+        }
+
+
+
     }
 
     @Test
@@ -439,6 +487,29 @@ public class TagsTest {
 
         onView(withId(R.id.activity_tags)).perform(click());
         onView(withId(R.id.button_tagsactivity_menu)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkTagsSaved() throws Throwable{
+
+        goToTagsActivity(0);
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, RecyclerItemClick.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+        pressBack();
+        pressBack();
+
+        activityTestRule.finishActivity();
+
+
+        activityTestRule.launchActivity(null);
+
+        goToTagsActivity(0);
+        onView(withRecyclerView(R.id.recyclerview_tagsactivity_tagscontainer)
+                .atPositionOnView(0, R.id.checkbox_tagitem_tick))
+                .check(matches(isChecked()));
+
+
+
     }
 
 }

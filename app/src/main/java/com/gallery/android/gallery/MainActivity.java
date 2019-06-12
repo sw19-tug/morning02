@@ -419,47 +419,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSearchClicked(AdapterImages adapter) {
-        EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
+        String searchbar_input = ((EditText) findViewById(R.id.search_bar)).getText().toString();
 
-        String image_path = adapter.searchPictures(searchbar_input.getText().toString());
+        RecyclerView recyclerview_images = findViewById(R.id.RecyclerId);
+        AdapterImages adapter_images = (AdapterImages)recyclerview_images.getAdapter();
+        GalleryApplication application_gallery = (GalleryApplication)getApplication();
+        List<ImageContainer> list_images =  new ArrayList<>();
+        list_images.addAll(application_gallery.imgs);
+        List<Tags> list_tags = application_gallery.tags;
 
-        if (image_path != null) {
-            Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-            fullscreenImageIntent.putExtra("path", image_path);
-            startActivity(fullscreenImageIntent);
+        if (searchbar_input.equals(""))
+            adapter_images.replaceItems(list_images);
+
+        Tags search_tag = null;
+
+        for(int i = 0; i < list_tags.size(); i++){
+            if(searchbar_input.equals(list_tags.get(i).getName())){
+                search_tag = list_tags.get(i);
+                break;
+            }
+        }
+
+        List<ImageContainer> list_images_tag_hit = new ArrayList<>();
+        List<ImageContainer> list_images_name_hit = new ArrayList<>();
+
+        for (ImageContainer image: list_images) {
+
+            if ((search_tag != null) && (image.tags.contains(search_tag)))
+                list_images_tag_hit.add(image);
+            else if (image.getFilename().contains(searchbar_input))
+                list_images_name_hit.add(image);
 
         }
-        else{
-            RecyclerView res = findViewById(R.id.RecyclerId);
 
-            GalleryApplication gal = (GalleryApplication)getApplication();
-            Tags search_tag = null;
-            String text = searchbar_input.getText().toString();
+        list_images_tag_hit.addAll(list_images_name_hit);
+        adapter_images.replaceItems(list_images_tag_hit);
 
-            for(int i = 0; i < gal.tags.size(); i++){
-                if((text).equals(gal.tags.get(i).getName())){
-                    search_tag = gal.tags.get(i);
-                    break;
-                }
-            }
-
-            if(search_tag == null)
-                return;
-
-            List<ImageContainer> imgs_ = new ArrayList<>();
-
-            for (int i = 0; i < res.getAdapter().getItemCount(); i++){
-                ImageContainer img = ((AdapterImages)res.getAdapter()).getListImages().get(i);
-
-                if(img.tags.contains(search_tag)){
-                    imgs_.add(img);
-                }
-            }
-
-            ((AdapterImages)res.getAdapter()).getListImages().clear();
-            ((AdapterImages)res.getAdapter()).getListImages().addAll(imgs_);
-            ((AdapterImages)res.getAdapter()).notifyDataSetChanged();
-        }
     }
 
     private void setEditText() {

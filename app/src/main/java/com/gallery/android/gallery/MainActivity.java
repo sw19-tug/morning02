@@ -427,6 +427,38 @@ public class MainActivity extends AppCompatActivity {
             Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
             fullscreenImageIntent.putExtra("path", image_path);
             startActivity(fullscreenImageIntent);
+
+        }
+        else{
+            RecyclerView res = findViewById(R.id.RecyclerId);
+
+            GalleryApplication gal = (GalleryApplication)getApplication();
+            Tags search_tag = null;
+            String text = searchbar_input.getText().toString();
+
+            for(int i = 0; i < gal.tags.size(); i++){
+                if((text).equals(gal.tags.get(i).getName())){
+                    search_tag = gal.tags.get(i);
+                    break;
+                }
+            }
+
+            if(search_tag == null)
+                return;
+
+            List<ImageContainer> imgs_ = new ArrayList<>();
+
+            for (int i = 0; i < res.getAdapter().getItemCount(); i++){
+                ImageContainer img = ((AdapterImages)res.getAdapter()).getListImages().get(i);
+
+                if(img.tags.contains(search_tag)){
+                    imgs_.add(img);
+                }
+            }
+
+            ((AdapterImages)res.getAdapter()).getListImages().clear();
+            ((AdapterImages)res.getAdapter()).getListImages().addAll(imgs_);
+            ((AdapterImages)res.getAdapter()).notifyDataSetChanged();
         }
     }
 

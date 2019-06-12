@@ -5,6 +5,7 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.widget.CheckBox;
 
@@ -12,6 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
+
+import java.util.List;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -30,6 +34,7 @@ import static com.gallery.android.gallery.TestUtils.withRecyclerView;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TagsTest {
 
@@ -196,6 +201,59 @@ public class TagsTest {
         Thread.sleep(100);
 
         assertTrue(activityTestRule.getActivity().recyclerImages.getAdapter().getItemCount() == 1);
+    }
+
+    @Test
+    public void assignTagSearchTwice() throws Throwable {
+
+        goToTagsActivity(0);
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+        RecyclerView tag_rec_view = activityTestRule2.getActivity().findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
+        Tags tag1 = ((AdapterTags)tag_rec_view.getAdapter()).tags_.get(0);
+        pressBack();
+        pressBack();
+
+        goToTagsActivity(1);
+        onView(withId(R.id.recyclerview_tagsactivity_tagscontainer))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, MyViewAction.clickChildViewWithId(R.id.checkbox_tagitem_tick)));
+        Tags tag2= ((AdapterTags)tag_rec_view.getAdapter()).tags_.get(1);
+        pressBack();
+        pressBack();
+
+        onView(withId(R.id.search)).perform(click());
+
+        onView(withId(R.id.search_bar)).perform(typeText(tag1.getName()));
+        onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
+
+        Thread.sleep(100);
+        RecyclerView rec_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        List<ImageContainer> imageList1 = ((AdapterImages)(rec_view.getAdapter())).getListImages();
+
+        assertFalse(imageList1.isEmpty());
+
+        for (ImageContainer ic : imageList1) {
+            if(!ic.getTags().contains(tag1))
+            {
+                fail();
+            }
+        }
+
+        onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_DEL));
+        onView(withId(R.id.search_bar)).perform(typeText(tag2.getName()));
+        onView(withId(R.id.search_bar)).perform(pressKey(KeyEvent.KEYCODE_ENTER));
+
+        RecyclerView rec_view2 = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
+        List<ImageContainer> imageList2 = ((AdapterImages)(rec_view2.getAdapter())).getListImages();
+
+        assertFalse(imageList2.isEmpty());
+
+        for (ImageContainer ic : imageList2) {
+            if(!ic.getTags().contains(tag2))
+            {
+                fail();
+            }
+        }
     }
 
     @Test

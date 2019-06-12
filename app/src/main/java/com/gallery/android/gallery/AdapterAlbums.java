@@ -1,5 +1,7 @@
 package com.gallery.android.gallery;
 
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -15,13 +17,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolderAlbums>  {
+public class AdapterAlbums<getPath> extends RecyclerView.Adapter<AdapterAlbums.ViewHolderAlbums>  {
     private final ArrayList<Pair<String, Bitmap>> listAlbums;
     private static AdapterAlbums.ClickListener listener;
 
     public AdapterAlbums(ArrayList<Pair<String, Bitmap>> listAlbums) {
         this.listAlbums = listAlbums;
     }
+
 
     @Override
     @NonNull
@@ -49,8 +52,8 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull AdapterAlbums.ViewHolderAlbums holder, int position) {
-
         String path = listAlbums.get(position).first;
+
         String album_name = path.substring(path.lastIndexOf("/") + 1);
 
         ((TextView) holder.album.findViewById(R.id.albumName)).setText(album_name);
@@ -59,15 +62,21 @@ public class AdapterAlbums extends RecyclerView.Adapter<AdapterAlbums.ViewHolder
         holder.album.setId(holder.album.getId()+position);
     }
 
+
+
     public class ViewHolderAlbums extends RecyclerView.ViewHolder implements View.OnClickListener{
         final RelativeLayout album;
+
 
 
         ViewHolderAlbums(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             album = itemView.findViewById(R.id.albumLayout);
+
         }
+
+
 
         @Override
         public void onClick(View view) {

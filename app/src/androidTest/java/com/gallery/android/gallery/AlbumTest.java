@@ -3,17 +3,21 @@ package com.gallery.android.gallery;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
+
+import java.util.ArrayList;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -74,20 +78,22 @@ public class AlbumTest {
 
         RecyclerView albums = album_overview_rule.getActivity().findViewById(R.id.albumRecyclerId);
         boolean path_exists = false;
+        final ArrayList<Pair<String, Bitmap>> ListAlbums = ((AdapterAlbums)albums.getAdapter()).getListAlbums();
 
-        for (int childCount = albums.getChildCount(), i = 0; i < childCount; ++i) {
-            AdapterAlbums.ViewHolderAlbums holder = (AdapterAlbums.ViewHolderAlbums) albums.getChildViewHolder(albums.getChildAt(i));
-            if (holder.path.getText().equals(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString())) {
+        for(Pair<String, Bitmap> album: ListAlbums){
+            if (album.first.equals(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString())) {
                 path_exists = true;
                 break;
             }
+
+
         }
 
         assertTrue(path_exists);
 
     }
 
-  /*  @Test
+   @Test
     public void PictureExistsInAlbum(){
 
         RecyclerView image_recycler = album_images_activity.getActivity().findViewById(R.id.RecyclerId);
@@ -103,5 +109,5 @@ public class AlbumTest {
 
         assertTrue(image_exists);
 
-    }*/
+    }
 }

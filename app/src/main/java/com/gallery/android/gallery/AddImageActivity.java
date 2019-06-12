@@ -84,6 +84,9 @@ public class AddImageActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+        Intent mainActivity = new Intent(AddImageActivity.this, MainActivity.class);
+        startActivity(mainActivity);
         return timeStamp;
+
     }
 }

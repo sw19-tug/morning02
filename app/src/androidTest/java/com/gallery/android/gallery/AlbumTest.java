@@ -24,6 +24,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
+import static com.gallery.android.gallery.AlbumOverviewActivity.recyclerAlbums;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
@@ -31,6 +33,7 @@ import static junit.framework.TestCase.assertTrue;
 public class AlbumTest {
     private ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
     private ActivityTestRule<AlbumOverviewActivity> album_overview_rule;
+    private ActivityTestRule<PictureSelectionActivity> pic_selection_rule;
     private ActivityTestRule<MainActivity> album_images_activity;
 
     @Rule
@@ -43,23 +46,8 @@ public class AlbumTest {
                     TestHelper.createFile("test.png");
                 }
             })
-            /*.around(album_images_activity = new ActivityTestRule<MainActivity>(MainActivity.class) {
-                @Override
-                protected Intent getActivityIntent() {
-                    Context targetContext = InstrumentationRegistry.getInstrumentation()
-                            .getTargetContext();
-                    Intent result = new Intent(targetContext, MainActivity.class);
-                    result.putExtra("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
-                    result.putExtra("include_subfolders", false);
-                    return result;
-                }
-                protected void beforeActivityLaunched() {
-                    TestHelper.createFile("test.png");
-                }
-            })*/
+            .around(pic_selection_rule = new ActivityTestRule<>(PictureSelectionActivity.class, true, false))
             .around(activityTestRule);
-
-
 
     @AfterClass
     public static void tearDownClass() {
@@ -67,14 +55,10 @@ public class AlbumTest {
     }
     @Test
     public void buttonExists(){
-        /*Intent intent=new Intent();
-        activityTestRule.launchActivity(intent);*/
         assertNotNull(activityTestRule.getActivity().findViewById(R.id.albums));
-        // onView(withId(R.id.albums)).check(matches(isDisplayed()));
     }
     @Test
     public void albumExists(){
-        // onView(withId(R.id.albums)).perform(click());
 
         RecyclerView albums = album_overview_rule.getActivity().findViewById(R.id.albumRecyclerId);
         boolean path_exists = false;
@@ -85,29 +69,81 @@ public class AlbumTest {
                 path_exists = true;
                 break;
             }
-
-
         }
 
         assertTrue(path_exists);
-
     }
 
-   @Test
-    public void PictureExistsInAlbum(){
+    @Test
+    public void clickOnAlbumButton() {
 
-        RecyclerView image_recycler = album_images_activity.getActivity().findViewById(R.id.RecyclerId);
-        boolean image_exists = false;
+        RecyclerView albums = album_overview_rule.getActivity().findViewById(R.id.albumRecyclerId);
+        AdapterAlbums adapter = (AdapterAlbums) albums.getAdapter();
 
-        for (int childCount = image_recycler.getChildCount(), i = 0; i < childCount; ++i) {
-            AdapterAlbums.ViewHolderAlbums holder = (AdapterAlbums.ViewHolderAlbums) image_recycler.getChildViewHolder(image_recycler.getChildAt(i));
-            if (holder.path.getText().equals("test.png")) {
-                image_exists = true;
-                break;
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            try {
+                runOnUiThread(new MyRunnable(albums, i) {
+                    public void run() {
+                        try {
+                            recyclerAlbums.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
+                        } catch (NullPointerException ex1) {
+                            ex1.printStackTrace();
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex1) {
+                            return;
+                        }
+                    }
+                });
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void addAlbumButton()
+    {
+        assertNotNull(album_overview_rule.getActivity().findViewById(R.id.add_album));
+    }
+
+    @Test
+    public void pictureSelectionTest() {
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
+        pic_selection_rule.launchActivity(intent);
+
+        RecyclerView picture_recycler = pic_selection_rule.getActivity().findViewById(R.id.RecyclerId);
+        AdapterImages adapter = (AdapterImages) picture_recycler.getAdapter();
+
+        int item_count = adapter.getItemCount();
+
+        for (int i = 0; i < item_count; i++) {
+            try {
+                runOnUiThread(new MyRunnable(picture_recycler, i) {
+                    public void run() {
+                        try {
+                            recyclerAlbums.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
+                        } catch (NullPointerException ex1) {
+                            ex1.printStackTrace();
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex1) {
+                            return;
+                        }
+                    }
+                });
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
             }
         }
 
-        assertTrue(image_exists);
+        assert(item_count == pic_selection_rule.getActivity().selection_list.size());
 
     }
 }

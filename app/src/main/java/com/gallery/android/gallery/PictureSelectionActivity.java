@@ -36,7 +36,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class PictureSelectionActivity extends AppCompatActivity {
 
-    public static RecyclerView recyclerImages;
     public static String path;
     public String album_path;
 
@@ -83,7 +82,7 @@ public class PictureSelectionActivity extends AppCompatActivity {
 
                 }
                 setResult(Activity.RESULT_OK);
-                PictureSelectionActivity.this.finish();
+                finish();
                 return (true);
             }
         }
@@ -99,7 +98,7 @@ public class PictureSelectionActivity extends AppCompatActivity {
 
     private void buildRecycler() {
 
-        recyclerImages = findViewById(R.id.RecyclerId);
+        RecyclerView recyclerImages = findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
@@ -110,7 +109,7 @@ public class PictureSelectionActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-
+                System.out.println("Picture selection!!!!");
                 if (selection_list.contains(image_list.get(position))) {
                     selection_list.remove(image_list.get(position));
                     v.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);

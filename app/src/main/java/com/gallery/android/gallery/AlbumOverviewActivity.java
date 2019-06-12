@@ -111,7 +111,6 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (MainActivity.album_mode) {
             FileLoader f = new FileLoader();
             final ArrayList<ImageContainer> image_list = f.loadImageContainersForPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), true, AlbumOverviewActivity.this);
             AdapterImages adapter = (AdapterImages) MainActivity.recyclerImages.getAdapter();
@@ -137,9 +136,6 @@ public class AlbumOverviewActivity extends AppCompatActivity {
             returnIntent.putExtra("title", "Gallery");
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private String createDirectory(String directory_name) {

@@ -246,8 +246,10 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK)
             {
                 setTitle(data.getStringExtra("title"));
+                buildRecycler();
             }
         }
+        setSelectionMode(false);
     }
 
     private void onSearchClicked(AdapterImages adapter) {

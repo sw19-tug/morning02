@@ -50,6 +50,7 @@ public class PictureSelectionActivity extends AppCompatActivity {
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
         setContentView(R.layout.picture_selection);
+        this.setTitle("Add pictures");
 
         buildRecycler();
 

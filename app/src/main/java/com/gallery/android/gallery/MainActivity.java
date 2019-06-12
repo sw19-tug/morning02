@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int STORAGE_READ_REQUEST = 1;
     public static final int FULLSCREEN_REQUEST = 2;
     public static final int OPEN_ZIP_REQUEST = 3;
+    public static final int ALBUM_OVERVIEW_REQUEST = 5;
     private static final int BUFFER_SIZE = 8192 ;//2048;
     public static RecyclerView recyclerImages;
     public static String path;
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
             case R.id.albums:{
                 Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
-                startActivity(albumIntent);
+                startActivityForResult(albumIntent, ALBUM_OVERVIEW_REQUEST);
             }
     }
         return(super.onOptionsItemSelected(item));
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             setSelectionMode(false);
         } else if (album_mode) {
             Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
-            startActivity(albumIntent);
+            startActivityForResult(albumIntent, ALBUM_OVERVIEW_REQUEST);
         } else {
             super.onBackPressed();
         }
@@ -239,6 +240,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
+        else if (requestCode == ALBUM_OVERVIEW_REQUEST) {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                setTitle(data.getStringExtra("title"));
             }
         }
     }

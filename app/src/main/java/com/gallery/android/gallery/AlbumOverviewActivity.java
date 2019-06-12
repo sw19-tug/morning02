@@ -33,6 +33,7 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_overview);
+        this.setTitle("Albums");
         buildRecycler();
     }
 
@@ -40,8 +41,6 @@ public class AlbumOverviewActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_album_overview, menu);
-
-
         return true;
     }
 
@@ -98,6 +97,11 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
                 MainActivity.path = albumPath;
                 MainActivity.album_mode = true;
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("title", albumPath.substring(albumPath.lastIndexOf("/") + 1));
+                setResult(Activity.RESULT_OK, returnIntent);
+
                 finish();
             }
         });
@@ -129,6 +133,9 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
             MainActivity.path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();;
             MainActivity.album_mode = false;
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("title", "Gallery");
+            setResult(Activity.RESULT_OK, returnIntent);
             finish();
         } else {
             super.onBackPressed();
@@ -170,6 +177,7 @@ public class AlbumOverviewActivity extends AppCompatActivity {
                     System.out.println("Created directory " + album_name);
                 }
                 else {
+                    Toast.makeText(AlbumOverviewActivity.this, "Album creation failed", Toast.LENGTH_LONG);
                     System.out.println("Album creation failed.");
                 }
 

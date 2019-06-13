@@ -74,11 +74,6 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences sharedPref =
                     PreferenceManager.getDefaultSharedPreferences(this);
 
-            /*Boolean switchPref = sharedPref.getBoolean
-                    (SettingsActivity.KEY_PREF_TEST_SWITCH, true);
-
-            Toast.makeText(this, switchPref.toString(), Toast.LENGTH_LONG).show();*/
-
             buildRecycler();
             setEditText();
         }
@@ -299,16 +294,26 @@ public class MainActivity extends AppCompatActivity {
         for(ImageContainer image_container: ((GalleryApplication)getApplication()).imgs){
             String jsonString = prefs.getString(image_container.getPath(), "");
             if(!jsonString.equals("")){
+                boolean update_preference = false;
                 try {
                     JSONArray jsonArray = new JSONArray(jsonString);
                     for (int i = 0; i < jsonArray.length(); i++) {
+                        boolean tag_exists = false;
                         for(Tags tag: tags) {
-                            if(tag.getName().equals(jsonArray.getString(i)))
+                            if(tag.getName().equals(jsonArray.getString(i))){
+                                tag_exists = true;
                                 image_container.tags.add(tag);
+                            }
                         }
+                        if(!tag_exists)
+                            update_preference = true;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                if(update_preference) {
+                    ((GalleryApplication) getApplication()).updateImageTagPreferance(
+                            image_container.getPath(), image_container.tags);
                 }
             }
         }

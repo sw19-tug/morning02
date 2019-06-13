@@ -109,7 +109,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                         Tags new_tag = new Tags(insert_text);
 
                         ((GalleryApplication) getApplication()).tags.add(new_tag);
-                        updateTagPreferences();
+                        ((GalleryApplication)getApplication()).updateTagPreferences();
                         adapter.addItem(new_tag);
                         recyclerTags.getAdapter().notifyItemInserted(recyclerTags.getAdapter().getItemCount());
 
@@ -139,7 +139,8 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                     }
 
                 }
-                updateImageTagPreferance();
+                ((GalleryApplication)getApplication()).updateImageTagPreferance(
+                        actual_image_container.getPath(),  actual_image_container.tags);
                 res.getAdapter().notifyDataSetChanged();
 
                 return true;
@@ -150,7 +151,8 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 for (int j = 0; j < tags_.size(); j++) {
                     actual_image_container.tags.clear();
                 }
-                updateImageTagPreferance();
+                ((GalleryApplication)getApplication()).updateImageTagPreferance(
+                        actual_image_container.getPath(),  actual_image_container.tags);
                 res1.getAdapter().notifyDataSetChanged();
 
         return true;
@@ -158,19 +160,6 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
     return false;
 
 }
-
-    private void updateTagPreferences() {
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getApplication());
-        JSONArray jsonArray = new JSONArray();
-        for(Tags t: ((GalleryApplication) getApplication()).tags)
-        {
-            jsonArray.put(t.getName());
-        }
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("tags", jsonArray.toString());
-        editor.commit();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,7 +207,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
             public void onItemDeleteClick(int position, View v) {
                 adapter.removeItem(position);
                 ((GalleryApplication)getApplication()).tags.remove(position);
-                updateTagPreferences();
+                ((GalleryApplication)getApplication()).updateTagPreferences();
             }
         });
 
@@ -232,26 +221,14 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 else {
                     actual_image_container.tags.remove(adapter.tags_.get(position));
                 }
-                updateImageTagPreferance();
+                ((GalleryApplication)getApplication()).updateImageTagPreferance(
+                        actual_image_container.getPath(),  actual_image_container.tags);
             }
         });
 
         recyclerTags.setAdapter(adapter);
         recyclerTags.setLayoutManager(new LinearLayoutManager(this));
 
-    }
-
-    private void updateImageTagPreferance() {
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getApplication());
-        JSONArray jsonArray = new JSONArray();
-        for(Tags t:  actual_image_container.tags)
-        {
-            jsonArray.put(t.getName());
-        }
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(actual_image_container.getPath(), jsonArray.toString());
-        editor.commit();
     }
 
     public void click_add_tag(View view){

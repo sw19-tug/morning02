@@ -9,6 +9,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class GalleryApplication extends Application {
 
@@ -48,6 +49,32 @@ public class GalleryApplication extends Application {
         }
 
         return tagsList;
+    }
+
+    public void updateTagPreferences() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        JSONArray jsonArray = new JSONArray();
+        for(Tags t: tags)
+        {
+            jsonArray.put(t.getName());
+        }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("tags", jsonArray.toString());
+        editor.commit();
+    }
+
+    public void updateImageTagPreferance(String path, Set<Tags> tags) {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        JSONArray jsonArray = new JSONArray();
+        for(Tags t:  tags)
+        {
+            jsonArray.put(t.getName());
+        }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(path, jsonArray.toString());
+        editor.commit();
     }
 
 }

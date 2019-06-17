@@ -1,11 +1,9 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +17,7 @@ import org.junit.rules.TestRule;
 
 import java.util.ArrayList;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread;
-import static com.gallery.android.gallery.AlbumOverviewActivity.recyclerAlbums;
-import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
@@ -77,7 +68,7 @@ public class AlbumTest {
     @Test
     public void clickOnAlbumButton() {
 
-        RecyclerView albums = album_overview_rule.getActivity().findViewById(R.id.albumRecyclerId);
+        final RecyclerView albums = album_overview_rule.getActivity().findViewById(R.id.albumRecyclerId);
         AdapterAlbums adapter = (AdapterAlbums) albums.getAdapter();
 
         for (int i = 0; i < adapter.getItemCount(); i++) {
@@ -85,7 +76,7 @@ public class AlbumTest {
                 runOnUiThread(new MyRunnable(albums, i) {
                     public void run() {
                         try {
-                            recyclerAlbums.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
+                            albums.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
                         } catch (NullPointerException ex1) {
                             ex1.printStackTrace();
                         }
@@ -117,7 +108,7 @@ public class AlbumTest {
         intent.putExtra("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
         pic_selection_rule.launchActivity(intent);
 
-        RecyclerView picture_recycler = pic_selection_rule.getActivity().findViewById(R.id.RecyclerId);
+        final RecyclerView picture_recycler = pic_selection_rule.getActivity().findViewById(R.id.RecyclerId);
         AdapterImages adapter = (AdapterImages) picture_recycler.getAdapter();
 
         int item_count = adapter.getItemCount();
@@ -127,7 +118,7 @@ public class AlbumTest {
                 runOnUiThread(new MyRunnable(picture_recycler, i) {
                     public void run() {
                         try {
-                            recyclerAlbums.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
+                            picture_recycler.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();
                         } catch (NullPointerException ex1) {
                             ex1.printStackTrace();
                         }

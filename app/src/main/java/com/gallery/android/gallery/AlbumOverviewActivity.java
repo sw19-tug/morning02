@@ -3,6 +3,7 @@ package com.gallery.android.gallery;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.File;
@@ -24,14 +26,20 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
     public static final int SELECTION_REQUEST = 4;
 
-    public static RecyclerView recyclerAlbums;
+    RecyclerView recyclerAlbums;
     private String album_name = "";
     private String album_path;
+    private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
+    Switch nightmodeswitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
+        if (isNightModeEnabled()) {
+            setTheme(R.style.DarkTheme);
+        }
+        this.isNightModeEnabled= (Boolean) GalleryApplication.getInstance().get("nightMode");
         setContentView(R.layout.activity_album_overview);
         this.setTitle("Albums");
         buildRecycler();
@@ -59,47 +67,10 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
                 String albumPath = albumList.get(position).first;
 
-                FileLoader f = new FileLoader();
-                final ArrayList<ImageContainer> image_list = f.loadImageContainersForPath(albumPath, false, AlbumOverviewActivity.this);
-                AdapterImages adapter = (AdapterImages) MainActivity.recyclerImages.getAdapter();
-
-                int i = 0;
-                while (i < adapter.getListImages().size()) {
-                    boolean found = false;
-                    for (ImageContainer album_image : image_list)   {
-                        if (adapter.getListImages().get(i).getPath().equals(album_image.getPath())) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        adapter.getListImages().remove(i);
-                        adapter.notifyItemRemoved(i);
-                        adapter.notifyItemRangeChanged(i, adapter.getListImages().size());
-                    } else {
-                        i++;
-                    }
-                }
-
-                for (ImageContainer album_image : image_list)
-                {
-                    boolean found = false;
-                    for (ImageContainer image : adapter.getListImages()) {
-                        if (image.getPath().equals(album_image.getPath())) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        adapter.getListImages().add(album_image);
-                        adapter.notifyItemInserted(adapter.getListImages().size() - 1);
-                        adapter.notifyItemRangeChanged(adapter.getListImages().size() - 1, adapter.getListImages().size());
-                    }
-                }
-
-                MainActivity.path = albumPath;
-                MainActivity.album_mode = true;
-
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("title", albumPath.substring(albumPath.lastIndexOf("/") + 1));
+                returnIntent.putExtra("path", albumPath);
+                returnIntent.putExtra("album_mode", true);
                 setResult(Activity.RESULT_OK, returnIntent);
 
                 finish();
@@ -111,29 +82,11 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-            FileLoader f = new FileLoader();
-            final ArrayList<ImageContainer> image_list = f.loadImageContainersForPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString(), true, AlbumOverviewActivity.this);
-            AdapterImages adapter = (AdapterImages) MainActivity.recyclerImages.getAdapter();
 
-            for (ImageContainer album_image : image_list)
-            {
-                boolean found = false;
-                for (ImageContainer image : adapter.getListImages()) {
-                    if (image.getPath().equals(album_image.getPath())) {
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    adapter.getListImages().add(album_image);
-                    adapter.notifyItemInserted(adapter.getListImages().size() - 1);
-                    adapter.notifyItemRangeChanged(adapter.getListImages().size() - 1, adapter.getListImages().size());
-                }
-            }
-
-            MainActivity.path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();;
-            MainActivity.album_mode = false;
             Intent returnIntent = new Intent();
             returnIntent.putExtra("title", "Gallery");
+            returnIntent.putExtra("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
+            returnIntent.putExtra("album_mode", false);
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
     }
@@ -148,9 +101,9 @@ public class AlbumOverviewActivity extends AppCompatActivity {
         return null;
     }
 
-    private boolean enterAlbumName()
+    private void enterAlbumName()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("Add album");
 
         // Set up the input
@@ -173,7 +126,7 @@ public class AlbumOverviewActivity extends AppCompatActivity {
                     System.out.println("Created directory " + album_name);
                 }
                 else {
-                    Toast.makeText(AlbumOverviewActivity.this, "Album creation failed", Toast.LENGTH_LONG);
+                    Toast.makeText(AlbumOverviewActivity.this, "Album creation failed", Toast.LENGTH_LONG).show();
                     System.out.println("Album creation failed.");
                 }
 
@@ -188,7 +141,6 @@ public class AlbumOverviewActivity extends AppCompatActivity {
         });
 
         builder.show();
-        return !album_name.isEmpty();
     }
 
     @Override
@@ -213,6 +165,12 @@ public class AlbumOverviewActivity extends AppCompatActivity {
                 new File(album_path).delete();
             }
         }
+    }
+    public boolean isNightModeEnabled() {
+        return isNightModeEnabled;
+    }
+    public void setIsNightModeEnabled(boolean isNightModeEnabled) {
+        this.isNightModeEnabled = isNightModeEnabled;
     }
 }
 

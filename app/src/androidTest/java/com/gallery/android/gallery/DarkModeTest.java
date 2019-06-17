@@ -28,8 +28,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.assertNotEquals;
+
 
 public class DarkModeTest {
     public ActivityTestRule<MainActivity> activityTestRule;
@@ -42,12 +41,10 @@ public class DarkModeTest {
 
             });
 
-
     @Test
     public void buttonExists(){
         onView(withId(R.id.NModeswitchAB)).perform(click());
     }
-
 
     @Test
     public void darkModeTest(){
@@ -64,9 +61,6 @@ public class DarkModeTest {
         EditText search2=b.findViewById(R.id.search_bar);
         Integer buttonColor2 =  search2.getCurrentTextColor();
         Assert.assertNotEquals(buttonColor1,buttonColor2);
-
-
-
 
 
     }

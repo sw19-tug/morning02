@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Switch;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,13 +21,18 @@ public class PictureSelectionActivity extends AppCompatActivity {
 
     public static String path;
     public String album_path;
+    private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
+    Switch nightmodeswitch;
 
     public List<ImageContainer> selection_list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (isNightModeEnabled()) {
+            setTheme(R.style.DarkTheme);
+        }
+        this.isNightModeEnabled= (Boolean) GalleryApplication.getInstance().get("nightMode");
         album_path = getIntent().getExtras().getString("path");
         path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
@@ -144,5 +150,12 @@ public class PictureSelectionActivity extends AppCompatActivity {
             result = source.delete();
         }
         return result;
+    }
+
+    public boolean isNightModeEnabled() {
+        return isNightModeEnabled;
+    }
+    public void setIsNightModeEnabled(boolean isNightModeEnabled) {
+        this.isNightModeEnabled = isNightModeEnabled;
     }
 }

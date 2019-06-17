@@ -11,7 +11,6 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Gallery;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -38,10 +36,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -53,11 +49,9 @@ public class MainActivity extends AppCompatActivity {
     public static final int ROTATE_REQUEST = 4;
     public static final int ALBUM_OVERVIEW_REQUEST = 5;
     private static final int BUFFER_SIZE = 8192 ;//2048;
-    public static RecyclerView recyclerImages;
     RecyclerView recyclerImages;
-    public static String path;
-    public static boolean album_mode = false;
-    private Boolean include_subfolders = true;
+    String path;
+    boolean album_mode = false;
 
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
@@ -106,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     public void setIsNightModeEnabled(boolean isNightModeEnabled) {
         this.isNightModeEnabled = isNightModeEnabled;
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -361,12 +356,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
-        final ArrayList<ImageContainer> image_list = f.loadImageContainersForPath(path, include_subfolders, this);
 
         ((GalleryApplication)getApplication()).imgs.clear();
-        ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainers(this));
-        //final ArrayList<ImageContainer> image_list =
-        //((GalleryApplication)this.getApplication()).imgs = imageList;
+        ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainersForPath(path, !album_mode, this));
 
         AdapterImages adapter = new AdapterImages(((GalleryApplication)getApplication()).imgs);
 
@@ -476,6 +468,8 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK)
             {
                 setTitle(data.getStringExtra("title"));
+                path = data.getStringExtra("path");
+                album_mode = data.getBooleanExtra("album_mode", true);
                 buildRecycler();
             }
         }

@@ -48,4 +48,21 @@ public class DarkModeTest {
     }
 
 
+    @Test
+    public void darkModeTest(){
+        int themeResId;
+
+        Activity a=activityTestRule.getActivity();
+        onView(withId(R.id.search)).perform(click());
+        View main=a.findViewById(R.id.activity_main);
+        ColorDrawable buttonColor1 =  (ColorDrawable)main.getBackground();
+        Integer d=buttonColor1.getColor();
+        Assert.assertNotEquals(buttonColor1,4149685);
+
+
+
+
+
+    }
+
 }

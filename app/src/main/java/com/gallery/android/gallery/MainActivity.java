@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplication(), "ON", Toast.LENGTH_SHORT)
                             .show();
                     setIsNightModeEnabled(true);
-                    MyApp.getInstance().set("nightMode",true);
+                    GalleryApplication.getInstance().set("nightMode",true);
                     MainActivity.this.finish();
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplication(), "OFF", Toast.LENGTH_SHORT)
                             .show();
                     setIsNightModeEnabled(false);
-                    MyApp.getInstance().set("nightMode",false);
+                    GalleryApplication.getInstance().set("nightMode",false);
                     MainActivity.this.finish();
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);

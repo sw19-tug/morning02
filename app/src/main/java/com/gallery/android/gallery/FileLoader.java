@@ -3,22 +3,13 @@ package com.gallery.android.gallery;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
-import android.media.Image;
+import android.media.ThumbnailUtils;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.util.Pair;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FileLoader implements FileLoaderInterface {
@@ -34,7 +25,7 @@ public class FileLoader implements FileLoaderInterface {
     private List<Bitmap> bitmapList;
     private List<String> extentions;
 
-    private void search(File[] filelist, List<String> paths) {
+    private void search(File[] filelist, List<String> paths, boolean include_subfolders) {
         for (File f : filelist) {
             for (String extension : extentions) {
                 if(f.getName().startsWith(".")) {
@@ -45,13 +36,18 @@ public class FileLoader implements FileLoaderInterface {
                     break;
                 }
                 if (f.isDirectory()) {
-                    File[] newfilelist = f.listFiles();
-                    search(newfilelist, paths);
-                    break;
+                    if (include_subfolders) {
+                        File[] newfilelist = f.listFiles();
+                        search(newfilelist, paths, true);
+                        break;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
     }
+
 
     @Override
     public Bitmap getAndAddBitMap(String s) {
@@ -80,41 +76,65 @@ public class FileLoader implements FileLoaderInterface {
         }
         ArrayList<String> paths = new ArrayList<String>();
         if(filelist != null)
-            search(filelist, paths);
+            search(filelist, paths, true);
+        return paths;
+    }
+
+    public ArrayList<String> getImagesInformationForPath(String path, boolean include_subfolders) {
+
+        File dir = new File(path);
+        File[] filelist = dir.listFiles();
+        boolean success = false;
+        if(!dir.exists() && !dir.isDirectory()){
+            success=dir.mkdirs();
+            if(success)
+                filelist = dir.listFiles();
+        }
+        ArrayList<String> paths = new ArrayList<String>();
+        if(filelist != null) {
+            search(filelist, paths, include_subfolders);
+        }
         return paths;
     }
 
 
     public ArrayList<ImageContainer> loadImageContainers(Context context){
-        /*
-        List<String> paths=this.getImagesInformation();
-        ArrayList<ImageContainer> imageList = new ArrayList<ImageContainer>();
-        for(int i = 0; i < paths.size(); i++ )
-        {
-            ExifInterface exif = null;
-            try {
-                 exif = new ExifInterface(paths.get(i));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            File file = new File(paths.get(i));
-            System.out.println(paths.get(i));
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
-            String datestring = exif.getAttribute(ExifInterface.TAG_DATETIME);
-            System.out.println(datestring);
-            try{
-                Date date = simpleDateFormat.parse(datestring);
-                imageList.add(new ImageContainer(paths.get(i), date, file.length()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            catch(NullPointerException n) {
-                System.out.println("Datestring : " + datestring);
+
+        ArrayList<String> paths = this.getImagesInformation();
+
+        MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
+
+        return loader.parseAllImages(paths);
+    }
+
+    public ArrayList<Pair<String, Bitmap>> loadAlbums(){
+        ArrayList<String> imagePaths = this.getImagesInformation();
+        ArrayList<Pair<String, Bitmap>> albumPaths=new ArrayList<Pair<String, Bitmap>>();
+        for(String image_path : imagePaths) {
+            String path= image_path.substring(0,image_path.lastIndexOf("/"));
+
+            boolean found = false;
+
+            for (Pair<String, Bitmap> album : albumPaths)
+            {
+                if (album.first.equals(path))
+                {
+                    found = true;
+                    break;
+                }
             }
 
+            if (!found){
+                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(image_path),
+                        256, 256);
+                albumPaths.add(Pair.create(path, thumbnail));
+            }
         }
-        return imageList;*/
-        ArrayList<String> paths = this.getImagesInformation();
+        return albumPaths;
+    }
+
+    public ArrayList<ImageContainer> loadImageContainersForPath(String album_path, boolean include_subfolders, Context context) {
+        ArrayList<String> paths = this.getImagesInformationForPath(album_path, include_subfolders);
 
         MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
 

@@ -51,8 +51,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int FULLSCREEN_REQUEST = 2;
     public static final int OPEN_ZIP_REQUEST = 3;
     public static final int ROTATE_REQUEST = 4;
+    public static final int ALBUM_OVERVIEW_REQUEST = 5;
     private static final int BUFFER_SIZE = 8192 ;//2048;
+    public static RecyclerView recyclerImages;
     RecyclerView recyclerImages;
+    public static String path;
+    public static boolean album_mode = false;
+    private Boolean include_subfolders = true;
 
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
@@ -65,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+
         if (isNightModeEnabled()) {
             setTheme(R.style.DarkTheme);
         }
@@ -210,7 +218,10 @@ public class MainActivity extends AppCompatActivity {
                 search_bar.setVisibility(View.GONE);
             return true;
         }
-
+            case R.id.albums:{
+                Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
+                startActivityForResult(albumIntent, ALBUM_OVERVIEW_REQUEST);
+            }
             case R.id.rotate_all: {
                 if (selection_list.size() == selection_pos_list.size()) {
                     for (int index = 0; index < selection_pos_list.size(); index++) {
@@ -322,6 +333,9 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (selection_mode) {
             resetSelectionMode();
+        } else if (album_mode) {
+            Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
+            startActivityForResult(albumIntent, ALBUM_OVERVIEW_REQUEST);
         } else {
             super.onBackPressed();
         }
@@ -347,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
-        final ArrayList<ImageContainer> image_list = f.loadImageContainers(this);
+        final ArrayList<ImageContainer> image_list = f.loadImageContainersForPath(path, include_subfolders, this);
 
         ((GalleryApplication)getApplication()).imgs.clear();
         ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainers(this));
@@ -445,7 +459,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(requestCode == OPEN_ZIP_REQUEST ){
+        else if(requestCode == OPEN_ZIP_REQUEST ){
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     Uri path = data.getData();
@@ -458,6 +472,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        else if (requestCode == ALBUM_OVERVIEW_REQUEST) {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                setTitle(data.getStringExtra("title"));
+                buildRecycler();
+            }
+        }
+        setSelectionMode(false);
     }
 
     private void startFullScreenActivity(int pos, String path) {

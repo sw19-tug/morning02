@@ -78,29 +78,46 @@ public class MediaStoreDataLoader {
                     if (!found)
                         continue;
 
-                    String file_name =  path.substring(path.lastIndexOf("/") + 1);
-                    file_name = file_name.substring(0, file_name.lastIndexOf("."));
+                    try {
+                        String file_name = path.substring(path.lastIndexOf("/") + 1);
+                        file_name = file_name.substring(0, file_name.lastIndexOf("."));
 //                    Date date_modified = new Date(Long.parseLong(cursor.getString(date_modified_col_num)));
-                    Date date_taken = new Date(Long.parseLong(cursor.getString(date_taken_col_num)));
-                    long image_size = Long.parseLong(cursor.getString(size_col_num));
-                    int height = Integer.parseInt(cursor.getString(height_col_num));
-                    int width = Integer.parseInt(cursor.getString(width_col_num));
-                    String orientation = cursor.getString(orientation_col_num);
+                        Date date_taken = new Date(Long.parseLong(cursor.getString(date_taken_col_num)));
+                        long image_size = Long.parseLong(cursor.getString(size_col_num));
 
-                    Bitmap thumb_nail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path),
-                            256, 256);
+                        int height;
+                        try {
+                            height = Integer.parseInt(cursor.getString(height_col_num));
+                        } catch (NumberFormatException e) {
+                            height = 0;
+                        }
+                        int width;
+                        try {
+                            width = Integer.parseInt(cursor.getString(width_col_num));
+                        } catch (NumberFormatException e) {
+                            width = 0;
+                        }
+                        String orientation = cursor.getString(orientation_col_num);
 
-                    ImageContainer image_container = new ImageContainer(
-                            thumb_nail,
-                            path,
-                            file_name,
-                            date_taken,
-                            height,
-                            width,
-                            image_size,
-                            orientation);
+                        Bitmap thumb_nail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path),
+                                256, 256);
 
-                    image_list.add(image_container);
+
+                        ImageContainer image_container = new ImageContainer(
+                                thumb_nail,
+                                path,
+                                file_name,
+                                date_taken,
+                                height,
+                                width,
+                                image_size,
+                                orientation);
+
+                        image_list.add(image_container);
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
             cursor.close();

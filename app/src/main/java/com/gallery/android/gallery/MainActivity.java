@@ -58,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
     public List<ImageContainer> selection_list = new ArrayList<>();
     public List<Integer> selection_pos_list = new ArrayList<>();
     private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
+    Switch nightmodeswitch;
     EditText editText;
     FileDeleter mainDeleter = new FileDeleter();
-    Switch nightmodeswitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

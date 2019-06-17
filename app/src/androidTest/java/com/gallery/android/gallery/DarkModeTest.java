@@ -42,6 +42,7 @@ public class DarkModeTest {
 
             });
 
+
     @Test
     public void buttonExists(){
         onView(withId(R.id.NModeswitchAB)).perform(click());
@@ -50,14 +51,19 @@ public class DarkModeTest {
 
     @Test
     public void darkModeTest(){
-        int themeResId;
-
         Activity a=activityTestRule.getActivity();
         onView(withId(R.id.search)).perform(click());
-        View main=a.findViewById(R.id.activity_main);
-        ColorDrawable buttonColor1 =  (ColorDrawable)main.getBackground();
-        Integer d=buttonColor1.getColor();
-        Assert.assertNotEquals(buttonColor1,4149685);
+        EditText search=a.findViewById(R.id.search_bar);
+        onView(isAssignableFrom(EditText.class)).perform(typeText("aaaaaa"));
+        Integer buttonColor1 =  search.getCurrentTextColor();
+        Log.e("hoh",String.valueOf(buttonColor1));
+        onView(withId(R.id.NModeswitchAB)).perform(click());
+        Activity b=activityTestRule.getActivity();
+        onView(withId(R.id.search)).perform(click());
+        onView(isAssignableFrom(EditText.class)).perform(typeText("bbbbbbb")) ;
+        EditText search2=b.findViewById(R.id.search_bar);
+        Integer buttonColor2 =  search2.getCurrentTextColor();
+        Assert.assertNotEquals(buttonColor1,buttonColor2);
 
 
 

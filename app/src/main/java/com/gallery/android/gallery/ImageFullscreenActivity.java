@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 
 import java.io.IOException;
 
@@ -23,12 +24,17 @@ import java.io.IOException;
 public class ImageFullscreenActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
     String path="";
     int index = -1;
+    private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
+    Switch nightmodeswitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
-
+        if (isNightModeEnabled()) {
+            setTheme(R.style.DarkTheme);
+        }
+        this.isNightModeEnabled= (Boolean) GalleryApplication.getInstance().get("nightMode");
         path = getIntent().getExtras().getString("path");
         index = getIntent().getExtras().getInt("index");
         setContentView(R.layout.activity_image_fullscreen);
@@ -36,7 +42,9 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         image.setImageBitmap(bitmap);
     }
-
+    public boolean isNightModeEnabled() {
+        return isNightModeEnabled;
+    }
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);

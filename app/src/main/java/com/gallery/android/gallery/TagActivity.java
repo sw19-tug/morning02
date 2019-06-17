@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
     private List<String> checkedTags = new ArrayList<String>();
     public RecyclerView recyclerTags;
     private ImageContainer actual_image_container;
+    private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
+    Switch nightmodeswitch;
 
     public void TagsMenu(View view) {
         PopupMenu tags_menu = new PopupMenu(this, view);
@@ -174,7 +177,10 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (isNightModeEnabled()) {
+            setTheme(R.style.DarkTheme);
+        }
+        this.isNightModeEnabled= (Boolean) GalleryApplication.getInstance().get("nightMode");
         Bundle bundle = getIntent().getExtras();
 
         try {
@@ -206,7 +212,9 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
         setUpRecyclerTags();
 
     }
-
+    public boolean isNightModeEnabled() {
+        return isNightModeEnabled;
+    }
     private void setUpRecyclerTags() {
 
         recyclerTags = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);

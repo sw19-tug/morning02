@@ -3,8 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="color2Primary">#23275c</color>
+    <color name="color2PrimaryDark">#214b43</color>
+    <color name="color2Accent">#FF4081</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="gray">#808080</color>
+    <color name="light_grey">#C7CDCF</color>
     <color name="androidgreen">#9cc96e</color>
     <color name="colorError">#B00020</color>
 </resources>

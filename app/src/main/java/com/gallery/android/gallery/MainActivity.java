@@ -18,12 +18,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -53,12 +57,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
     public List<Integer> selection_pos_list = new ArrayList<>();
+    private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
+    Switch nightmodeswitch;
     EditText editText;
     FileDeleter mainDeleter = new FileDeleter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (isNightModeEnabled()) {
+            setTheme(R.style.DarkTheme);
+        }
+        this.isNightModeEnabled= (Boolean) GalleryApplication.getInstance().get("nightMode");
+
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -78,9 +89,15 @@ public class MainActivity extends AppCompatActivity {
 
             buildRecycler();
             setEditText();
+            nightmodeswitch = (Switch) findViewById(R.id.NModeswitchId);
         }
     }
-
+    public boolean isNightModeEnabled() {
+        return isNightModeEnabled;
+    }
+    public void setIsNightModeEnabled(boolean isNightModeEnabled) {
+        this.isNightModeEnabled = isNightModeEnabled;
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
@@ -113,7 +130,36 @@ public class MainActivity extends AppCompatActivity {
         menu.findItem(R.id.rotate_all).setVisible(selection_mode);
         menu.findItem(R.id.delete_all).setVisible(selection_mode);
         menu.findItem(R.id.share_all).setVisible(selection_mode);
+        MenuItem nswitch=menu.findItem(R.id.NModeswitchId).setVisible(!selection_mode);
+        nswitch.setActionView(R.layout.switch_layout);
+        SwitchCompat switchDarkMode;
 
+        switchDarkMode = (SwitchCompat) nswitch.getActionView().findViewById(R.id.NModeswitchAB);
+        switchDarkMode.setChecked(isNightModeEnabled());
+
+        switchDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                if (isChecked) {
+                    Toast.makeText(getApplication(), "ON", Toast.LENGTH_SHORT)
+                            .show();
+                    setIsNightModeEnabled(true);
+                    GalleryApplication.getInstance().set("nightMode",true);
+                    MainActivity.this.finish();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplication(), "OFF", Toast.LENGTH_SHORT)
+                            .show();
+                    setIsNightModeEnabled(false);
+                    GalleryApplication.getInstance().set("nightMode",false);
+                    MainActivity.this.finish();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
         return true;
     }
 
@@ -207,6 +253,14 @@ public class MainActivity extends AppCompatActivity {
                 Intent addImageIntent = new Intent(MainActivity.this, AddImageActivity.class);
                 startActivity(addImageIntent);
                 return true;
+            }
+            case R.id.NModeswitchAB:{
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+
+
+
+
             }
 
     }

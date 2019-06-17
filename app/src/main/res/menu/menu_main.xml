@@ -62,5 +62,12 @@
         app:showAsAction="always"
         android:title="Add Image"/>
 
+    <item
+        android:id="@+id/NModeswitchId"
+        android:title=""
+        app:showAsAction="ifRoom"
+        android:actionLayout="@layout/switch_layout"/>
+    />
+
 
 </menu>

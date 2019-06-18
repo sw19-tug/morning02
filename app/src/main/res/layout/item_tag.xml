@@ -23,7 +23,8 @@
                 android:id="@+id/textview_tagitem_text"
                 android:textSize="25sp"
                 android:gravity="center"
-                android:background="@color/white" />
+                android:background="@color/white"
+                android:textColor="@color/black"/>
 
             <Button
                 android:id="@+id/button_tagitem_delete"

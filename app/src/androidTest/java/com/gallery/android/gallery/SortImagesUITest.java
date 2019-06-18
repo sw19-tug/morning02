@@ -31,6 +31,4 @@ public class SortImagesUITest {
         TestHelper.deleteFile("test1.png");
         TestHelper.deleteFile("test2.png");
     }
-
-
 }

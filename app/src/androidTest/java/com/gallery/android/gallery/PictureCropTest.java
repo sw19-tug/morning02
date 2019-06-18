@@ -3,15 +3,8 @@ package com.gallery.android.gallery;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Instrumentation;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.util.Log;
@@ -27,31 +20,21 @@ import java.util.List;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
-
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.CREATED;
 import static android.support.test.runner.lifecycle.Stage.PAUSED;
 import static android.support.test.runner.lifecycle.Stage.PRE_ON_CREATE;
-import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static android.support.test.runner.lifecycle.Stage.STARTED;
 import static android.support.test.runner.lifecycle.Stage.STOPPED;
-import static com.googlecode.eyesfree.utils.LogUtils.TAG;
 
 //Code was parially taken from https://code.tutsplus.com/tutorials/capture-and-crop-an-image-with-the-device-camera--mobile-11458
 
 public class PictureCropTest {
-
-
 
     public IntentsTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(MainActivity.class);
     @Rule
@@ -62,7 +45,6 @@ public class PictureCropTest {
             .around(new IntentsTestRule<MainActivity>(MainActivity.class) {
 
             });
-
 
     @Test
     public void testButtonsVisible() {
@@ -91,8 +73,6 @@ public class PictureCropTest {
                 }
             }
         });
-
-        //return currentActivity;
     }
     public void getActivityInstance2(){
         Context ctx=activityTestRule.getActivity().getApplicationContext();
@@ -110,7 +90,5 @@ public class PictureCropTest {
                     .getShortClassName();
             Log.e("foi ",topActivity );
         }
-
     }
-
 }

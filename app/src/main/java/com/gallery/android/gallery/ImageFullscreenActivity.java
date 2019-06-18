@@ -8,14 +8,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.PopupMenu;
 import android.text.InputType;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -30,9 +25,6 @@ public class ImageFullscreenActivity extends AppCompatActivity {
 
     private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
     Switch nightmodeswitch;
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

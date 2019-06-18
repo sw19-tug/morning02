@@ -8,7 +8,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ImageView;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +30,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -54,7 +52,6 @@ public class FileDeleterJTest {
     public void testPathsAreRetrieved(){
         FileDeleter fd=new FileDeleter();
         assertNotNull(fd);
-        //Create Test File to delete
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         File dir = new File(path);
         if(!dir.exists() && !dir.isDirectory()){
@@ -82,7 +79,6 @@ public class FileDeleterJTest {
             }
         }
 
-        //delete the test file
         assertNotEquals(false, fd.delete(path));
     }
 

@@ -4,13 +4,11 @@ import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ImageView;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +28,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -43,10 +40,6 @@ public class RotateImageJTest {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .around(activityTestRule =new IntentsTestRule<MainActivity>(MainActivity.class) {
-                /*@Override
-                protected void beforeActivityLaunched() {
-                    TestHelper.createFile("testClick.png");
-                }*/
             });
 
     @Test

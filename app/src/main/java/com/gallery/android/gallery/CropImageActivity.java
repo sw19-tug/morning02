@@ -34,7 +34,6 @@ public class CropImageActivity extends AppCompatActivity {
         final int PIC_CROP = 2;
 
         try {
-
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
             cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             String pathName=path.toString();
@@ -55,21 +54,15 @@ public class CropImageActivity extends AppCompatActivity {
             SharedPreferences settings = getSharedPreferences("PREFS_NAME", MODE_PRIVATE);
             SharedPreferences.Editor editor = settings.edit();
             editor.clear();
-
             editor.putString("filename",filename);
-
             editor.commit();
             startActivityForResult(cropIntent, PIC_CROP);
-
         }
         catch(ActivityNotFoundException anfe){
-            //display an error message
             String errorMessage = "Device does not support cropping!";
             Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
             toast.show();
         }
-
-
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -87,18 +80,16 @@ public class CropImageActivity extends AppCompatActivity {
         }
 
     }
+
     private String savebitmap(Bitmap bmp,String name) {
         String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         OutputStream outStream = null;
-        // String temp = null;
         File file = new File(extStorageDirectory, timeStamp+"Crop" + name );
 
         if (file.exists()) {
             file.delete();
             file = new File(extStorageDirectory, timeStamp+"Crop" + name );
-
-
         }
 
         try {
@@ -113,5 +104,4 @@ public class CropImageActivity extends AppCompatActivity {
         }
         return timeStamp;
     }
-
 }

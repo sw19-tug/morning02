@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +66,6 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         catch (NullPointerException nullptr_exeption ) {
             nullptr_exeption.printStackTrace();
         }
-
     }
 
     public void addItems(List<ImageContainer> new_list) {
@@ -74,7 +74,6 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
             listImages.addAll(new_list);
             notifyDataSetChanged();
         }
-
     }
 
     public void addItem(ImageContainer new_item) {
@@ -158,4 +157,3 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         void onItemLongClick(int position, View v);
     }
 }
-

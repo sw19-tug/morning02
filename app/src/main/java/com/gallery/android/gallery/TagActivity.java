@@ -70,7 +70,6 @@ public class TagActivity extends AppCompatActivity  {
                 final EditText input = (EditText) viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
 
-                // Set up the buttons
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -78,7 +77,6 @@ public class TagActivity extends AppCompatActivity  {
                         dialog.dismiss();
 
                         AdapterTags adapter = (AdapterTags) recyclerTags.getAdapter();
-
 
                         insert_text = input.getText().toString();
 
@@ -139,7 +137,6 @@ public class TagActivity extends AppCompatActivity  {
         return true;
     }
     return false;
-
 }
 
     @Override
@@ -171,13 +168,11 @@ public class TagActivity extends AppCompatActivity  {
                 tagsList.add(new Tags(basic_tags[i]));
             }
 
-
             tags_ = tagsList;
         }
 
         setContentView(R.layout.activity_tags);
         setUpRecyclerTags();
-
     }
     public boolean isNightModeEnabled() {
         return isNightModeEnabled;
@@ -214,11 +209,9 @@ public class TagActivity extends AppCompatActivity  {
 
         recyclerTags.setAdapter(adapter);
         recyclerTags.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     public void click_add_tag(View view){
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("New tag");
@@ -228,7 +221,6 @@ public class TagActivity extends AppCompatActivity  {
         final EditText input = (EditText) viewInflated.findViewById(R.id.input);
         builder.setView(viewInflated);
 
-        // Set up the buttons
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -239,10 +231,8 @@ public class TagActivity extends AppCompatActivity  {
 
                 ((GalleryApplication)getApplication()).tags.add(new_tag);
 
-
                 AdapterTags adapter = (AdapterTags)recyclerTags.getAdapter();
                 adapter.addItem(new_tag);
-
 
                 recyclerTags.getAdapter().notifyItemInserted(recyclerTags.getAdapter().getItemCount());
 
@@ -257,8 +247,4 @@ public class TagActivity extends AppCompatActivity  {
 
         builder.show();
     }
-
-
-
-
 }

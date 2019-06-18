@@ -48,7 +48,6 @@ public class FileLoader implements FileLoaderInterface {
         }
     }
 
-
     @Override
     public Bitmap getAndAddBitMap(String s) {
         Bitmap b= BitmapFactory.decodeFile(s);
@@ -61,7 +60,6 @@ public class FileLoader implements FileLoaderInterface {
         view.setImageBitmap(bitmapList.get(index));
         return view;
     }
-
 
     public ArrayList<String> getImagesInformation() {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
@@ -96,7 +94,6 @@ public class FileLoader implements FileLoaderInterface {
         }
         return paths;
     }
-
 
     public ArrayList<ImageContainer> loadImageContainers(Context context){
 

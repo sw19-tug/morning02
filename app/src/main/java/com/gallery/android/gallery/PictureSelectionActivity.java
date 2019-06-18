@@ -40,13 +40,11 @@ public class PictureSelectionActivity extends AppCompatActivity {
         this.setTitle("Add pictures");
 
         buildRecycler();
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_picture_selection, menu);
 
         return true;
@@ -82,7 +80,6 @@ public class PictureSelectionActivity extends AppCompatActivity {
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
-
 
     private void buildRecycler() {
 

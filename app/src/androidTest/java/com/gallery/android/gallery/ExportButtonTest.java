@@ -56,7 +56,7 @@ public class ExportButtonTest {
         for (int i = 0; i < adapter_images.getListImages().size() && i<15; i++ ) {
 
             onView(withId(R.id.RecyclerId)).perform(
-                    RecyclerViewActions.actionOnItemAtPosition(i, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+                    RecyclerViewActions.actionOnItemAtPosition(i, TestHelper.clickChildViewWithId(R.id.ImageLayout)));
             pressBack();
         }
     }
@@ -75,7 +75,7 @@ public class ExportButtonTest {
         for (int i = 0; i <3; i++ ) {
             String path = ((AdapterImages)(recycler_view.getAdapter())).getListImages().get(i).getPath();
             onView(withId(R.id.RecyclerId)).perform(
-                    RecyclerViewActions.actionOnItemAtPosition(i, MyViewAction.clickChildViewWithId(R.id.ImageLayout)));
+                    RecyclerViewActions.actionOnItemAtPosition(i, TestHelper.clickChildViewWithId(R.id.ImageLayout)));
             Thread.sleep(100);
             checkExportImage(i, adapter_images.getListImages().get(i).getSize(),path);
             pressBack();

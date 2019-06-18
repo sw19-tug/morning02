@@ -52,7 +52,7 @@ public class SearchTest {
 
         onView(withId(R.id.search)).perform(click());
         onView(isAssignableFrom(EditText.class)).perform(typeText("testSearch"), pressKey(KeyEvent.KEYCODE_ENTER));
-        onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
-
+        ImageContainer imagecontainer = ((AdapterImages)activityTestRule.getActivity().recyclerImages.getAdapter()).getListImages().get(0);
+        assertTrue(imagecontainer.getFilename().contains("testSearch"));
     }
 }

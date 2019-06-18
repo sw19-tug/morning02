@@ -11,6 +11,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,6 +29,9 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,8 +40,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -83,11 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
             SharedPreferences sharedPref =
                     PreferenceManager.getDefaultSharedPreferences(this);
-
-            /*Boolean switchPref = sharedPref.getBoolean
-                    (SettingsActivity.KEY_PREF_TEST_SWITCH, true);
-
-            Toast.makeText(this, switchPref.toString(), Toast.LENGTH_LONG).show();*/
 
             buildRecycler();
             setEditText();
@@ -360,6 +361,38 @@ public class MainActivity extends AppCompatActivity {
         ((GalleryApplication)getApplication()).imgs.clear();
         ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainersForPath(path, !album_mode, this));
 
+
+        SharedPreferences prefs = android.support.v7.preference.PreferenceManager
+                .getDefaultSharedPreferences(getApplication());
+        List<Tags> tags = ((GalleryApplication) getApplication()).tags;
+
+        for(ImageContainer image_container: ((GalleryApplication)getApplication()).imgs){
+            String jsonString = prefs.getString(image_container.getPath(), "");
+            if(!jsonString.equals("")){
+                boolean update_preference = false;
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonString);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        boolean tag_exists = false;
+                        for(Tags tag: tags) {
+                            if(tag.getName().equals(jsonArray.getString(i))){
+                                tag_exists = true;
+                                image_container.tags.add(tag);
+                            }
+                        }
+                        if(!tag_exists)
+                            update_preference = true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(update_preference) {
+                    ((GalleryApplication) getApplication()).updateImageTagPreferance(
+                            image_container.getPath(), image_container.tags);
+                }
+            }
+        }
+
         AdapterImages adapter = new AdapterImages(((GalleryApplication)getApplication()).imgs);
 
         adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
@@ -498,15 +531,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSearchClicked(AdapterImages adapter) {
-        EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
+        String searchbar_input = ((EditText) findViewById(R.id.search_bar)).getText().toString();
 
-        String image_path = adapter.searchPictures(searchbar_input.getText().toString());
+        RecyclerView recyclerview_images = findViewById(R.id.RecyclerId);
+        AdapterImages adapter_images = (AdapterImages)recyclerview_images.getAdapter();
+        GalleryApplication application_gallery = (GalleryApplication)getApplication();
+        List<ImageContainer> list_images =  new ArrayList<>();
+        list_images.addAll(application_gallery.imgs);
+        List<Tags> list_tags = application_gallery.tags;
 
-        if (image_path != null) {
-            Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-            fullscreenImageIntent.putExtra("path", image_path);
-            startActivity(fullscreenImageIntent);
+        if (searchbar_input.equals(""))
+            adapter_images.replaceItems(list_images);
+
+        Tags search_tag = null;
+
+        for(int i = 0; i < list_tags.size(); i++){
+            if(searchbar_input.equals(list_tags.get(i).getName())){
+                search_tag = list_tags.get(i);
+                break;
+            }
         }
+
+        List<ImageContainer> list_images_tag_hit = new ArrayList<>();
+        List<ImageContainer> list_images_name_hit = new ArrayList<>();
+
+        for (ImageContainer image: list_images) {
+
+            if ((search_tag != null) && (image.tags.contains(search_tag)))
+                list_images_tag_hit.add(image);
+            else if (image.getFilename().contains(searchbar_input))
+                list_images_name_hit.add(image);
+
+        }
+
+        list_images_tag_hit.addAll(list_images_name_hit);
+        adapter_images.replaceItems(list_images_tag_hit);
+
     }
 
     private void setEditText() {

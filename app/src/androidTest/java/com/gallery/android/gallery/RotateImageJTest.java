@@ -21,7 +21,9 @@ import org.junit.runner.RunWith;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -52,7 +54,7 @@ public class RotateImageJTest {
 
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Rotate")).check(matches(isDisplayed()));
     }
@@ -73,7 +75,7 @@ public class RotateImageJTest {
 
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(200);
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Rotate")).perform(click());
         Thread.sleep(200);
@@ -106,7 +108,7 @@ public class RotateImageJTest {
 
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(200);
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Rotate")).perform(click());
         Thread.sleep(200);

@@ -21,7 +21,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -89,7 +91,7 @@ public class FileDeleterJTest {
 
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Delete")).check(matches(isDisplayed()));
     }
@@ -98,7 +100,7 @@ public class FileDeleterJTest {
      public void dialog() throws InterruptedException {
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Delete")).check(matches(isDisplayed()));
         onView(withText("Delete")).perform(click());
@@ -110,14 +112,14 @@ public class FileDeleterJTest {
     public void testDialogClick() throws InterruptedException {
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Delete")).perform(click());
         Thread.sleep(100);
         onView(withText("no")).perform(click());
         Thread.sleep(100);
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Delete")).perform(click());
         Thread.sleep(100);
@@ -132,7 +134,7 @@ public class FileDeleterJTest {
         String firstImagePath = ((AdapterImages)(rView.getAdapter())).getListImages().get(0).getPath();
         onView(withId(R.id.idImage)).perform(click());
         Thread.sleep(100);
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         Thread.sleep(100);
         onView(withText("Delete")).perform(click());
         Thread.sleep(100);

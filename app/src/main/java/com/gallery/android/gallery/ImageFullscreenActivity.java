@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.PopupMenu;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,11 +23,24 @@ import android.widget.Switch;
 import java.io.IOException;
 
 
-public class ImageFullscreenActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+public class ImageFullscreenActivity extends AppCompatActivity {
     String path="";
     int index = -1;
+    private Menu action_menu;
+
     private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
     Switch nightmodeswitch;
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_fullscreen, menu);
+        action_menu = menu;
+
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -45,26 +60,22 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
     public boolean isNightModeEnabled() {
         return isNightModeEnabled;
     }
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.popup_menu);
-        popup.show();
-    }
+
+
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.cropButton:
+            case R.id.menu_crop:
                 Intent cropImageActivity = new Intent(ImageFullscreenActivity.this, CropImageActivity.class);
                 cropImageActivity.putExtra("path", path);
                 startActivity(cropImageActivity);
                 return true;
-            case R.id.shareButton:
+            case R.id.menu_share:
                 Intent shareContentActivity = new Intent(ImageFullscreenActivity.this, ShareContentActivity.class);
                 startActivity(shareContentActivity);
                 return true;
-            case R.id.exportButton:
+            case R.id.menu_exprot:
                 String[] paths = {path};
                 try {
                     ExportImages.compressImage(paths, path+"_export.zip");
@@ -72,7 +83,7 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                     e.printStackTrace();
                 }
                 return true;
-            case R.id.deleteButton:
+            case R.id.menu_delete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(ImageFullscreenActivity.this);
                 builder.setTitle("Confirm");
                 builder.setMessage("Are you sure?");
@@ -98,7 +109,7 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                 AlertDialog alert = builder.create();
                 alert.show();
                 return true;
-            case R.id.renameButton:
+            case R.id.menu_rename:
                 AlertDialog.Builder inputTextBuilder = new AlertDialog.Builder(ImageFullscreenActivity.this);
                 inputTextBuilder.setTitle("New Name: ");
                 final EditText input = new EditText(this);
@@ -127,14 +138,14 @@ public class ImageFullscreenActivity extends AppCompatActivity implements PopupM
                 AlertDialog inputTextDialog = inputTextBuilder.create();
                 inputTextDialog.show();
                 return true;
-            case R.id.rotateButton:
+            case R.id.menu_rotate:
                         int rotateIndex = index;
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("indexRotate",rotateIndex);
                         setResult(Activity.RESULT_OK,returnIntent);
                         ImageFullscreenActivity.this.finish();
                 return true;
-            case R.id.tagsButton:
+            case R.id.menu_tags:
 
                 Intent tagsContentActivity = new Intent(ImageFullscreenActivity.this, TagActivity.class);
                 tagsContentActivity.putExtra("index", index);

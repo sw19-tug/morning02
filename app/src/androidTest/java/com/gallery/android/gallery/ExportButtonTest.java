@@ -85,7 +85,7 @@ public class ExportButtonTest {
 
     public void checkExportImage(int number, long size, String path) throws Throwable {
 
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Export")).perform(click());
         String export_phase = "_export.zip";
         File f = new File(path + export_phase);

@@ -1,6 +1,7 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -22,7 +23,9 @@ import org.junit.rules.TestRule;
 
 import java.util.List;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
@@ -44,6 +47,15 @@ import static org.junit.Assert.fail;
 
 public class TagsTest {
 
+    private ActivityTestRule<TagActivity> activityTestRule2;
+    @Rule
+    public final TestRule chain2 = RuleChain
+            .outerRule(GrantPermissionRule.grant(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            .around(activityTestRule2 = new ActivityTestRule<TagActivity>(TagActivity.class) {
+            });
+
     private ActivityTestRule<MainActivity> activityTestRule;
     @Rule
     public final TestRule chain = RuleChain
@@ -59,14 +71,7 @@ public class TagsTest {
             });
 
 
-    private ActivityTestRule<TagActivity> activityTestRule2;
-    @Rule
-    public final TestRule chain2 = RuleChain
-            .outerRule(GrantPermissionRule.grant(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            .around(activityTestRule2 = new ActivityTestRule<TagActivity>(TagActivity.class) {
-            });
+
 
     @Before
     public void beforeTests(){
@@ -91,9 +96,7 @@ public class TagsTest {
         goToTagsActivity(0);
 
         for(int index = 0; index < 5; index++){
-            onView(withId(R.id.button_tagsactivity_menu)).perform(click());
-            onView(withText("Add new tag")).check(matches(isDisplayed()));
-            onView(withText("Add new tag")).perform(click());
+            onView(withId(R.id.menu_add)).perform(click());
             onView(withId(R.id.input)).perform(typeText("T" + index));
             onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
         }
@@ -120,9 +123,8 @@ public class TagsTest {
 
         onView(withId(R.id.fullscreen_image_view)).check(matches(isDisplayed()));
 
-        onView(withId(R.id.popupMenu)).perform(click());
-        Thread.sleep(100);
-        onView(withText("Tags")).perform(click());
+        onView(withId(R.id.menu_tags)).perform(click());
+
 
     }
 
@@ -154,9 +156,7 @@ public class TagsTest {
         goToTagsActivity(0);
 
 
-        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
-        onView(withText("Add new tag")).check(matches(isDisplayed()));
-        onView(withText("Add new tag")).perform(click());
+        onView(withId(R.id.menu_add)).perform(click());
 
 
         onView(withId(R.id.input)).perform(typeText("TestNewTag"));
@@ -173,9 +173,7 @@ public class TagsTest {
 
         int itemcount = activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount();
 
-        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
-        onView(withText("Add new tag")).check(matches(isDisplayed()));
-        onView(withText("Add new tag")).perform(click());
+        onView(withId(R.id.menu_add)).perform(click());
 
 
         onView(withId(R.id.input)).perform(typeText("TestNewTag"));
@@ -189,17 +187,17 @@ public class TagsTest {
     public void DeleteTags() throws Throwable{
 
         goToTagsActivity(0);
-        String tag = activityTestRule2.getActivity().tags_.get(0).getName();
+
+        AdapterTags adapter = (AdapterTags)activityTestRule2.getActivity().recyclerTags.getAdapter();
+        String tag_text = adapter.tags_.get(0).getName();
 
         clickOnRecyclerViewItemChild(R.id.recyclerview_tagsactivity_tagscontainer, 0, R.id.button_tagitem_delete);
 
         Thread.sleep(100);
         pressBack();
-        onView(withId(R.id.popupMenu)).perform(click());
-        Thread.sleep(100);
-        onView(withText("Tags")).perform(click());
+        onView(withId(R.id.menu_tags)).perform(click());
 
-        onView(withText(tag)).check(doesNotExist());
+        onView(withText(tag_text)).check(doesNotExist());
     }
 
     @Test
@@ -220,10 +218,10 @@ public class TagsTest {
             }
 
             pressBack();
+
+            onView(withId(R.id.menu_tags)).perform(click());
+
             Thread.sleep(100);
-            onView(withId(R.id.popupMenu)).perform(click());
-            Thread.sleep(100);
-            onView(withText("Tags")).perform(click());            Thread.sleep(100);
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
 
             for (int n = 0; n < activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount(); n++) {
@@ -244,9 +242,7 @@ public class TagsTest {
 
 
         pressBack();
-        onView(withId(R.id.popupMenu)).perform(click());
-        Thread.sleep(100);
-        onView(withText("Tags")).perform(click());
+        onView(withId(R.id.menu_tags)).perform(click());
         onView(withRecyclerView(R.id.recyclerview_tagsactivity_tagscontainer)
                 .atPositionOnView(0, R.id.checkbox_tagitem_tick))
                 .check(matches(isNotChecked()));
@@ -378,31 +374,28 @@ public class TagsTest {
     public void removeAllButtonExists() throws Throwable, InterruptedException{
         goToTagsActivity(0);
 
-        onView(withId(R.id.button_tagsactivity_menu)).check(matches(isDisplayed()));
-        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
-        onView(withText("Remove all selected tags")).check(matches(isDisplayed()));
-        onView(withText("Remove all selected tags")).perform(click());
+        onView(withText("Deselect all")).check(matches(isDisplayed()));
+        onView(withText("Deselect all")).perform(click());
     }
 
     @Test
     public void selectAllButtonExists() throws Throwable, InterruptedException{
         goToTagsActivity(0);
 
-        onView(withId(R.id.button_tagsactivity_menu)).check(matches(isDisplayed()));
-        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
-
-        onView(withText("Select all tags")).check(matches(isDisplayed()));
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText("Select all")).check(matches(isDisplayed()));
     }
 
     @Test
     public void checkIfAllSelected() throws Throwable, InterruptedException {
         goToTagsActivity(0);
 
-        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText("Select all")).perform(click());
         Thread.sleep(1000);
 
-        onView(withText("Select all tags")).perform(click());
 
         for(int i=0; i< activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount(); i++) {
             CheckBox checkbox = activityTestRule2.getActivity().recyclerTags.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.checkbox_tagitem_tick);
@@ -414,9 +407,8 @@ public class TagsTest {
     public void checkIfAllDeselected() throws Throwable, InterruptedException {
         checkIfAllSelected();
 
-        onView(withId(R.id.button_tagsactivity_menu)).perform(click());
-
-        onView(withText("Remove all selected tags")).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText("Deselect all")).perform(click());
 
         for(int i=0; i< activityTestRule2.getActivity().recyclerTags.getAdapter().getItemCount(); i++) {
             CheckBox checkbox = activityTestRule2.getActivity().recyclerTags.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.checkbox_tagitem_tick);
@@ -433,16 +425,13 @@ public class TagsTest {
 
 
         pressBack();
-        onView(withId(R.id.popupMenu)).perform(click());
-        Thread.sleep(100);
-        onView(withText("Tags")).perform(click());
+        onView(withId(R.id.menu_tags)).perform(click());
+
 
         clickOnRecyclerViewItemChild(R.id.recyclerview_tagsactivity_tagscontainer, 0, R.id.button_tagitem_delete);
 
         pressBack();
-        onView(withId(R.id.popupMenu)).perform(click());
-        Thread.sleep(100);
-        onView(withText("Tags")).perform(click());
+        onView(withId(R.id.menu_tags)).perform(click());
     }
 
     @Test
@@ -463,10 +452,7 @@ public class TagsTest {
             }
 
             pressBack();
-            Thread.sleep(100);
-            onView(withId(R.id.popupMenu)).perform(click());
-            Thread.sleep(100);
-            onView(withText("Tags")).perform(click());
+            onView(withId(R.id.menu_tags)).perform(click());
             Thread.sleep(1000);
             onView(withId(R.id.recyclerview_tagsactivity_tagscontainer)).check(matches(isDisplayed()));
 
@@ -482,25 +468,19 @@ public class TagsTest {
             clickOnRecyclerViewItemChild(R.id.recyclerview_tagsactivity_tagscontainer, 0, R.id.checkbox_tagitem_tick);
 
             pressBack();
-            onView(withId(R.id.popupMenu)).perform(click());
-            Thread.sleep(100);
-            onView(withText("Tags")).perform(click());
+            onView(withId(R.id.menu_tags)).perform(click());
 
             clickOnRecyclerViewItemChild(R.id.recyclerview_tagsactivity_tagscontainer, 0, R.id.button_tagitem_delete);
 
-            onView(withId(R.id.button_tagsactivity_menu)).perform(click());
-            onView(withText("Add new tag")).check(matches(isDisplayed()));
-            onView(withText("Add new tag")).perform(click());
-
+            onView(withId(R.id.menu_add)).perform(click());
 
             onView(withId(R.id.input)).perform(typeText("TestNewTag New " + i));
             onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
 
             pressBack();
-            onView(withId(R.id.popupMenu)).perform(click());
-            Thread.sleep(100);
-            onView(withText("Tags")).perform(click());            pressBack();
+            onView(withId(R.id.menu_tags)).perform(click());
+            pressBack();
             pressBack();
         }
 
@@ -542,12 +522,10 @@ public class TagsTest {
 
         for(int j =1; j <6; j++){
 
-            onView(withId(R.id.button_tagsactivity_menu)).perform(click());
-            onView(withText("Add new tag")).check(matches(isDisplayed()));
-            onView(withText("Add new tag")).perform(click());
+            onView(withId(R.id.menu_add)).perform(click());
 
 
-            onView(withId(R.id.input)).perform(typeText("T" + j+"2"));
+            onView(withId(R.id.input)).perform(typeText("T" + j));
             onView(withText("OK")).inRoot(isDialog()).check(matches(isDisplayed())).perform(click());
 
         }
@@ -555,13 +533,6 @@ public class TagsTest {
         pressBack();
     }
 
-    @Test
-    public void buttonExistsTest()  throws  Throwable{
-        goToTagsActivity(0);
-
-        onView(withId(R.id.activity_tags)).perform(click());
-        onView(withId(R.id.button_tagsactivity_menu)).check(matches(isDisplayed()));
-    }
 
     @Test
     public void checkTagsSaved() throws Throwable{

@@ -9,6 +9,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener, PopupMenu.OnMenuItemClickListener {
+public class TagActivity extends AppCompatActivity  {
 
     int imageId = -1;
 
@@ -38,51 +39,28 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
     private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
     Switch nightmodeswitch;
 
-    public void TagsMenu(View view) {
-        PopupMenu tags_menu = new PopupMenu(this, view);
-        MenuInflater inflater = tags_menu.getMenuInflater();
-        inflater.inflate(R.menu.tags_menu, tags_menu.getMenu());
-        tags_menu.setOnMenuItemClickListener(this);
-        tags_menu.show();
-    }
+    private Menu action_menu;
+
+
+
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_tags, menu);
+        action_menu = menu;
+
+        return true;
+    }
+
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.apply_button_menu:
-                for (int i = 0; i < tags_.size(); i++) {
-
-                    Tags actual_tag = tags_.get(i);
-
-                    String tag_name = actual_tag.getName();
-                    int actual_tag_id = actual_tag.getTagId();
-                    System.out.println("tag_id_+100=" + actual_tag_id + 100);
-
-                    int tag_id = 100 + actual_tag_id;
-                    int tag_id2 = 200 + actual_tag_id;
-                    System.out.println("tag_id=" + tag_id);
-
-                    CheckBox checkBox = (CheckBox) findViewById(tag_id);
-                    TextView text_checkBox = (TextView) findViewById(tag_id2);
-
-                    String tagName = (String) text_checkBox.getText();
-                    System.out.println(checkBox.getId());
-
-                    Boolean selected = checkBox.isChecked();
-                    ArrayList<String> checked = new ArrayList<String>();
-
-                    if (selected == true) {
-                        checkBox.setChecked(true);
-                        checked.add(tagName);
-                        System.out.println("Checked" + checkBox.getId());
-                    } else {
-                        checkBox.setChecked(false);
-                    }
-                }
-                return true;
-
-            case R.id.item_tagsmenu_addtag:
+            case R.id.menu_add:
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("New tag");
@@ -130,7 +108,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
                 return true;
 
 
-            case R.id.item_tagsmenu_selectall:
+            case R.id.menu_selectall:
 
                 RecyclerView res = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
 
@@ -148,7 +126,7 @@ public class TagActivity extends AppCompatActivity implements MenuItem.OnMenuIte
 
                 return true;
 
-            case R.id.item_tagsmenu_unselectall:
+            case R.id.menu_deselectall:
 
                 RecyclerView res1 = findViewById(R.id.recyclerview_tagsactivity_tagscontainer);
                 for (int j = 0; j < tags_.size(); j++) {

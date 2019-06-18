@@ -56,8 +56,7 @@ public class ShareButtonTest {
             return;
         
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
-        onView(withText("Share")).perform(click());
+        onView(withId(R.id.menu_share)).perform(click());
 
         intended(hasComponent(ShareContentActivity.class.getName()));
         intended(hasAction(Intent.ACTION_CHOOSER));

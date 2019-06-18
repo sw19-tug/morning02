@@ -9,7 +9,9 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -31,13 +33,13 @@ public class PopupButtonTest {
     public void buttonExistsTest(){
 
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).check(matches(isDisplayed()));
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
     }
 
     @Test
     public void cropButtonExists(){
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Crop")).check(matches(isDisplayed()));
     }
 }

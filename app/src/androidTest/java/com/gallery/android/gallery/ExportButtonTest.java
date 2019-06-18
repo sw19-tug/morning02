@@ -63,10 +63,6 @@ public class ExportButtonTest {
 
     @Test
     public void exportAllImages() throws Throwable, InterruptedException {
-        Log.e("this","export");
-
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText("Sort by date descending")).perform(click());
 
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         final AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
@@ -87,6 +83,7 @@ public class ExportButtonTest {
 
         onView(withId(R.id.popupMenu)).perform(click());
         onView(withText("Export")).perform(click());
+        Thread.sleep(200);
         String export_phase = "_export.zip";
         File f = new File(path + export_phase);
         assertTrue((f.exists() && f.isFile()));

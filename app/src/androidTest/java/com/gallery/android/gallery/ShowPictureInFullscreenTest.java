@@ -56,7 +56,7 @@ public class ShowPictureInFullscreenTest {
     public void testClick() throws Throwable, InterruptedException {
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
-        for (int i = 0; i < adapter_images.getItemCount(); i++ ) {
+        for (int i = 0; i < adapter_images.getItemCount() && i<15; i++ ) {
             runOnUiThread(new MyRunnable(recycler_view, i) {
                 public void run() {
                     this.resycler_view.findViewHolderForAdapterPosition(adapter_position).itemView.performClick();

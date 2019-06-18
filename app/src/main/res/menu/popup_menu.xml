@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/cropButton"
+        android:title="Crop" />
+
+    <item
+        android:id="@+id/shareButton"
+        android:title="Share" />
+
+    <item
+        android:id="@+id/exportButton"
+        android:title="Export" />
+
+    <item
+        android:id="@+id/deleteButton"
+        android:title="Delete" />
+    <item
+        android:id="@+id/renameButton"
+        android:title="Rename" />
+
+    <item
+        android:id="@+id/rotateButton"
+        android:title="Rotate" />
+
+    <item
+        android:id="@+id/tagsButton"
+        android:title="Tags" />
+
+</menu>

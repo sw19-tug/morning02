@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
 import static com.gallery.android.gallery.ImageContainer.PictureComperator.DATE;
 import static com.gallery.android.gallery.ImageContainer.PictureComperator.NAME;
 import static com.gallery.android.gallery.ImageContainer.PictureComperator.SIZE;
@@ -24,15 +27,15 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
     }
 
     public AdapterImages(ArrayList<ImageContainer> listImages) {
-        this.listImages = listImages;
+        this.listImages = new ArrayList<>(listImages);
     }
 
     @Override
     @NonNull
     public ViewHolderImages onCreateViewHolder(@NonNull ViewGroup parent, int viewType)  {
         int layout;
-        layout=R.layout.item_grid_images;
-        View view= LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
+        layout = R.layout.item_grid_images;
+        View view = LayoutInflater.from(parent.getContext()).inflate(layout,null,false);
         return new ViewHolderImages(view);
     }
 
@@ -51,13 +54,39 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         return listImages;
     }
 
-    public ImageContainer searchPictures(String name){
+    public void replaceItems(List<ImageContainer> new_list) {
+
+        try {
+            listImages.clear();
+            if (!new_list.isEmpty())
+                listImages.addAll(new_list);
+
+            notifyDataSetChanged();
+        }
+        catch (NullPointerException nullptr_exeption ) {
+            nullptr_exeption.printStackTrace();
+        }
+    }
+
+    public void addItems(List<ImageContainer> new_list) {
+
+        if (!new_list.isEmpty()) {
+            listImages.addAll(new_list);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void addItem(ImageContainer new_item) {
+        listImages.add(new_item);
+        notifyDataSetChanged();
+    }
+
+    public String searchPictures(String name){
         for(ImageContainer image : listImages)
         {
             if(image.getFilename().equals(name))
             {
-                System.out.println(name + "=" + image.getFilename());
-                return image;
+                return image.getPath();
             }
         }
         return null;
@@ -128,4 +157,3 @@ public class AdapterImages extends RecyclerView.Adapter<AdapterImages.ViewHolder
         void onItemLongClick(int position, View v);
     }
 }
-

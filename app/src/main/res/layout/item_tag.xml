@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:id="@+id/linearlayout_tag_item"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="15dp">
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/checkbox_tagitem_tick"
+                android:background="@color/cardview_light_background"
+                />
+
+            <TextView
+                android:layout_width="270dp"
+                android:layout_height="match_parent"
+                android:id="@+id/textview_tagitem_text"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:background="@color/white" />
+
+            <Button
+                android:id="@+id/button_tagitem_delete"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:textSize="15sp"
+                android:gravity="center"
+                android:background="@color/colorError"
+                android:textColor="@color/white"
+                android:text="Delete"
+                android:layout_marginRight="5dp"/>
+
+</LinearLayout>

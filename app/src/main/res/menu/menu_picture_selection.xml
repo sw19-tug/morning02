@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".PictureSelectionActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <item
+        android:id="@+id/cancel"
+        android:icon="@drawable/icon_cancel_selection"
+        app:showAsAction="always"
+        android:title="Cancel"/>
+
+    <item
+        android:id="@+id/confirm"
+        android:icon="@drawable/icon_check_selection"
+        app:showAsAction="always"
+        android:title="Confirm Selection"/>
+
+</menu>

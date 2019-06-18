@@ -2,17 +2,16 @@ package com.gallery.android.gallery;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PictureSortingUnitTest {
 
@@ -23,12 +22,11 @@ public class PictureSortingUnitTest {
     @Test
     public void hasMemberVariables() throws ParseException
     {
-        //List<dummyimageclass> imageList = new ArrayList<>();
         Date date, date1, date2;
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
         date = date_format.parse("2018-04-05");
 
-        ImageContainer image = new ImageContainer("test1",date, 5000);
+        ImageContainer image = new ImageContainer("test1",date, 5000,"testimage");
 
         assertTrue(image.getPath().equals("test1"));
         assertTrue(image.getSize() == 5000);
@@ -47,9 +45,9 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date2 = date_format.parse("2008-01-04");
 
-        ImageContainer image = new ImageContainer("test", date, 5000);
-        ImageContainer image1 = new ImageContainer("test1", date1, 5000);
-        ImageContainer image2 = new ImageContainer( "test2", date2, 5000);
+        ImageContainer image = new ImageContainer("test", date, 5000,"testimage");
+        ImageContainer image1 = new ImageContainer("test1", date1, 5000,"testimage1");
+        ImageContainer image2 = new ImageContainer( "test2", date2, 5000,"testimage2");
 
         decendingimageList.add(0,image);
         decendingimageList.add(1,image1);
@@ -81,14 +79,12 @@ public class PictureSortingUnitTest {
         date4 = date_format.parse("2014-10-08");
         date5 = date_format.parse("2018-02-23");
 
-
-        ImageContainer image = new ImageContainer( "test",date, 5000);
-        ImageContainer image1 = new ImageContainer("test1", date1, 6000);
-        ImageContainer image2 = new ImageContainer("test2", date2, 6000);
-        ImageContainer image3 = new ImageContainer( "test3",date3, 8000);
-        ImageContainer image4 = new ImageContainer( "test4", date4,2000);
-        ImageContainer image5 = new ImageContainer( "test5",date5, 1000);
-
+        ImageContainer image = new ImageContainer( "test",date, 5000,"testimage");
+        ImageContainer image1 = new ImageContainer("test1", date1, 6000,"testimage1");
+        ImageContainer image2 = new ImageContainer("test2", date2, 6000,"testimage2");
+        ImageContainer image3 = new ImageContainer( "test3",date3, 8000,"testimage3");
+        ImageContainer image4 = new ImageContainer( "test4", date4,2000,"testimage4");
+        ImageContainer image5 = new ImageContainer( "test5",date5, 1000,"testimage5");
 
         ascendingimageList.add(0,image);
         ascendingimageList.add(1,image1);
@@ -108,7 +104,6 @@ public class PictureSortingUnitTest {
 
         piclist.sortByDate(AdapterImages.SortOrder.ASCENDING);
         assertThat(piclist.getListImages(), is(equalTo(ascendingimageList)));
-
     }
 
     @Test
@@ -123,9 +118,9 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date = date_format.parse("2008-01-04");
 
-        ImageContainer image = new ImageContainer("test",date,  5000);
-        ImageContainer image1 = new ImageContainer("test1",date1,  4500);
-        ImageContainer image2 = new ImageContainer( "test2",date2, 4000);
+        ImageContainer image = new ImageContainer("test",date,  5000,"testimage");
+        ImageContainer image1 = new ImageContainer("test1",date1,  4500,"testimage1");
+        ImageContainer image2 = new ImageContainer( "test2",date2, 4000,"testimage2");
         decendingimageList.add(0,image);
         decendingimageList.add(1,image1);
         decendingimageList.add(2,image2);
@@ -153,9 +148,9 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date = date_format.parse("2008-01-04");
 
-        ImageContainer image = new ImageContainer( "test",date, 3000);
-        ImageContainer image1 = new ImageContainer( "test1", date1,4500);
-        ImageContainer image2 = new ImageContainer( "test2", date2,7000);
+        ImageContainer image = new ImageContainer( "test",date, 3000,"testimage");
+        ImageContainer image1 = new ImageContainer( "test1", date1,4500,"testimage1");
+        ImageContainer image2 = new ImageContainer( "test2", date2,7000,"testimage2");
 
         ascendingimageList.add(0,image);
         ascendingimageList.add(1,image1);
@@ -184,9 +179,9 @@ public class PictureSortingUnitTest {
         date1 = date_format.parse("2018-04-05");
         date = date_format.parse("2008-01-04");
 
-        ImageContainer image = new ImageContainer( "zenia", date, 3000);
-        ImageContainer image1 = new ImageContainer( "gustav", date1, 4500);
-        ImageContainer image2 = new ImageContainer("albert", date2, 7000);
+        ImageContainer image = new ImageContainer( "zenia", date, 3000,"testimage");
+        ImageContainer image1 = new ImageContainer( "gustav", date1, 4500,"testimage1");
+        ImageContainer image2 = new ImageContainer("albert", date2, 7000,"testimage2");
 
         descendingimageList.add(0,image);
         descendingimageList.add(1,image1);
@@ -215,9 +210,9 @@ public class PictureSortingUnitTest {
         date = date_format.parse("2018-04-05");
         date1 = date_format.parse("2008-01-04");
 
-        ImageContainer image = new ImageContainer("albert",date, 3000);
-        ImageContainer image1 = new ImageContainer( "gustav",date1, 4500);
-        ImageContainer image2 = new ImageContainer( "zenia", date2, 200);
+        ImageContainer image = new ImageContainer("albert",date, 3000,"testimage");
+        ImageContainer image1 = new ImageContainer( "gustav",date1, 4500,"testimage1");
+        ImageContainer image2 = new ImageContainer( "zenia", date2, 200,"testimage2");
 
         ascendingimageList.add(0,image);
         ascendingimageList.add(1,image1);

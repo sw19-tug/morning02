@@ -1,10 +1,11 @@
 package com.gallery.android.gallery;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-import java.util.Date;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ImageContainer implements ImageContainerInterface{
 
@@ -12,7 +13,14 @@ public class ImageContainer implements ImageContainerInterface{
     private String path;
     private String filename;
     private Date date;
-    int size;
+    private int height;
+    private int width;
+    private long size;
+    private String orientation;
+    public Set<Tags> tags = new HashSet<>();
+    public Set<Tags> getTags() {
+        return tags;
+    }
 
     enum PictureComperator implements Comparator<ImageContainer> {
         NAME {
@@ -23,7 +31,7 @@ public class ImageContainer implements ImageContainerInterface{
 
         SIZE {
             public int compare(ImageContainer p1, ImageContainer p2) {
-                return Integer.compare(p1.getSize(), p2.getSize());
+                return Long.compare(p1.getSize(), p2.getSize());
 
             }
         },
@@ -49,18 +57,31 @@ public class ImageContainer implements ImageContainerInterface{
         this.date = new Date();
     }
 
-    public ImageContainer(String path, Date date, int size) {
+
+    public ImageContainer(String path, Date date, long size, String filename) {
         this.date = date;
         this.path = path;
         this.size = size;
+        this.filename = filename;
     }
 
-    public ImageContainer(String path)
-    {
-        this.image = BitmapFactory.decodeFile(path);
+    public ImageContainer(
+            Bitmap image,
+            String path,
+            String filename,
+            Date date,
+            int height,
+            int width,
+            long size,
+            String orientation) {
+        this.image = image;
         this.path = path;
-        this.date = new Date();
-        this.filename = path.substring(path.lastIndexOf("/")+1);
+        this.filename = filename;
+        this.date = date;
+        this.height = height;
+        this.width = width;
+        this.size = size;
+        this.orientation = orientation;
     }
 
     public ImageContainer(String path,Date date, String name)
@@ -68,6 +89,14 @@ public class ImageContainer implements ImageContainerInterface{
         this.path = path;
         this.date = date;
         this.filename = name;
+    }
+
+    public ImageContainer(String path, Date date, String name, Set<Tags> tags)
+    {
+        this.path = path;
+        this.date = date;
+        this.filename = name;
+        this.tags = tags;
     }
 
     public Bitmap getImage() {
@@ -98,8 +127,36 @@ public class ImageContainer implements ImageContainerInterface{
 
     public void setFilename(String name){this.filename = name;}
 
-    int getSize() {
+    long getSize() {
         return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public String getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(String orientation) {
+        this.orientation = orientation;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     public static Comparator<ImageContainer> decending(final Comparator<ImageContainer> other) {

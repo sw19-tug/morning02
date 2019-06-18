@@ -1,8 +1,11 @@
 package com.gallery.android.gallery;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Environment;
+import android.util.Pair;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -17,24 +20,29 @@ public class FileLoader implements FileLoaderInterface {
         this.extentions.add("png");
         this.extentions.add("bmp");
         this.extentions.add("gif");
+        this.extentions.add("jpeg");
     }
     private List<Bitmap> bitmapList;
     private List<String> extentions;
 
-    private void search(File[] filelist, List<String> paths) {
+    private void search(File[] filelist, List<String> paths, boolean include_subfolders) {
         for (File f : filelist) {
-            for (String extetion : extentions) {
+            for (String extension : extentions) {
                 if(f.getName().startsWith(".")) {
                     break;
                 }
-                if (f.getName().endsWith("." + extetion)) {
+                if (f.getName().endsWith("." + extension)) {
                     paths.add(f.getAbsolutePath());
                     break;
                 }
                 if (f.isDirectory()) {
-                    File[] newfilelist = f.listFiles();
-                    search(newfilelist, paths);
-                    break;
+                    if (include_subfolders) {
+                        File[] newfilelist = f.listFiles();
+                        search(newfilelist, paths, true);
+                        break;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
@@ -52,8 +60,10 @@ public class FileLoader implements FileLoaderInterface {
         view.setImageBitmap(bitmapList.get(index));
         return view;
     }
-    public List<String> getImagesPaths() {
+
+    public ArrayList<String> getImagesInformation() {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+
         File dir = new File(path);
         File[] filelist = dir.listFiles();
         boolean success = false;
@@ -62,18 +72,69 @@ public class FileLoader implements FileLoaderInterface {
             if(success)
                 filelist = dir.listFiles();
         }
-        List<String> paths = new ArrayList<String>();
+        ArrayList<String> paths = new ArrayList<String>();
         if(filelist != null)
-            search(filelist, paths);
+            search(filelist, paths, true);
         return paths;
     }
-    public ArrayList<ImageContainer> loadImageContainers(){
-        List<String> paths=this.getImagesPaths();
-        ArrayList<ImageContainer> imageList = new ArrayList<ImageContainer>();
-        for(int i = 0; i < paths.size(); i++ )
-        {
-            imageList.add(new ImageContainer(paths.get(i)));
+
+    public ArrayList<String> getImagesInformationForPath(String path, boolean include_subfolders) {
+
+        File dir = new File(path);
+        File[] filelist = dir.listFiles();
+        boolean success = false;
+        if(!dir.exists() && !dir.isDirectory()){
+            success=dir.mkdirs();
+            if(success)
+                filelist = dir.listFiles();
         }
-        return imageList;
+        ArrayList<String> paths = new ArrayList<String>();
+        if(filelist != null) {
+            search(filelist, paths, include_subfolders);
+        }
+        return paths;
+    }
+
+    public ArrayList<ImageContainer> loadImageContainers(Context context){
+
+        ArrayList<String> paths = this.getImagesInformation();
+
+        MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
+
+        return loader.parseAllImages(paths);
+    }
+
+    public ArrayList<Pair<String, Bitmap>> loadAlbums(){
+        ArrayList<String> imagePaths = this.getImagesInformation();
+        ArrayList<Pair<String, Bitmap>> albumPaths=new ArrayList<Pair<String, Bitmap>>();
+        for(String image_path : imagePaths) {
+            String path= image_path.substring(0,image_path.lastIndexOf("/"));
+
+            boolean found = false;
+
+            for (Pair<String, Bitmap> album : albumPaths)
+            {
+                if (album.first.equals(path))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found){
+                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(image_path),
+                        256, 256);
+                albumPaths.add(Pair.create(path, thumbnail));
+            }
+        }
+        return albumPaths;
+    }
+
+    public ArrayList<ImageContainer> loadImageContainersForPath(String album_path, boolean include_subfolders, Context context) {
+        ArrayList<String> paths = this.getImagesInformationForPath(album_path, include_subfolders);
+
+        MediaStoreDataLoader loader = new MediaStoreDataLoader(context);
+
+        return loader.parseAllImages(paths);
     }
 }

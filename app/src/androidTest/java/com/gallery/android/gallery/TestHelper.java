@@ -3,6 +3,11 @@ package com.gallery.android.gallery;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
+import android.view.View;
+
+import org.hamcrest.Matcher;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,12 +32,15 @@ public class TestHelper {
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         for(int x = 0; x < 100; x++){
             for(int y = 0; y < 100; y++){
-                bitmap.setPixel(x, y, Color.rgb(2, 100, 56));
+                if(y==x)
+                    bitmap.setPixel(x, y, Color.rgb(255, 255, 255));
+                else
+                    bitmap.setPixel(x, y, Color.rgb(66, 81, 181));
             }
         }
         try {
             FileOutputStream fos = new FileOutputStream(dest);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
         } catch (Exception e) {
@@ -46,5 +54,47 @@ public class TestHelper {
         {
             file.delete();
         }
+    }
+
+    public static ViewAction clickChildViewWithId(final int id) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return null;
+            }
+
+            @Override
+            public String getDescription() {
+                return "Click on a child view with specified id.";
+            }
+
+            @Override
+            public void perform(UiController uiController,
+                                View view) {
+                View v = view.findViewById(id);
+                v.performClick();
+            }
+        };
+    }
+
+    public static ViewAction longClickChildViewWithId(final int id) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return null;
+            }
+
+            @Override
+            public String getDescription() {
+                return "Longclick on a child view with specified id.";
+            }
+
+            @Override
+            public void perform(UiController uiController,
+                                View view) {
+                View v = view.findViewById(id);
+                v.performLongClick();
+            }
+        };
     }
 }

@@ -1,46 +1,100 @@
 package com.gallery.android.gallery;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int STORAGE_READ_REQUEST = 1;
-
+    public static final int FULLSCREEN_REQUEST = 2;
+    public static final int OPEN_ZIP_REQUEST = 3;
+    public static final int ROTATE_REQUEST = 4;
+    public static final int ALBUM_OVERVIEW_REQUEST = 5;
+    private static final int BUFFER_SIZE = 8192 ;//2048;
     RecyclerView recyclerImages;
-
+    String path;
+    boolean album_mode = false;
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
+    public List<Integer> selection_pos_list = new ArrayList<>();
+    private boolean isNightModeEnabled = (Boolean) GalleryApplication.getInstance().get("nightMode");
+    Switch nightmodeswitch;
     EditText editText;
+    FileDeleter mainDeleter = new FileDeleter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+
+        if (isNightModeEnabled()) {
+            setTheme(R.style.DarkTheme);
+        }
+        this.isNightModeEnabled= (Boolean) GalleryApplication.getInstance().get("nightMode");
+
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_READ_REQUEST);
 
         } else {
+
+            SharedPreferences sharedPref =
+                    PreferenceManager.getDefaultSharedPreferences(this);
+
             buildRecycler();
             setEditText();
+            nightmodeswitch = (Switch) findViewById(R.id.NModeswitchId);
         }
+    }
+    public boolean isNightModeEnabled() {
+        return isNightModeEnabled;
+    }
+    public void setIsNightModeEnabled(boolean isNightModeEnabled) {
+        this.isNightModeEnabled = isNightModeEnabled;
     }
 
     @Override
@@ -61,31 +115,271 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (selection_mode) {
-            RecyclerView rec_view = (RecyclerView) this.findViewById(R.id.RecyclerId);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
-            for (int i = 0; i < rec_view.getChildCount(); i++) {
-                RelativeLayout rel_layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(i).itemView;
-                rel_layout.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
+        menu.findItem(R.id.search).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_name_asc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_name_desc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_date_asc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_date_desc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_size_asc).setVisible(!selection_mode);
+        menu.findItem(R.id.sort_size_desc).setVisible(!selection_mode);
+        menu.findItem(R.id.rotate_all).setVisible(selection_mode);
+        menu.findItem(R.id.delete_all).setVisible(selection_mode);
+        menu.findItem(R.id.share_all).setVisible(selection_mode);
+        MenuItem nswitch=menu.findItem(R.id.NModeswitchId).setVisible(!selection_mode);
+        nswitch.setActionView(R.layout.switch_layout);
+        SwitchCompat switchDarkMode;
+
+        switchDarkMode = (SwitchCompat) nswitch.getActionView().findViewById(R.id.NModeswitchAB);
+        switchDarkMode.setChecked(isNightModeEnabled());
+
+        switchDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                if (isChecked) {
+                    Toast.makeText(getApplication(), "ON", Toast.LENGTH_SHORT)
+                            .show();
+                    setIsNightModeEnabled(true);
+                    GalleryApplication.getInstance().set("nightMode",true);
+                    MainActivity.this.finish();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplication(), "OFF", Toast.LENGTH_SHORT)
+                            .show();
+                    setIsNightModeEnabled(false);
+                    GalleryApplication.getInstance().set("nightMode",false);
+                    MainActivity.this.finish();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        AdapterImages adapterImages_sort = (AdapterImages) recyclerImages.getAdapter();
+        switch(item.getItemId()) {
+        case R.id.import_zip: {
+            System.out.println("import zip pressed");
+            performFileSearch();
+            return (true);
+        }
+        case R.id.sort_name_asc: {
+            adapterImages_sort.sortByName(AdapterImages.SortOrder.ASCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_name_desc: {
+            adapterImages_sort.sortByName(AdapterImages.SortOrder.DESCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_date_asc: {
+            adapterImages_sort.sortByDate(AdapterImages.SortOrder.ASCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_date_desc: {
+            adapterImages_sort.sortByDate(AdapterImages.SortOrder.DESCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_size_asc: {
+            adapterImages_sort.sortBySize(AdapterImages.SortOrder.ASCENDING);
+            refreshView();
+            return (true);
+        }
+        case R.id.sort_size_desc: {
+            adapterImages_sort.sortBySize(AdapterImages.SortOrder.DESCENDING);
+            refreshView();
+            return true;
+        }
+        case R.id.search: {
+            EditText search_bar = findViewById(R.id.search_bar);
+            if (search_bar.getVisibility() == View.GONE)
+                search_bar.setVisibility(View.VISIBLE);
+            else
+                search_bar.setVisibility(View.GONE);
+            return true;
+        }
+            case R.id.albums:{
+                Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
+                startActivityForResult(albumIntent, ALBUM_OVERVIEW_REQUEST);
+            }
+            case R.id.rotate_all: {
+                if (selection_list.size() == selection_pos_list.size()) {
+                    for (int index = 0; index < selection_pos_list.size(); index++) {
+                        rotateImage((int) selection_pos_list.get(index));
+                    }
+                    resetSelectionMode();
+                }
+                selection_list.clear();
+                selection_pos_list.clear();
+                setSelectionMode(false);
+                return true;
+            }
+            case R.id.delete_all: {
+                if (selection_list.size() == selection_pos_list.size()) {
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    for (int index = 0; index < selection_pos_list.size(); index++) {
+                        mainDeleter.delete(adapterImages.getListImages().get(index).getPath());
+                    }
+                    Collections.sort(selection_pos_list, Collections.<Integer>reverseOrder());
+                    for (int index = 0; index < selection_pos_list.size(); index++) {
+                        adapterImages.getListImages().remove((int)selection_pos_list.get(index));
+                        adapterImages.notifyItemRemoved(selection_pos_list.get(index));
+                    }
+                    adapterImages.notifyItemRangeChanged(0, adapterImages.getListImages().size());
+
+                    selection_list.clear();
+                    selection_pos_list.clear();
+                    setSelectionMode(false);
+                }
+                return true;
+            }
+            case R.id.settings: {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
             }
 
-            selection_list.clear();
-            selection_mode = false;
+            case R.id.addImage:{
+                Intent addImageIntent = new Intent(MainActivity.this, AddImageActivity.class);
+                startActivity(addImageIntent);
+                return true;
+            }
+            case R.id.NModeswitchAB:{
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
+
+    }
+        return(super.onOptionsItemSelected(item));
+    }
+
+    private void rotateImage(int pos) {
+        AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+        Bitmap oldBitmap = BitmapFactory.decodeFile(adapterImages.getListImages().get(pos).getPath());
+        Bitmap oldThumbnailBitmap = adapterImages.getListImages().get(pos).getImage();
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
+        Bitmap newBitmap = Bitmap.createBitmap(oldBitmap, 0, 0,
+                oldBitmap.getWidth(),oldBitmap.getHeight(), matrix, true);
+
+        Bitmap newThumbnailBitmap = Bitmap.createBitmap(oldThumbnailBitmap, 0, 0,
+                oldThumbnailBitmap.getWidth(),oldThumbnailBitmap.getHeight(), matrix, true);
+
+        adapterImages.getListImages().get(pos).setImage(newThumbnailBitmap);
+        adapterImages.notifyItemChanged(pos);
+        String path = adapterImages.getListImages().get(pos).getPath();
+
+        String extension = path.substring(path.lastIndexOf(".")+1);
+        Bitmap.CompressFormat myFormat = Bitmap.CompressFormat.PNG;
+
+        switch (extension.toUpperCase()){
+            case "PNG":
+                myFormat = Bitmap.CompressFormat.PNG;
+                break;
+            case "JPEG":
+                myFormat = Bitmap.CompressFormat.JPEG;
+                break;
+            case "WEBP":
+                myFormat = Bitmap.CompressFormat.WEBP;
+                break;
+            default:
+                break;
+        }
+        OutputStream fOut = null;
+        File file = new File(path);
+        try {
+            fOut = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        newBitmap.compress(myFormat, 100, fOut);
+        try {
+            fOut.flush();
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (selection_mode) {
+            resetSelectionMode();
+        } else if (album_mode) {
+            Intent albumIntent = new Intent(MainActivity.this, AlbumOverviewActivity.class);
+            startActivityForResult(albumIntent, ALBUM_OVERVIEW_REQUEST);
         } else {
             super.onBackPressed();
         }
     }
 
+    private void resetSelectionMode() {
+        RecyclerView rec_view = (RecyclerView) this.findViewById(R.id.RecyclerId);
+
+        for (int i = 0; i < rec_view.getChildCount(); i++) {
+            RelativeLayout rel_layout = (RelativeLayout) rec_view.findViewHolderForAdapterPosition(i).itemView;
+            rel_layout.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
+        }
+
+        selection_list.clear();
+        selection_pos_list.clear();
+        setSelectionMode(false);
+    }
 
     private void buildRecycler() {
+
         recyclerImages = findViewById(R.id.RecyclerId);
         recyclerImages.setLayoutManager(new GridLayoutManager(this, 3));
 
         FileLoader f = new FileLoader();
-        final ArrayList<ImageContainer> imageList = f.loadImageContainers();
 
-        AdapterImages adapter = new AdapterImages(imageList);
+        ((GalleryApplication)getApplication()).imgs.clear();
+        ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainersForPath(path, !album_mode, this));
+
+        SharedPreferences prefs = android.support.v7.preference.PreferenceManager
+                .getDefaultSharedPreferences(getApplication());
+        List<Tags> tags = ((GalleryApplication) getApplication()).tags;
+
+        for(ImageContainer image_container: ((GalleryApplication)getApplication()).imgs){
+            String jsonString = prefs.getString(image_container.getPath(), "");
+            if(!jsonString.equals("")){
+                boolean update_preference = false;
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonString);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        boolean tag_exists = false;
+                        for(Tags tag: tags) {
+                            if(tag.getName().equals(jsonArray.getString(i))){
+                                tag_exists = true;
+                                image_container.tags.add(tag);
+                            }
+                        }
+                        if(!tag_exists)
+                            update_preference = true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(update_preference) {
+                    ((GalleryApplication) getApplication()).updateImageTagPreferance(
+                            image_container.getPath(), image_container.tags);
+                }
+            }
+        }
+
+        AdapterImages adapter = new AdapterImages(((GalleryApplication)getApplication()).imgs);
 
         adapter.setOnItemClickListener(new AdapterImages.ClickListener() {
             @Override
@@ -93,22 +387,22 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(position);
                 if (selection_mode) {
 
-                    if (selection_list.contains(imageList.get(position))) {
-                        selection_list.remove(imageList.get(position));
+                    if (selection_list.contains(((GalleryApplication)getApplication()).imgs.get(position))) {
+                        selection_pos_list.remove((Integer)position);
+                        selection_list.remove(((GalleryApplication)getApplication()).imgs.get(position));
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.GONE);
                     } else {
-                        selection_list.add(imageList.get(position));
+                        selection_list.add(((GalleryApplication)getApplication()).imgs.get(position));
+                        selection_pos_list.add(position);
                         v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                     }
 
                     if (selection_list.isEmpty())
-                        selection_mode = false;
+                        setSelectionMode(false);
                 } else {
-                    String image_path = imageList.get(position).getPath();
+                    String image_path = ((GalleryApplication)getApplication()).imgs.get(position).getPath();
                     System.out.println(image_path);
-                    Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
-                    fullscreenImageIntent.putExtra("path", image_path);
-                    startActivity(fullscreenImageIntent);
+                    startFullScreenActivity(position,image_path);
                 }
             }
         });
@@ -117,8 +411,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemLongClick(int position, View v) {
                 if (!selection_mode) {
-                    selection_list.add(imageList.get(position));
-                    selection_mode = true;
+                    selection_list.add(((GalleryApplication)getApplication()).imgs.get(position));
+                    selection_pos_list.add(position);
+                    setSelectionMode(true);
                     v.findViewById(R.id.SelectedIcon).setVisibility(View.VISIBLE);
                 }
             }
@@ -126,14 +421,138 @@ public class MainActivity extends AppCompatActivity {
         recyclerImages.setAdapter(adapter);
     }
 
-    private void onSearchClicked(AdapterImages adapter) {
-        EditText searchbar_input = (EditText) findViewById(R.id.search_bar);
-        System.out.println(searchbar_input.getText().toString());
-        ImageContainer image = adapter.searchPictures(searchbar_input.getText().toString());
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (image != null) {
-            searchbar_input.setText("Found: " + image.getFilename());
+        if (requestCode == FULLSCREEN_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                int result = data.getIntExtra("deletePos", -1);
+                if (result > -1) {
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    mainDeleter.delete(adapterImages.getListImages().get(result).getPath());
+                    adapterImages.getListImages().remove(result);
+                    adapterImages.notifyItemRemoved(result);
+                    adapterImages.notifyItemRangeChanged(result, adapterImages.getListImages().size());
+                }
+                String nameresult = data.getStringExtra("newName");
+                int renameindex = data.getIntExtra("indexRename",-1);
+                if(nameresult != "" && renameindex > -1){
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+
+                    String oldPath = adapterImages.getListImages().get(renameindex).getPath();
+                    String newPath =  oldPath.substring(0,oldPath.lastIndexOf("/")+1);
+                    newPath = newPath + nameresult + oldPath.substring(oldPath.lastIndexOf("."));
+
+                    if(!newPath.equals(oldPath)) {
+                        while (existsName(newPath,oldPath))
+                        {
+                            nameresult = nameresult + "_copy";
+                            newPath = newPath.substring(0,newPath.lastIndexOf("/")+1) + nameresult + newPath.substring(newPath.lastIndexOf("."));
+                        }
+
+                        File from = new File(oldPath);
+                        File to = new File(newPath);
+                        if (from.exists()) {
+                            from.renameTo(to);
+                            adapterImages.getListImages().get(renameindex).setFilename(nameresult);
+                            adapterImages.getListImages().get(renameindex).setPath(newPath);
+                        }
+                    }
+                }
+                int rotateIndex = data.getIntExtra("indexRotate",-1);
+                if(rotateIndex > -1){
+                    rotateImage(rotateIndex);
+                    AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
+                    startFullScreenActivity(rotateIndex, adapterImages.getListImages().get(rotateIndex).getPath());
+                }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
         }
+
+        else if(requestCode == OPEN_ZIP_REQUEST ){
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    Uri path = data.getData();
+                    if (!unzip(path, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString()))
+                    {
+                        Toast.makeText(this, "Could not unzip.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    buildRecycler();
+                }
+            }
+        }
+        else if (requestCode == ALBUM_OVERVIEW_REQUEST) {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                setTitle(data.getStringExtra("title"));
+                path = data.getStringExtra("path");
+                album_mode = data.getBooleanExtra("album_mode", true);
+                buildRecycler();
+            }
+        }
+        setSelectionMode(false);
+    }
+
+    private void startFullScreenActivity(int pos, String path) {
+        Intent fullscreenImageIntent = new Intent(MainActivity.this, ImageFullscreenActivity.class);
+        fullscreenImageIntent.putExtra("path", path);
+        fullscreenImageIntent.putExtra("index", pos);
+        startActivityForResult(fullscreenImageIntent,FULLSCREEN_REQUEST);
+    }
+
+    private boolean existsName(String newPath, String oldPath) {
+        String dirPath = newPath.substring(0,newPath.lastIndexOf("/"));
+        File dir = new File(dirPath);
+        if(dir.exists() && dir.isDirectory())
+        {
+            File[] filelist = dir.listFiles();
+            for (File f : filelist) {
+                if(f.getPath().equals(newPath) && !f.getPath().equals(oldPath))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private void onSearchClicked(AdapterImages adapter) {
+        String searchbar_input = ((EditText) findViewById(R.id.search_bar)).getText().toString();
+
+        RecyclerView recyclerview_images = findViewById(R.id.RecyclerId);
+        AdapterImages adapter_images = (AdapterImages)recyclerview_images.getAdapter();
+        GalleryApplication application_gallery = (GalleryApplication)getApplication();
+        List<ImageContainer> list_images =  new ArrayList<>();
+        list_images.addAll(application_gallery.imgs);
+        List<Tags> list_tags = application_gallery.tags;
+
+        if (searchbar_input.equals(""))
+            adapter_images.replaceItems(list_images);
+
+        Tags search_tag = null;
+
+        for(int i = 0; i < list_tags.size(); i++){
+            if(searchbar_input.equals(list_tags.get(i).getName())){
+                search_tag = list_tags.get(i);
+                break;
+            }
+        }
+
+        List<ImageContainer> list_images_tag_hit = new ArrayList<>();
+        List<ImageContainer> list_images_name_hit = new ArrayList<>();
+
+        for (ImageContainer image: list_images) {
+
+            if ((search_tag != null) && (image.tags.contains(search_tag)))
+                list_images_tag_hit.add(image);
+            else if (image.getFilename().contains(searchbar_input))
+                list_images_name_hit.add(image);
+
+        }
+
+        list_images_tag_hit.addAll(list_images_name_hit);
+        adapter_images.replaceItems(list_images_tag_hit);
+
     }
 
     private void setEditText() {
@@ -148,5 +567,69 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    public void performFileSearch() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/zip");
+        startActivityForResult(intent, OPEN_ZIP_REQUEST);
+    }
+
+    public Boolean unzip(Uri sourceFile, String destinationFolder)  {
+        ZipInputStream zis = null;
+
+        try {
+            FileInputStream istream = (FileInputStream) this.getContentResolver().openInputStream(sourceFile);
+            zis = new ZipInputStream(new BufferedInputStream(istream));
+            ZipEntry ze;
+            int count;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while ((ze = zis.getNextEntry()) != null) {
+                String fileName = ze.getName();
+                fileName = fileName.substring(fileName.indexOf("/") + 1);
+                File file = new File(destinationFolder, fileName);
+                File dir = ze.isDirectory() ? file : file.getParentFile();
+
+                if (!dir.isDirectory() && !dir.mkdirs())
+                    throw new FileNotFoundException("Invalid path: " + dir.getAbsolutePath());
+                if (ze.isDirectory()) continue;
+                FileOutputStream fout = new FileOutputStream(file);
+                try {
+                    while ((count = zis.read(buffer)) != -1)
+                        fout.write(buffer, 0, count);
+                } finally {
+                    fout.close();
+                }
+            }
+        } catch (IOException ioe){
+            System.out.println(ioe.getStackTrace());
+            return false;
+        }  finally {
+            if (zis != null)
+                try {
+                    zis.close();
+                } catch (IOException e) {
+                    return false;
+                }
+        }
+        return true;
+    }
+
+    public void refreshView()
+    {
+        ((AdapterImages)recyclerImages.getAdapter()).notifyDataSetChanged();
+    }
+
+    private void setSelectionMode(boolean selection_mode)
+    {
+        if (selection_mode)
+        {
+            EditText search_bar = findViewById(R.id.search_bar);
+            if (search_bar.getVisibility() == View.VISIBLE)
+                search_bar.setVisibility(View.GONE);
+        }
+        this.selection_mode = selection_mode;
+        this.invalidateOptionsMenu();
     }
 }

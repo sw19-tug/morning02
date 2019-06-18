@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/albumLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="0dip" >
+
+    <LinearLayout android:id="@+id/thumbnail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/idImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/image01"/>
+
+    </LinearLayout>
+
+<TextView
+android:id="@+id/albumName"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:gravity="clip_horizontal"
+android:layout_below="@id/thumbnail"
+android:layout_centerHorizontal="true"
+android:text="test"
+android:textColor="#000000"
+android:typeface="sans"
+android:textSize="15dip"
+android:textStyle="bold"/>
+    </RelativeLayout>

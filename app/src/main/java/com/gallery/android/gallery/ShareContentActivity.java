@@ -26,9 +26,9 @@ public class ShareContentActivity  extends Activity{
         this.startActivity(share);
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //get the returned data
+
         Bundle extras = data.getExtras();
-//get the cropped bitmap
+
         Bitmap thePic = extras.getParcelable("data");
         savebitmap(thePic);
     }
@@ -36,14 +36,11 @@ public class ShareContentActivity  extends Activity{
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         OutputStream outStream = null;
-        // String temp = null;
         File file = new File(extStorageDirectory, "QR_" + timeStamp + ".png");
 
         if (file.exists()) {
             file.delete();
             file = new File(extStorageDirectory, "QR_" + timeStamp + ".png");
-
-
         }
 
         try {

@@ -4,11 +4,9 @@ import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.view.View;
 
-
 import org.hamcrest.Matcher;
 
 public class RecyclerItemClick {
-
 
         public static ViewAction clickChildViewWithId(final int id) {
             return new ViewAction() {
@@ -29,6 +27,4 @@ public class RecyclerItemClick {
                 }
             };
         }
-
     }
-

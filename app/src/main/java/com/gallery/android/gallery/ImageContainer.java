@@ -1,10 +1,9 @@
 package com.gallery.android.gallery;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
-import java.util.Date;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,15 +17,10 @@ public class ImageContainer implements ImageContainerInterface{
     private int width;
     private long size;
     private String orientation;
-
     public Set<Tags> tags = new HashSet<>();
-
-
-
     public Set<Tags> getTags() {
         return tags;
     }
-
 
     enum PictureComperator implements Comparator<ImageContainer> {
         NAME {
@@ -71,14 +65,7 @@ public class ImageContainer implements ImageContainerInterface{
         this.filename = filename;
     }
 
-   /* public ImageContainer(String path)
-    {
-        this.image = BitmapFactory.decodeFile(path);
-        this.path = path;
-        this.date = new Date();
-        this.filename = path.substring(path.lastIndexOf("/")+1);
-    }*/
-   public ImageContainer(
+    public ImageContainer(
             Bitmap image,
             String path,
             String filename,
@@ -87,16 +74,15 @@ public class ImageContainer implements ImageContainerInterface{
             int width,
             long size,
             String orientation) {
-       this.image = image;
-       this.path = path;
-       this.filename = filename;
-       this.date = date;
-       this.height = height;
-       this.width = width;
-       this.size = size;
-       this.orientation = orientation;
-   }
-
+        this.image = image;
+        this.path = path;
+        this.filename = filename;
+        this.date = date;
+        this.height = height;
+        this.width = width;
+        this.size = size;
+        this.orientation = orientation;
+    }
 
     public ImageContainer(String path,Date date, String name)
     {

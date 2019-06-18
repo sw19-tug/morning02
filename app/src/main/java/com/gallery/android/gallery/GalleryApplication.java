@@ -98,7 +98,6 @@ public class GalleryApplication extends Application {
         mData.put(key, value);
     }
 
-    // Getter to access Singleton instance
     public static GalleryApplication getInstance() {
         return sInstance;
     }

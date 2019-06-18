@@ -21,19 +21,6 @@ public class AddImageActivity extends AppCompatActivity {
     private ImageView imageView;
     private static String path;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-
-
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
-
-
-    }
     public String getPath(){
         return path;
     }
@@ -42,10 +29,16 @@ public class AddImageActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-
-
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             String name=savebitmap(photo);
             data.putExtra("namePhoto",name);
@@ -55,16 +48,15 @@ public class AddImageActivity extends AppCompatActivity {
             startActivityForResult(imageFullScreenIntent,FULLSCREEN_REQUEST);
         }
     }
+
     public String savebitmap(Bitmap bmp) {
         String extStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         OutputStream outStream = null;
-        // String temp = null;
         File file = new File(extStorageDirectory, "QR_" + timeStamp + ".png");
 
         if (file.exists()) {
             file.delete();
-            //file = new File(extStorageDirectory, "QR_" + timeStamp + ".png");
             file = new File(extStorageDirectory, "QR_" + timeStamp + ".png");
             setPath(file.getPath());
 
@@ -87,6 +79,5 @@ public class AddImageActivity extends AppCompatActivity {
         Intent mainActivity = new Intent(AddImageActivity.this, MainActivity.class);
         startActivity(mainActivity);
         return timeStamp;
-
     }
 }

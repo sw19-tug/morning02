@@ -1,13 +1,10 @@
-
 package com.gallery.android.gallery;
-
 
 import android.Manifest;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +21,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.TestCase.assertTrue;
-
 
 public class ExportButtonTest {
 
@@ -63,10 +59,6 @@ public class ExportButtonTest {
 
     @Test
     public void exportAllImages() throws Throwable, InterruptedException {
-        Log.e("this","export");
-
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText("Sort by date descending")).perform(click());
 
         RecyclerView recycler_view = activityTestRule.getActivity().findViewById(R.id.RecyclerId);
         final AdapterImages adapter_images = (AdapterImages) recycler_view.getAdapter();
@@ -85,8 +77,9 @@ public class ExportButtonTest {
 
     public void checkExportImage(int number, long size, String path) throws Throwable {
 
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Export")).perform(click());
+        Thread.sleep(200);
         String export_phase = "_export.zip";
         File f = new File(path + export_phase);
         assertTrue((f.exists() && f.isFile()));

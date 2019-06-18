@@ -10,8 +10,6 @@ import java.util.zip.ZipOutputStream;
 
 public class ExportImages {
 
-
-
     public static void compressImage(String[] folder, String compFile) throws IOException {
 
         final int BUFFER_SIZE = 10000;

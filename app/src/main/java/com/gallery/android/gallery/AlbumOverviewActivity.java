@@ -3,7 +3,6 @@ package com.gallery.android.gallery;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,7 +33,6 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-
         super.onCreate(savedInstanceState);
         if (isNightModeEnabled()) {
             setTheme(R.style.DarkTheme);
@@ -47,7 +45,6 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_album_overview, menu);
         return true;
     }
@@ -82,7 +79,6 @@ public class AlbumOverviewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
             Intent returnIntent = new Intent();
             returnIntent.putExtra("title", "Gallery");
             returnIntent.putExtra("path", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
@@ -106,12 +102,9 @@ public class AlbumOverviewActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("Add album");
 
-        // Set up the input
         final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         builder.setView(input);
 
-        // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

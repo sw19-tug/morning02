@@ -35,9 +35,4 @@ public class PictureSearchUnitTest {
         String image = adapter.searchPictures("trick");
         assertEquals(image,"/path/trick");
     }
-
-
-
-
-
 }

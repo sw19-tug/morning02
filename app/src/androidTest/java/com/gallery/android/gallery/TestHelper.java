@@ -1,10 +1,7 @@
 package com.gallery.android.gallery;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Environment;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;

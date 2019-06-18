@@ -11,7 +11,6 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -40,10 +39,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -58,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerImages;
     String path;
     boolean album_mode = false;
-
     public boolean selection_mode = false;
     public List<ImageContainer> selection_list = new ArrayList<>();
     public List<Integer> selection_pos_list = new ArrayList<>();
@@ -81,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_READ_REQUEST);
 
@@ -121,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         menu.findItem(R.id.search).setVisible(!selection_mode);
@@ -240,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
                     for (int index = 0; index < selection_pos_list.size(); index++) {
                         adapterImages.getListImages().remove((int)selection_pos_list.get(index));
                         adapterImages.notifyItemRemoved(selection_pos_list.get(index));
-                        //adapterImages.notifyItemRangeChanged(selection_pos_list.get(index),adapterImages.getListImages().size());
                     }
                     adapterImages.notifyItemRangeChanged(0, adapterImages.getListImages().size());
 
@@ -264,16 +257,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.NModeswitchAB:{
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-
-
-
-
             }
 
     }
         return(super.onOptionsItemSelected(item));
     }
-
 
     private void rotateImage(int pos) {
         AdapterImages adapterImages = (AdapterImages) recyclerImages.getAdapter();
@@ -350,7 +338,6 @@ public class MainActivity extends AppCompatActivity {
         setSelectionMode(false);
     }
 
-
     private void buildRecycler() {
 
         recyclerImages = findViewById(R.id.RecyclerId);
@@ -360,7 +347,6 @@ public class MainActivity extends AppCompatActivity {
 
         ((GalleryApplication)getApplication()).imgs.clear();
         ((GalleryApplication)getApplication()).imgs.addAll(f.loadImageContainersForPath(path, !album_mode, this));
-
 
         SharedPreferences prefs = android.support.v7.preference.PreferenceManager
                 .getDefaultSharedPreferences(getApplication());
@@ -646,5 +632,4 @@ public class MainActivity extends AppCompatActivity {
         this.selection_mode = selection_mode;
         this.invalidateOptionsMenu();
     }
-
 }

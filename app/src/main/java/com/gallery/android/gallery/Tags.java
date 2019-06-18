@@ -1,7 +1,5 @@
 package com.gallery.android.gallery;
 
-import java.util.ArrayList;
-
 public class Tags {
 
     private String mName;
@@ -19,9 +17,6 @@ public class Tags {
     }
 
     private static int lastTagId = 0;
-
-
-
 
     public int getTagId() {
         return tagid;

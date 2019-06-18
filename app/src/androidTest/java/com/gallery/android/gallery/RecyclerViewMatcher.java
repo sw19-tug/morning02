@@ -3,13 +3,11 @@ package com.gallery.android.gallery;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-/**
- * Created by dannyroa on 5/10/15.
- */
 public class RecyclerViewMatcher {
     private final int recyclerViewId;
 

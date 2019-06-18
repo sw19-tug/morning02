@@ -8,7 +8,6 @@ import org.hamcrest.Matcher;
 
 public class ItemClick {
 
-
         public static ViewAction clickChildViewWithId(final int id) {
             return new ViewAction() {
                 @Override
@@ -28,6 +27,4 @@ public class ItemClick {
                 }
             };
         }
-
-
 }

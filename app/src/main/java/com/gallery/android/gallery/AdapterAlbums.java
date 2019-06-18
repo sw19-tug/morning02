@@ -21,7 +21,6 @@ public class AdapterAlbums<getPath> extends RecyclerView.Adapter<AdapterAlbums.V
         this.listAlbums = listAlbums;
     }
 
-
     @Override
     @NonNull
     public AdapterAlbums.ViewHolderAlbums onCreateViewHolder(@NonNull ViewGroup parent, int viewType)  {
@@ -58,12 +57,8 @@ public class AdapterAlbums<getPath> extends RecyclerView.Adapter<AdapterAlbums.V
         holder.album.setId(holder.album.getId()+position);
     }
 
-
-
     public class ViewHolderAlbums extends RecyclerView.ViewHolder implements View.OnClickListener{
         final RelativeLayout album;
-
-
 
         ViewHolderAlbums(View itemView) {
             super(itemView);
@@ -71,8 +66,6 @@ public class AdapterAlbums<getPath> extends RecyclerView.Adapter<AdapterAlbums.V
             album = itemView.findViewById(R.id.albumLayout);
 
         }
-
-
 
         @Override
         public void onClick(View view) {

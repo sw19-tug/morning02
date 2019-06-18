@@ -191,9 +191,5 @@ public class BulkEditJTest {
         assertFalse(file1.exists());
         File file2 = new File(path2);
         assertFalse(file2.exists());
-
-        /*TestHelper.createFile(((Long)System.currentTimeMillis()).toString());
-        TestHelper.createFile(((Long)System.currentTimeMillis()).toString());*/
     }
-
 }

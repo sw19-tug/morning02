@@ -18,7 +18,9 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressKey;
@@ -60,7 +62,7 @@ public class RenameTest {
             return;
         
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Rename")).check(matches((isDisplayed())));
     }
 
@@ -71,7 +73,7 @@ public class RenameTest {
             return;
 
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Rename")).check(matches((isDisplayed())));
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
@@ -89,7 +91,7 @@ public class RenameTest {
         String timestamp = timestampLong.toString();
         String oldPath = ((AdapterImages)(rec_view.getAdapter())).getListImages().get(0).getPath();
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Rename")).check(matches((isDisplayed())));
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
@@ -120,7 +122,7 @@ public class RenameTest {
         Long timestampLong = System.currentTimeMillis();
         String timestamp = timestampLong.toString();
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
         onView(isAssignableFrom(EditText.class)).perform(typeText(timestamp), pressKey(KeyEvent.KEYCODE_ENTER));
@@ -150,7 +152,7 @@ public class RenameTest {
         TestHelper.createFile(timestamp + extension);
 
         onView(withId(R.id.idImage)).perform(click());
-        onView(withId(R.id.popupMenu)).perform(click());
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText("Rename")).perform(click());
         Thread.sleep(200);
         onView(isAssignableFrom(EditText.class)).perform(typeText(timestamp), pressKey(KeyEvent.KEYCODE_ENTER));
